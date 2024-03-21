@@ -102,7 +102,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
       cd mrsub
       bash +x demo_sfrc_run.sh 'MRI' '' 'unet' 4
 
-   Change third option to 'plstv' for the plstv-based outputs found in our paper. 
+   Change third option to 'plstv' for the plstv-based results provided in our paper. 
 
 |
 
@@ -115,20 +115,20 @@ This checkpoint can be applied to the low-resolution CT images provided in this 
 .. code-block:: bash 
 
    cd ctsr
-   bash +x ./demo_srgan_test.sh 'sel' 'sh' #on sharp kernel-based tuning set
+   bash +x demo_srgan_test.sh 'sel' 'sh' #on sharp kernel-based tuning set
 
 To apply the SRGAN to all the CT images from patient L067 (as described in our paper) refer to "./ctsr/create_sr_dataset/readme.txt".
-Once you successfully download and preprocess CT scans of patient L067, the following commands will yield fake patches as tabulated 
-in I in our paper and as depicted in the following `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
+Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
+yield fake patches as tabulated in I in our paper and as depicted in the following `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
 .. code-block:: bash 
 
    cd ctsr
-   bash +x ./demo_srgan_test.sh '' 'sh'
-   bash +x ./demo_srgan_test.sh '' 'sm'
+   bash +x demo_srgan_test.sh '' 'sh'
+   bash +x demo_srgan_test.sh '' 'sm'
    cd ..
-   bash +x ./demo_sfrc_run.sh '' 'sh' 47 # on sharp test data with 47 set as no. of processors
-   bash +x ./demo_sfrc_run.sh '' 'sm' 47 #on smooth test data with 47 set as the no. of processors
+   bash +x demo_sfrc_run.sh '' 'sh' 47 # on sharp test data with 47 set as no. of processors
+   bash +x demo_sfrc_run.sh '' 'sm' 47 #on smooth test data with 47 set as the no. of processors
 
 |
 
@@ -151,6 +151,7 @@ Follow the instructions provided in the `BART repository <https://mrirecon.githu
 Then edit the path to BART's python wrapper in line 20 in file "./mrsub/plstv/bart_pls_tv.py".
 
 .. code-block:: bash 
+
    cd mrsub/plstv
    bash +x run_bart_pls_tv.sh
 
