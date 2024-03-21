@@ -16,11 +16,12 @@ Usage
               [--dx DX] [--ht HT] [--windowing WINDOWING] [--remove-ref-noise] [--img-y-padding]
 
     sFRC analysis between image pairs from DL(or Reg)- & reference-based methods to identify fake artifacts
+    
     arguments:
     -h, --help            show this help message and exit
     --input-folder        directory name containing images.
     --output-folder       output folder to save bounding box-based fake labels on DL/Reg & reference image pairs, and sFRC plots.
-    --patch-size          p96 or p64 or 48 or p32 to indicate patch sizes for the sFRC analysis. Change padding option below for a
+    --patch-size          p96 or p64 or 48 or p32 to indicate patch sizes for the sFRC analysis. Change padding option in main.py for a
                           different patch size.
     --random_N            performs sfrc calculation on randomly selected 16 complimentary images from DL/Reg - Reference folders.
                           For more info refer to in-built options in main.py.
@@ -48,7 +49,7 @@ Usage
     --apply-bm3d          apply image-based mild bm3d smoothing before the frc calculation. It decreases the chance of quick FRC
                           drop. which means it increases the chance of missing fake artifacts. But it has advantage of increasing PPV.
     --mtf-space           x-axis for FRC is in the mtf space. Uses the dx info. Use this option only if you have info on dx for your
-                          acquisition. Otherwise do not use this option. When this option is not used x-axis for FRC has unit pixel(^-1).
+                          acquisition. Otherwise do not use this option. When this option is not used, x-axis for FRC has unit pixel(^-1).
     --dx                  xy plane pixel spacing. Default value is set from the LDGC dataset and has the unit mm.
     --ht                  patches whose x-coordinates (corresponding to the points when their FRC curves intersect with the frc-
                           threshold) fall below this ht threshold will be labeled as fake ROIs.
@@ -59,32 +60,47 @@ Usage
     --remove-ref-noise    applies a gentle bilateral filtering to reference images
     --img-y-padding       pads y-dim with zeros with pad_width=(rNx-rNy). Its useful when analyzing coronal-slices
 
+|
 
-DL/Reg method- and Reference method-based data for sFRC 
+DEMO execution of sFRC
 ----------------------------------------------------------
+ The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in our paper. 
+ Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
 
-1. Get SRGAN-based CT upsampled (x4) output
-----------------------------------------------------------
+1. sFRC on SRGAN-based CT upsampled (x4) outputs
 
-Usage::
-  cd ctsr
-  chmod +x demo_srgan_test.sh 
-  ./demo_srgan_test.sh 'sh' 'sel'
+   .. code-block:: bash
+      
+      cd ctsr
+      OUTPUT_FNAME="./results/CT/sm_srgan_sel_sh_L067/"
+      INPUT_FOLDER="./ctsr/results/test_sh_L067/ua_ll_smSRGANsel_in_x4/checkpoint-generator-20/"
+      INPUT_GEN="test_sh_L067_cnn"
+      TARGET_GEN="test_sh_L067_gt"
+      time mpirun --mca btl ^openib -np 1 \
+      python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p64'   \
+      --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} --img-format 'raw' --frc-threshold '0.5' --in-dtype 'uint16' \
+      --anaRing --inscribed-rings --rNx 512 --apply-hann --mtf-space --ht 0.33 --windowing 'soft' --save-patched-subplots
+   
+   OR execute the demo bash file
+   
+   .. code-block:: bash 
+      
+      bash +x demo_srgan_test.sh 'CT' 'sh' 'sel' 1
 
-'sh' indicates sharp kernel-based test set and 'sel' indicates CT images used as tuning set for sFRC parameters in our paper.
-Likewise 'sm'indicates smooth kernel-based test set and '' indicates CT images used as test set for sFRC analysis in our paper.
-To apply the trained SRGAN model on all CT images from patient L067 look inside the file ctsr/create_sr_dataset/readme.txt to
-get the required LDGC box path and on how to get the downsampled input.
-----
+   'CT' indicates sfrc on CT-based data. 'sh' indicates sharp kernel-based data and 'sel' indicates CT images used as tuning set for sFRC parameters in our paper.
+   Likewise 'sm' indicates smooth kernel-based test set. '' indicates CT images used as test set for sFRC analysis in our paper.
+   1 indicates 1 processing unit (-np) to be used in our mpi-based sFRC implementation. 
+   To apply the trained SRGAN model on all CT images from patient L067 look inside the file ctsr/create_sr_dataset/readme.txt to
+   get the required LDGC box path and on how to get the downsampled input.
 
+2. sFRC on UNet- and PLSTV-based MRI outputs from subsampled acquisition (x3)
 
-2. Get UNet- and PLS-TV-based recovery of subsampled (3x) acquisition
-----------------------------------------------------------
-All the post-processing codes, data have been sourced from . Other packages such as BART and fastmri are 
+.. code-block:: bash
 
-Usage::
-
-  python main_3d.py --acceleration_factor 4
+   cd mrsub
+   bash +x demo_sfrc_run.sh 'MRI' '' 'unet' 4
+   
+   Change third option to 'plstv' for the plstv-based outputs found in the paper. 
 
 edit the path to BART's python wrapper in line 20 in file mrsub/plstv/bart_pls_tv.py
   cd mrsub/unet
@@ -92,7 +108,7 @@ edit the path to BART's python wrapper in line 20 in file mrsub/plstv/bart_pls_t
   ./run_unet_tesh.sh
 ----
 
-3. sFRC analysis on the SRGAN-based outputs
+sFRC analysis on the SRGAN-based outputs
 ----------------------------------------------------------
 
 Reconstruct dynamic MR images from its undersampled measurements using 
@@ -106,9 +122,9 @@ Usage::
 Once you successfully download and preprocess test CT scans of patient L067 used in the paper
   ./demo_sfrc_run 'sh' '' 47 #on sharp test data with 47 set as no. of processors
   ./demo_sfrc_run 'sm' '' 47 #on smooth test data with 47 set as the no. of processors
-----
 
-4. sFRC analysis on the UNet-based output
+
+sFRC analysis on the UNet-based output
 ----------------------------------------------------------
 
 Reconstruct dynamic MR images from its undersampled measurements using 
