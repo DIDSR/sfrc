@@ -64,8 +64,8 @@ Usage
 
 DEMO execution of sFRC
 ----------------------------------------------------------
- The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in our paper. 
- Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
+The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in our paper. 
+Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
 
 1. sFRC on SRGAN-based CT upsampled (x4) outputs
 
@@ -95,12 +95,12 @@ DEMO execution of sFRC
 
 2. sFRC on UNet- and PLSTV-based MRI outputs from subsampled acquisition (x3)
 
-.. code-block:: bash
+   .. code-block:: bash
+      
+      cd mrsub
+      bash +x demo_sfrc_run.sh 'MRI' '' 'unet' 4
 
-   cd mrsub
-   bash +x demo_sfrc_run.sh 'MRI' '' 'unet' 4
-   
-   Change third option to 'plstv' for the plstv-based outputs found in the paper. 
+   Change third option to 'plstv' for the plstv-based outputs found in our paper. 
 
 edit the path to BART's python wrapper in line 20 in file mrsub/plstv/bart_pls_tv.py
   cd mrsub/unet
