@@ -3,7 +3,6 @@ sFRC for detecting fakes in AI-assisted medical image recovery
 This implementation performs Fourier Ring Correlation (FRC)-based analysis over small patches and concomitantly (s)canning
 across Deep learning(DL) or regularization(Reg)-based outputs and their reference counterparts to identify fakes.
 
-|
 
 Usage
 -----
@@ -33,55 +32,32 @@ Usage
     --remove-edge-padding remove patches at the edges of images when mod(img size, patch size) != 0.
     --apply-hann          apply hanning filter before the frc calculation
     --frc-threshold       frc threshold to determine correlation cut-off between the 2 methods. This patch-based FRC analysis
-                        is better suited with a constant threshold such as
-                        0.5, 0.75. Other common options include half-bit, all,
-                        one-bit. To add new threshold, look inside function
-                        FRC in the file frc_utils.py
-    --inscribed-rings     max frequency at which coorelation is calculated is
-                        img (or patch) length/2. if false then frc will be
-                        calculated upto the corner of the image (or patch).
-    --anaRing             perimeter of circle based calculation to determine
-                        data points in each ring. Otherwise no. of pixels in
-                        each ring used to determine data points in each ring.
+                          is better suited with a constant threshold such as 0.5, 0.75. Other common options include half-bit, all,
+                          one-bit. To add new threshold, look inside function FRC in the file frc_utils.py
+    --inscribed-rings     max frequency at which correlation is calculated is img (or patch) length/2. if false then frc will be
+                          calculated upto the corner of the image (or patch).
+    --anaRing             perimeter of circle based calculation to determine data points in each ring. Otherwise no. of pixels in
+                          each ring used to determine data points in each ring.
     --rNx RNX             image x-size for raw image as input.
-    --rNy RNY             image y-size for raw image as input. Default is same
-                        dim as rNx
-    --in-dtype IN_DTYPE   data type of input images. It is needed for .raw
-                        format imgs. It is also needed to set the maximum
-                        intensity value for air thresholding and windowing of
-                        patches when saving bounding box-based outputs.
+    --rNy RNY             image y-size for raw image as input. Default is same dim as rNx
+    --in-dtype            data type of input images. It is needed for .raw
+                          format imgs. It is also needed to set the maximum intensity value for air thresholding and windowing of
+                          patches when saving bounding box-based outputs.
     --save-patched-subplots
-                        if you want to save patches with the bounding box and
-                        FRC plot results.
-    --apply-bm3d          apply image-based mild bm3d smoothing before the frc
-                        calculation. It decreases the chance of quick FRC
-                        drop. which means it increases the chance of missing
-                        fake artifacts. But it has advantage of increasing
-                        PPV.
-    --mtf-space           x-axis for FRC is in the mtf space. Uses the dx info.
-                        Use this option only if you have info on dx for your
-                        acquisition. Otherwise do not use this option. When
-                        this option is not used x-axis for FRC has unit
-                        pixel(^-1).
-    --dx DX               xy plane pixel spacing. Default value is set from the
-                        LDGC dataset and has the unit mm.
-    --ht HT               patches whose x-coordinates (corresponding to the
-                        points when their FRC curves intersect with the frc-
-                        threshold) fall below this ht threshold will be
-                        labeled as fake ROIs.
-    --windowing WINDOWING
-                        windowing used when generating the patched subplots.
-                        options include soft, lung, bone, unity and none.
-                        Setting appropriate viewing window is very important
-                        in zeroing anomalies between a DL method- and
-                        reference method-based outputs. For a sanity check,
-                        you may choose to confirm the marked ROIs generated
-                        from this implementation by using software like ImageJ
-                        under different type of windowing.
-    --remove-ref-noise    applies a gentle bilateral filtering to reference
-                        images
-    --img-y-padding       pads y-dim with zeros with pad_width=(rNx-rNy). Its
-                        useful when analyzing coronal-slices
+                          if you want to save patches with the bounding box and FRC plot results.
+    --apply-bm3d          apply image-based mild bm3d smoothing before the frc calculation. It decreases the chance of quick FRC
+                          drop. which means it increases the chance of missing fake artifacts. But it has advantage of increasing PPV.
+    --mtf-space           x-axis for FRC is in the mtf space. Uses the dx info. Use this option only if you have info on dx for your
+                          acquisition. Otherwise do not use this option. When this option is not used x-axis for FRC has unit pixel(^-1).
+    --dx                  xy plane pixel spacing. Default value is set from the LDGC dataset and has the unit mm.
+    --ht                  patches whose x-coordinates (corresponding to the points when their FRC curves intersect with the frc-
+                          threshold) fall below this ht threshold will be labeled as fake ROIs.
+    --windowing           windowing used when generating the patched subplots Options include soft, lung, bone, unity and none.
+                          Setting appropriate viewing window is very important in zeroing anomalies between a DL method- and
+                          reference method-based outputs. For a sanity check, you may choose to confirm the marked ROIs generated
+                          from this implementation by using software like ImageJ under different type of windowing.
+    --remove-ref-noise    applies a gentle bilateral filtering to reference images
+    --img-y-padding       pads y-dim with zeros with pad_width=(rNx-rNy). Its useful when analyzing coronal-slices
 
 
 DL/Reg method- and Reference method-based data for sFRC 
@@ -159,6 +135,7 @@ References
 6. Uecker, Martin, et al. "The BART toolbox for computational magnetic resonance imaging." Proc Intl Soc Magn Reson Med. Vol. 24. 2016.
 
 7. Maallo, Anne Margarette S., et al. "Effects of unilateral cortical resection of the visual cortex on bilateral human white matter." NeuroImage 207 (2020): 116345.
-----
 
+Citation
+----
 The paper is also available on arXiv: 

@@ -17,13 +17,6 @@ parser.add_argument('--patch-size',    type=str, default='p96',     help="p96 or
 parser.add_argument('--random_N', 	   action="store_true",         help=" performs sfrc calculation on randomly selected 16 \
                                                                     complimentary images from DL/Reg - Reference folders. \
                                                                     For more info refer to in-built options below.")
-# parser.add_argument('--air_threshold',   action='store_true', help='removes patches devoid of contrast')
-# parser.add_argument('--blurr_n_noise',   action='store_true', help="whether or not you want to add noise and blurr input data. \
-#																	Non-funtional in for the mpi-run. Only works in serial run (for now).")
-# parser.add_argument('--mpi_run', 		 action='store_true', help='if you want to employ mpi-based parallel computation')
-# parser.add_argument('--nsplit', type=int, default=1, help='no. of h5 files containing n chunks of patches')
-# parser.add_argument('--out-dtype', type=str, default='float16', help="array type of output h5 file. Options include \
-#				 	float32, float64, int16, uint16.")
 parser.add_argument('--input-gen-folder', type=str,                  help="folder name containing DL or regularization method-based outputs.")
 parser.add_argument('--target-gen-folder', type=str,                 help="folder name containing reference method-based outputs.")
 parser.add_argument('--img-format', type=str, default='dicom',       help='image format for input and target images. Dicom/raw/tif/png?\
@@ -37,7 +30,7 @@ parser.add_argument('--frc-threshold', type=str, default='0.5',      help='frc t
                                                                      This patch-based FRC analysis is better suited with a constant threshold such as \
                                                                      0.5, 0.75. Other common options include half-bit, all, one-bit. To add new threshold,\
                                                                      look inside function FRC in the file frc_utils.py')
-parser.add_argument('--inscribed-rings', action='store_true',        help='max frequency at which coorelation is calculated is img (or patch) length/2. \
+parser.add_argument('--inscribed-rings', action='store_true',        help='max frequency at which correlation is calculated is img (or patch) length/2. \
                                                                      if false then frc will be calculated upto the corner of the image (or patch).')
 parser.add_argument('--anaRing', action='store_true',                help='perimeter of circle based calculation to determine data points in each ring. \
                                                                      Otherwise no. of pixels in each ring used to determine data points in each ring.')
@@ -88,7 +81,7 @@ if __name__ == '__main__':
     args.lr_stride                  = int(args.input_size - args.lr_padding)
     args.channel                    = 1 # code is developed and tested against images with 1 channel
     
-    	# the array type below is the precision type that MPI performs its operations after the read of data
+    # the array type below is the precision type that MPI performs its operations after the read of data
     # and up until saving the h5 patches. There is not much flexibility in changing the data type for 
     # the MPI operations. Have a look at https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-data.html#Python
     args.dtype                      = 'float32' 
