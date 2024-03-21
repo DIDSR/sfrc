@@ -1,12 +1,6 @@
-
-
 ##########################################################
-# @author: pkc/Vincent 
-# --------------------------------------------------------
-# Based on the MATLAB code by Michael Wojcik
-# modification of python code by sajid
+# @author: pkc 
 #
-
 
 import numpy as np
 import numpy.fft as fft
@@ -221,10 +215,11 @@ def is_float(string):
         return False
 
 def FRC( i1, i2, thresholding='half-bit', inscribed_rings=True, analytical_arc_based=True, info_split=True):
-    
-    ''' Check whether the dimensions of input image is 
-    square or not
-    '''
+    # --------------------------------------------------------
+    # Based on the MATLAB code by Michael Wojcik
+    # modification of python code by sajid
+
+    # Check whether the dimensions of input image is  square or not
     if ( np.shape(i1) != np.shape(i2) ) :
         print('\n [!] input images must have the same dimensions\n')
         import sys
@@ -234,9 +229,7 @@ def FRC( i1, i2, thresholding='half-bit', inscribed_rings=True, analytical_arc_b
         import sys
         sys.exit()
     # grab the nu
-    ''' Performing the fourier transform of input
-    images to determine the FRC
-    '''
+    # Performing the fourier transform of input images to determine the FRC
     I1 = fft.fftshift(fft.fft2(i1))
     I2 = fft.fftshift(fft.fft2(i2))
     C  = spinavej(I1*np.conjugate(I2), inscribed_rings=inscribed_rings)

@@ -337,34 +337,3 @@ def dict_plot_of_patched_frc(bool_hallu_1darr, args, fx_coord, stacked_frc, tx_c
     if save_img: plt.savefig(output_img_name); plt.close()
 
     return(bool_hallu_mat, per_img_pair_fk)
-
-'''
-debugs
-bool_mat=np.zeros((4,4))
-bool_mat[1,0]=1.0
-bool_mat[1,1,]=1.0 
-hallu_ind = np.where(bool_mat==1.0)
-
-win_max=1.0
-win_min=0.0
-
-
-
-fig, ax = plt.subplots(nrows=rows,ncols=cols, figsize=(14, 14))# plt.figure(figsize=(14, 14)) # width height
-for i, comp in enumerate(arr_2d):
-    plt.subplot(rows, cols, i + 1)
-    plt.imshow(comp, cmap=cmap, interpolation="nearest", vmin=win_min, vmax=win_max)# norm=colors.Normalize(vmin=0, vmax=1.0))#vmin=0, vmax=1.0)# vmin=825.0, vmax=1275.0)
-    plt.xticks(())
-    plt.yticks(())
-
-if len(hallu_ind[0])!=0:
-    for i in range(len(hallu_ind[0])):
-        ax_i = hallu_ind[0][i]
-        ax_j = hallu_ind[1][i]
-        print(ax_i, ax_j)
-        #ax[ax_i, ax_j].spines['top'].set_color('green')
-        #ax[ax_i, ax_j].spines['top'].set_linewidth(4)  
-        add_subplot_border(ax[ax_i, ax_j],1,'red')
-
-plt.show()
-'''
