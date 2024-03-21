@@ -103,16 +103,10 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
    Change third option to 'plstv' for the plstv-based outputs found in our paper. 
 
-edit the path to BART's python wrapper in line 20 in file mrsub/plstv/bart_pls_tv.py
-  cd mrsub/unet
-  chmod +x run_unet_test.sh
-  ./run_unet_tesh.sh
-
 |
 
 Apply trained SRGAN 
 --------------------
-
 The SRGAN checkpoint provided in this repository was trained using CT images from the six patients provided in 
 `LDGC dataset <https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=52758026>`_ and as detailed in our paper.
 This checkpoint can be applied to the low-resolution CT images provided in this repository in the following manner: 
@@ -127,6 +121,7 @@ Once you successfully download and preprocess CT scans of patient L067, the foll
 in I in our paper and as depicted in the following `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
 .. code-block:: bash 
+
    cd ctsr
    bash +x ./demo_srgan_test.sh '' 'sh'
    bash +x ./demo_srgan_test.sh '' 'sm'
@@ -135,17 +130,24 @@ in I in our paper and as depicted in the following `movie files <https://fdahhs.
    bash +x ./demo_sfrc_run.sh '' 'sm' 47 #on smooth test data with 47 set as the no. of processors
 
 
-sFRC analysis on the UNet-based output
-----------------------------------------------------------
+Apply trained UNet 
+-------------------
+The trained Unet model and data provided in this repository (as well as used in our paper) have been imported from the following github
+repository: `hallucinations-tomo-recon <https://github.com/comp-imaging-sci/hallucinations-tomo-recon>`_. Also, 
+`Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205> is 
+the original source of the MRI data. 
 
-Reconstruct dynamic MR images from its undersampled measurements using 
-Convolutional Recurrent Neural Networks. This is a pytorch implementation requiring 
-Torch 0.4.  
 
-Usage::
+PLSTV-based reconstruction 
+-------------------------------
+edit the path to BART's python wrapper in line 20 in file mrsub/plstv/bart_pls_tv.py
 
-  python main_crnn.py --acceleration_factor 4
+.. code-block:: bash 
+   cd mrsub/unet
+   chmod +x run_unet_test.sh
+   ./run_unet_tesh.sh
 
+|
 
 References 
 ----------
@@ -162,6 +164,8 @@ References
 6. Uecker, Martin, et al. "The BART toolbox for computational magnetic resonance imaging." Proc Intl Soc Magn Reson Med. Vol. 24. 2016.
 
 7. Maallo, Anne Margarette S., et al. "Effects of unilateral cortical resection of the visual cortex on bilateral human white matter." NeuroImage 207 (2020): 116345.
+
+8. `Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205>'_.
 
 Citation
 ----
