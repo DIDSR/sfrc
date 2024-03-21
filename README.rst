@@ -3,84 +3,73 @@ sFRC for detecting fakes in AI-assisted medical image recovery
 This implementation performs Fourier Ring Correlation (FRC)-based analysis over small patches and concomitantly (s)canning
 across Deep learning(DL) or regularization(Reg)-based outputs and their reference counterparts to identify fakes.
 
+|
+
 Usage
 -----
-  main.py [-h] --input-folder INPUT_FOLDER [--output-folder OUTPUT_FOLDER] [--patch-size PATCH_SIZE]
-  [--random_N] [--input-gen-folder INPUT_GEN_FOLDER] [--target-gen-folder TARGET_GEN_FOLDER]
-  [--img-format IMG_FORMAT] [--multi-patients] [--remove-edge-padding] [--apply-hann]
-  [--frc-threshold FRC_THRESHOLD] [--inscribed-rings] [--anaRing] [--rNx RNX] [--rNy RNY] --in-dtype IN_DTYPE
-  [--save-patched-subplots] [--apply-bm3d] [--mtf-space] [--dx DX] [--ht HT] [--windowing WINDOWING]
-  [--remove-ref-noise] [--img-y-padding]
 
-sFRC analysis on image pairs from DL(or regularization) & reference methods to
-label fake artifacts
+.. code-block:: bash
 
-  -h, --help            show this help message and exit
-  --input-folder        directory name containing images.
-  --output-folder       output folder to save bounding box-based fake labels on DL/Reg & reference image pairs, and sFRC plots.
-  --patch-size          p96 or p64 or 48 or p32 to indicate patch sizes for
-                        the sFRC analysis. Change padding option below for a
-                        different patch size.
-  --random_N            performs sfrc calculation on randomly selected 16
-                        complimentary images from DL/Reg - Reference folders.
-                        For more info refer to in-built options below.
-  --input-gen-folder INPUT_GEN_FOLDER
-                        folder name containing DL or regularization method-
-                        based outputs.
-  --target-gen-folder TARGET_GEN_FOLDER
-                        folder name containing reference method-based outputs.
-  --img-format IMG_FORMAT
-                        image format for input and target images.
-                        Dicom/raw/tif/png? To add a new image format read
-                        function look inside the function
-                        partition_read_normalize_n_augment in file
-                        mpi_utils.py.
-  --multi-patients      if there are multiple-subfolders related to different
-                        parents.
-  --remove-edge-padding
-                        remove patches at the edges of images when mod(img
-                        size, patch size) != 0.
-  --apply-hann          apply hanning filter before the frc calculation
-  --frc-threshold FRC_THRESHOLD
-                        frc threshold to determine co-orelation cut-off
-                        between the 2 methods. This patch-based FRC analysis
+    $ main.py [-h] --input-folder INPUT_FOLDER [--output-folder OUTPUT_FOLDER] [--patch-size PATCH_SIZE] [--random_N]
+              [--input-gen-folder INPUT_GEN_FOLDER] [--target-gen-folder TARGET_GEN_FOLDER] [--img-format IMG_FORMAT] 
+              [--multi-patients] [--remove-edge-padding] [--apply-hann] [--frc-threshold FRC_THRESHOLD] [--inscribed-rings] 
+              [--anaRing] [--rNx RNX] [--rNy RNY] --in-dtype IN_DTYPE [--save-patched-subplots] [--apply-bm3d] [--mtf-space]
+              [--dx DX] [--ht HT] [--windowing WINDOWING] [--remove-ref-noise] [--img-y-padding]
+
+    sFRC analysis between image pairs from DL(or Reg)- & reference-based methods to identify fake artifacts
+    arguments:
+    -h, --help            show this help message and exit
+    --input-folder        directory name containing images.
+    --output-folder       output folder to save bounding box-based fake labels on DL/Reg & reference image pairs, and sFRC plots.
+    --patch-size          p96 or p64 or 48 or p32 to indicate patch sizes for the sFRC analysis. Change padding option below for a
+                          different patch size.
+    --random_N            performs sfrc calculation on randomly selected 16 complimentary images from DL/Reg - Reference folders.
+                          For more info refer to in-built options in main.py.
+    --input-gen-folder    folder name containing DL or regularization method-based outputs.
+    --target-gen-folder   folder name containing reference method-based outputs.
+    --img-format          image format for input and target images. Dicom/raw/tif/png? To add a new image format read function look 
+                          inside the function partition_read_normalize_n_augment in file mpi_utils.py.
+    --multi-patients      if there are multiple-subfolders related to different parents.
+    --remove-edge-padding remove patches at the edges of images when mod(img size, patch size) != 0.
+    --apply-hann          apply hanning filter before the frc calculation
+    --frc-threshold       frc threshold to determine correlation cut-off between the 2 methods. This patch-based FRC analysis
                         is better suited with a constant threshold such as
                         0.5, 0.75. Other common options include half-bit, all,
                         one-bit. To add new threshold, look inside function
                         FRC in the file frc_utils.py
-  --inscribed-rings     max frequency at which coorelation is calculated is
+    --inscribed-rings     max frequency at which coorelation is calculated is
                         img (or patch) length/2. if false then frc will be
                         calculated upto the corner of the image (or patch).
-  --anaRing             perimeter of circle based calculation to determine
+    --anaRing             perimeter of circle based calculation to determine
                         data points in each ring. Otherwise no. of pixels in
                         each ring used to determine data points in each ring.
-  --rNx RNX             image x-size for raw image as input.
-  --rNy RNY             image y-size for raw image as input. Default is same
+    --rNx RNX             image x-size for raw image as input.
+    --rNy RNY             image y-size for raw image as input. Default is same
                         dim as rNx
-  --in-dtype IN_DTYPE   data type of input images. It is needed for .raw
+    --in-dtype IN_DTYPE   data type of input images. It is needed for .raw
                         format imgs. It is also needed to set the maximum
                         intensity value for air thresholding and windowing of
                         patches when saving bounding box-based outputs.
-  --save-patched-subplots
+    --save-patched-subplots
                         if you want to save patches with the bounding box and
                         FRC plot results.
-  --apply-bm3d          apply image-based mild bm3d smoothing before the frc
+    --apply-bm3d          apply image-based mild bm3d smoothing before the frc
                         calculation. It decreases the chance of quick FRC
                         drop. which means it increases the chance of missing
                         fake artifacts. But it has advantage of increasing
                         PPV.
-  --mtf-space           x-axis for FRC is in the mtf space. Uses the dx info.
+    --mtf-space           x-axis for FRC is in the mtf space. Uses the dx info.
                         Use this option only if you have info on dx for your
                         acquisition. Otherwise do not use this option. When
                         this option is not used x-axis for FRC has unit
                         pixel(^-1).
-  --dx DX               xy plane pixel spacing. Default value is set from the
+    --dx DX               xy plane pixel spacing. Default value is set from the
                         LDGC dataset and has the unit mm.
-  --ht HT               patches whose x-coordinates (corresponding to the
+    --ht HT               patches whose x-coordinates (corresponding to the
                         points when their FRC curves intersect with the frc-
                         threshold) fall below this ht threshold will be
                         labeled as fake ROIs.
-  --windowing WINDOWING
+    --windowing WINDOWING
                         windowing used when generating the patched subplots.
                         options include soft, lung, bone, unity and none.
                         Setting appropriate viewing window is very important
@@ -89,15 +78,17 @@ label fake artifacts
                         you may choose to confirm the marked ROIs generated
                         from this implementation by using software like ImageJ
                         under different type of windowing.
-  --remove-ref-noise    applies a gentle bilateral filtering to reference
+    --remove-ref-noise    applies a gentle bilateral filtering to reference
                         images
-  --img-y-padding       pads y-dim with zeros with pad_width=(rNx-rNy). Its
+    --img-y-padding       pads y-dim with zeros with pad_width=(rNx-rNy). Its
                         useful when analyzing coronal-slices
-1. DL/Reg method- and Reference method-based data for sFRC 
-==============================
+
+
+DL/Reg method- and Reference method-based data for sFRC 
+----------------------------------------------------------
 
 1. Get SRGAN-based CT upsampled (x4) output
-==============================
+----------------------------------------------------------
 
 Usage::
   cd ctsr
@@ -112,7 +103,7 @@ get the required LDGC box path and on how to get the downsampled input.
 
 
 2. Get UNet- and PLS-TV-based recovery of subsampled (3x) acquisition
-=========================================================================
+----------------------------------------------------------
 All the post-processing codes, data have been sourced from . Other packages such as BART and fastmri are 
 
 Usage::
@@ -126,7 +117,7 @@ edit the path to BART's python wrapper in line 20 in file mrsub/plstv/bart_pls_t
 ----
 
 3. sFRC analysis on the SRGAN-based outputs
-=========================================================================
+----------------------------------------------------------
 
 Reconstruct dynamic MR images from its undersampled measurements using 
 Convolutional Recurrent Neural Networks. This is a pytorch implementation requiring 
@@ -142,7 +133,7 @@ Once you successfully download and preprocess test CT scans of patient L067 used
 ----
 
 4. sFRC analysis on the UNet-based output
-=========================================================================
+----------------------------------------------------------
 
 Reconstruct dynamic MR images from its undersampled measurements using 
 Convolutional Recurrent Neural Networks. This is a pytorch implementation requiring 

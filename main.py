@@ -1,10 +1,14 @@
+##########################################################
+# @author: pkc 
+#
+#
 import argparse
 import sys
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 # Command line arguments
 #--------------------------------------------------------------------------------------------------------------------------------------------------
-parser = argparse.ArgumentParser(description='sFRC analysis on image pairs from DL(or regularization) & reference methods to label fake artifacts')
+parser = argparse.ArgumentParser(description='sFRC analysis between image pairs from DL(or Reg)- & reference-based methods to identify fake artifacts')
 parser.add_argument('--input-folder',  type=str, required=True,     help='directory name containing images.')
 parser.add_argument('--output-folder', type=str, default='results', help='output folder to save bounding box-based fake labels on \
                                                                     DL/Reg & reference image pairs, and sFRC plots.')
@@ -29,7 +33,7 @@ parser.add_argument('--img-format', type=str, default='dicom',       help='image
 parser.add_argument('--multi-patients', action='store_true',         help='if there are multiple-subfolders related to different parents.')
 parser.add_argument('--remove-edge-padding', action='store_true',    help='remove patches at the edges of images when mod(img size, patch size) != 0.')
 parser.add_argument('--apply-hann', action='store_true',             help='apply hanning filter before the frc calculation')
-parser.add_argument('--frc-threshold', type=str, default='0.5',      help='frc threshold to determine co-orelation cut-off between the 2 methods. \
+parser.add_argument('--frc-threshold', type=str, default='0.5',      help='frc threshold to determine correlation cut-off between the 2 methods. \
                                                                      This patch-based FRC analysis is better suited with a constant threshold such as \
                                                                      0.5, 0.75. Other common options include half-bit, all, one-bit. To add new threshold,\
                                                                      look inside function FRC in the file frc_utils.py')
