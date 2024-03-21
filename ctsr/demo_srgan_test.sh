@@ -9,7 +9,7 @@ usage: resolve_sr.py [-h] [--model-name MODEL_NAME] --input-folder INPUT_FOLDER 
 
 PyTorch application of trained weight on CT images
 
-optional arguments:
+arguments:
   -h, --help            show this help message and exit
   --model-name , --m    choose the network architecture name that you are
                         going to use. Other options include redcnn, dncnn,
@@ -47,11 +47,9 @@ COMMENT
 #source /home/prabhat.kc/anaconda3/base_env.sh
 #source /home/prabhat.kc/anaconda3/horovod_env.sh
 #cd /projects01/didsr-aiml/prabhat.kc/code/GitRepo/mpi_sfrc/ctsr
-# ----------------------------------------------------
-# test set for sharp/smooth selected(sel) L067 ua_ll (x4)
-# -----------------------------------------------------
-ker_opt=$1 #kernel option {sh: sharp or sm: smooth}
-data_opt=$2 #data option {sel: tuning set or '':entire testset}}
+
+data_opt=$1 #data option {sel: tuning set or '':entire testset}}
+ker_opt=$2 #kernel option {sh: sharp or sm: smooth}
 # to get entire testset look into create_sr_testset/readme.txt
 
 export CUDA_DEVICE_ORDER=PCI_BUS_ID

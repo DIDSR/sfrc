@@ -85,15 +85,16 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
    
    .. code-block:: bash 
       
-      bash +x demo_srgan_test.sh 'CT' 'sh' 'sel' 1
+      bash +x demo_srgan_test.sh 'CT' 'sel' 'sh' 1
 
-   'CT' indicates sfrc on CT-based data. 'sh' indicates sharp kernel-based data and 'sel' indicates CT images used as tuning set for sFRC parameters in our paper.
-   Likewise 'sm' indicates smooth kernel-based test set. '' indicates CT images used as test set for sFRC analysis in our paper.
+   'CT' indicates sfrc on CT-based data. 'sh' and 'sel' are options to indicate paths for sharp kernel-based data and 
+   tuning set for sFRC parameters used in our paper. Likewise 'sm' indicates smooth kernel-based test set. 
+   '' is the option to indicate paths of CT images used as test set for the sFRC analysis in our paper.
    1 indicates 1 processing unit (-np) to be used in our mpi-based sFRC implementation. 
    To apply the trained SRGAN model on all CT images from patient L067 look inside the file ctsr/create_sr_dataset/readme.txt to
    get the required LDGC box path and on how to get the downsampled input.
 
-2. sFRC on UNet- and PLSTV-based MRI outputs from subsampled acquisition (x3)
+2. sFRC on UNet- and PLSTV-based MRI outputs from a subsampled acquisition (x3)
 
    .. code-block:: bash
       
@@ -106,22 +107,32 @@ edit the path to BART's python wrapper in line 20 in file mrsub/plstv/bart_pls_t
   cd mrsub/unet
   chmod +x run_unet_test.sh
   ./run_unet_tesh.sh
-----
 
-sFRC analysis on the SRGAN-based outputs
-----------------------------------------------------------
+|
 
-Reconstruct dynamic MR images from its undersampled measurements using 
-Convolutional Recurrent Neural Networks. This is a pytorch implementation requiring 
-Torch 0.4.  
+Apply trained SRGAN 
+--------------------
 
-Usage::
+The SRGAN checkpoint provided in this repository was trained using CT images from the six patients provided in 
+`LDGC dataset <https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=52758026>`_ and as detailed in our paper.
+This checkpoint can be applied to the low-resolution CT images provided in this repository in the following manner: 
 
-  ./demo_sfrc_run.sh 'sh' 'sel' #on sharp kernel-based tuning set
+.. code-block:: bash 
 
-Once you successfully download and preprocess test CT scans of patient L067 used in the paper
-  ./demo_sfrc_run 'sh' '' 47 #on sharp test data with 47 set as no. of processors
-  ./demo_sfrc_run 'sm' '' 47 #on smooth test data with 47 set as the no. of processors
+   cd ctsr
+   bash +x ./demo_srgan_test.sh 'sel' 'sh' #on sharp kernel-based tuning set
+
+To apply the SRGAN to all the CT images from patient L067 (as described in our paper) refer to ./ctsr/create_sr_dataset/readme.txt.
+Once you successfully download and preprocess CT scans of patient L067, the following commands will yield fake patches as tabulated 
+in I in our paper and as depicted in the following 'movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
+
+.. code-block:: bash 
+   cd ctsr
+   bash +x ./demo_srgan_test.sh '' 'sh'
+   bash +x ./demo_srgan_test.sh '' 'sm'
+   cd ..
+   bash +x ./demo_sfrc_run.sh '' 'sh' 47 # on sharp test data with 47 set as no. of processors
+   bash +x ./demo_sfrc_run.sh '' 'sm' 47 #on smooth test data with 47 set as the no. of processors
 
 
 sFRC analysis on the UNet-based output
