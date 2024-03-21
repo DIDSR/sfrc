@@ -3,6 +3,7 @@ sFRC for detecting fakes in AI-assisted medical image recovery
 This implementation performs Fourier Ring Correlation (FRC)-based analysis over small patches and concomitantly (s)canning
 across Deep learning(DL) or regularization(Reg)-based outputs and their reference counterparts to identify fakes.
 
+.. contents::
 
 Usage
 -----
@@ -129,6 +130,7 @@ in I in our paper and as depicted in the following `movie files <https://fdahhs.
    bash +x ./demo_sfrc_run.sh '' 'sh' 47 # on sharp test data with 47 set as no. of processors
    bash +x ./demo_sfrc_run.sh '' 'sm' 47 #on smooth test data with 47 set as the no. of processors
 
+|
 
 Apply trained UNet 
 -------------------
@@ -137,15 +139,20 @@ repository: `hallucinations-tomo-recon <https://github.com/comp-imaging-sci/hall
 `Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205>`_ is 
 the original source of the MRI data. 
 
+.. code-block:: bash 
+   
+   cd mrsub/unet
+   bash +x run_unet_test.sh
+|
 
 PLSTV-based reconstruction 
 -------------------------------
-edit the path to BART's python wrapper in line 20 in file mrsub/plstv/bart_pls_tv.py
+Follow the instructions provided in the `BART repository <https://mrirecon.github.io/bart/>`_.
+Then edit the path to BART's python wrapper in line 20 in file "./mrsub/plstv/bart_pls_tv.py".
 
 .. code-block:: bash 
-   cd mrsub/unet
-   chmod +x run_unet_test.sh
-   ./run_unet_tesh.sh
+   cd mrsub/plstv
+   bash +x run_bart_pls_tv.sh
 
 |
 
@@ -166,6 +173,8 @@ References
 7. Maallo, Anne Margarette S., et al. "Effects of unilateral cortical resection of the visual cortex on bilateral human white matter." NeuroImage 207 (2020): 116345.
 
 8. `Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205>`_.
+
+|
 
 Citation
 ----
