@@ -122,9 +122,9 @@ This checkpoint can be applied to the low-resolution CT images provided in this 
    cd ctsr
    bash +x ./demo_srgan_test.sh 'sel' 'sh' #on sharp kernel-based tuning set
 
-To apply the SRGAN to all the CT images from patient L067 (as described in our paper) refer to ./ctsr/create_sr_dataset/readme.txt.
+To apply the SRGAN to all the CT images from patient L067 (as described in our paper) refer to "./ctsr/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess CT scans of patient L067, the following commands will yield fake patches as tabulated 
-in I in our paper and as depicted in the following 'movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
+in I in our paper and as depicted in the following `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
 .. code-block:: bash 
    cd ctsr
