@@ -4,12 +4,13 @@ This implementation performs Fourier Ring Correlation (FRC)-based analysis over 
 across Deep learning(DL) or regularization(Reg)-based outputs and their reference counterparts to identify fakes.
 
 Usage
-usage: main.py [-h] --input-folder INPUT_FOLDER [--output-folder OUTPUT_FOLDER] [--patch-size PATCH_SIZE]
-               [--random_N] [--input-gen-folder INPUT_GEN_FOLDER] [--target-gen-folder TARGET_GEN_FOLDER]
-               [--img-format IMG_FORMAT] [--multi-patients] [--remove-edge-padding] [--apply-hann]
-               [--frc-threshold FRC_THRESHOLD] [--inscribed-rings] [--anaRing] [--rNx RNX] [--rNy RNY] --in-dtype IN_DTYPE
-               [--save-patched-subplots] [--apply-bm3d] [--mtf-space] [--dx DX] [--ht HT] [--windowing WINDOWING]
-               [--remove-ref-noise] [--img-y-padding]
+-----
+  main.py [-h] --input-folder INPUT_FOLDER [--output-folder OUTPUT_FOLDER] [--patch-size PATCH_SIZE]
+  [--random_N] [--input-gen-folder INPUT_GEN_FOLDER] [--target-gen-folder TARGET_GEN_FOLDER]
+  [--img-format IMG_FORMAT] [--multi-patients] [--remove-edge-padding] [--apply-hann]
+  [--frc-threshold FRC_THRESHOLD] [--inscribed-rings] [--anaRing] [--rNx RNX] [--rNy RNY] --in-dtype IN_DTYPE
+  [--save-patched-subplots] [--apply-bm3d] [--mtf-space] [--dx DX] [--ht HT] [--windowing WINDOWING]
+  [--remove-ref-noise] [--img-y-padding]
 
 sFRC analysis on image pairs from DL(or regularization) & reference methods to
 label fake artifacts
