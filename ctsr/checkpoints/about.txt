@@ -1,0 +1,2 @@
+* srgan/checkpoint-generator-20.pth.tar: (96_uni_augTrTaTdT/srgan/hvd_cpt_for__lr_5e-05_bs_32)
+	is trained using patch 96 over data normalized to [0, 1] with lr: 5e-5, batch size: 32 p
