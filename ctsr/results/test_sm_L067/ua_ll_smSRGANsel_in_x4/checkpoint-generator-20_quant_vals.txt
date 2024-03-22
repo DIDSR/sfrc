@@ -1,0 +1,2 @@
+chckpt-no, CNN rMSE, (+,-std), CNN PSNR [dB], (+,-std), CNN SSIM, (+,-std), BC rMSE, (+,-std), BC PSNR [dB], (+,-std), BC SSIM, (+,-std)
+       20,   0.0050,   0.0036,       37.5808,   3.1671,   0.9467,   0.0065,  0.0091,   0.0004,      34.0612,   0.7853,  0.9056,   0.0136

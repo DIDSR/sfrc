@@ -5,6 +5,8 @@ then
   echo "creating conda enviroment and installing required packages for sfrc-based computations"
   conda create -n mpi_sfrc python=3.7.5 --no-default-packages
   conda activate mpi_sfrc
+  #chmod +x /home/prabhat.kc/anaconda3/envs/mpi_sfrc/bin/pip
+  #chmod +x /home/prabhat.kc/anaconda3/envs/mpi_sfrc/bin/*
   conda install -c anaconda h5py==3.6.0
   pip install PyWavelets==1.3.0
   pip install -r ./mrsub/unet/requirements.txt

@@ -63,6 +63,13 @@ Usage
 
 |
 
+Requirements
+------------
+Install `openmpi<https://www.open-mpi.org/>'_ and export mpirun/mpicc compiler paths. 
+Either execute the file inshall_packages.sh or install the packages listed in this file.
+
+|
+
 DEMO execution of sFRC
 ----------------------------------------------------------
 The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in our paper. 
@@ -72,7 +79,6 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
    .. code-block:: bash
       
-      cd ctsr
       OUTPUT_FNAME="./results/CT/sm_srgan_sel_sh_L067/"
       INPUT_FOLDER="./ctsr/results/test_sh_L067/ua_ll_smSRGANsel_in_x4/checkpoint-generator-20/"
       INPUT_GEN="test_sh_L067_cnn"
@@ -86,7 +92,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
    
    .. code-block:: bash 
       
-      bash +x demo_srgan_test.sh 'CT' 'sel' 'sh' 1
+      bash +x demo_sfrc_run.sh 'CT' 'sel' 'sh' 1
 
    'CT' indicates sfrc on CT-based data. 'sh' and 'sel' are options to indicate paths for sharp kernel-based data and 
    tuning set for sFRC parameters used in our paper. Likewise 'sm' indicates smooth kernel-based test set. 
