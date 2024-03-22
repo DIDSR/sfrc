@@ -70,12 +70,13 @@ as your environment variable in your machine as follows:
 
   .. code-block:: bash
      
-     $ export PATH=$HOME/Downloads/openmpi/bin:$PATH
-     $ export LD_LIBRARY_PATH=$HOME/Downloads/openmpi/lib:$LD_LIBRARY_PATH
+     $ export PATH=$HOME/path/to/openmpi/bin:$PATH
+     $ export LD_LIBRARY_PATH=$HOME/path/to/openmpi/lib:$LD_LIBRARY_PATH
      
 Create a new conda enviroment and install the required packages as follows:
 
   . code-block:: bash
+  
     conda create -n mpi_sfrc python=3.7.5 --no-default-packages
     conda activate mpi_sfrc
     conda install -c anaconda h5py==3.6.0
