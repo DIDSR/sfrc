@@ -69,10 +69,10 @@ Install `openmpi <https://www.open-mpi.org/>`_. Export paths related to openmpi'
 as your environment variable in your machine as follows:
 
   .. code-block:: bash
+     
      $ export PATH=$HOME/Downloads/openmpi/bin:$PATH
      $ export LD_LIBRARY_PATH=$HOME/Downloads/openmpi/lib:$LD_LIBRARY_PATH
      
-
 Create a new conda enviroment and install the required packages as follows:
 
   . code-block:: bash
