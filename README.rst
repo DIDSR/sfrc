@@ -65,8 +65,22 @@ Usage
 
 Requirements
 ------------
-Install `openmpi <https://www.open-mpi.org/>`_ and export mpirun/mpicc's path as your environment variable. 
-Next either execute the file inshall_packages.sh or install the packages listed in this file.
+Install `openmpi <https://www.open-mpi.org/>`_. Export paths related to openmpi's compilers and libraries 
+as your environment variable in your machine as follows:
+
+  .. code-block:: bash
+     $ export PATH=$HOME/Downloads/openmpi/bin:$PATH
+     $ export LD_LIBRARY_PATH=$HOME/Downloads/openmpi/lib:$LD_LIBRARY_PATH
+     
+
+Create a new conda enviroment and install the required packages as follows:
+
+  . code-block:: bash
+    conda create -n mpi_sfrc python=3.7.5 --no-default-packages
+    conda activate mpi_sfrc
+    conda install -c anaconda h5py==3.6.0
+    pip install -r ./requirements/sfrc_requirements.txt
+    pip install -r ./requirements/unet_mri_requirements.txt
 
 |
 
@@ -79,6 +93,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
    .. code-block:: bash
       
+      conda activate mpi_sfrc
       OUTPUT_FNAME="./results/CT/sm_srgan_sel_sh_L067/"
       INPUT_FOLDER="./ctsr/results/test_sh_L067/ua_ll_smSRGANsel_in_x4/checkpoint-generator-20/"
       INPUT_GEN="test_sh_L067_cnn"
