@@ -65,7 +65,7 @@ Usage
 
 Requirements
 ------------
-Install `openmpi<https://www.open-mpi.org/>`_ and export mpirun/mpicc compiler paths as your enviroment variable. 
+Install `openmpi <https://www.open-mpi.org/>`_ and export mpirun/mpicc compiler paths as your enviroment variable. 
 Next either execute the file inshall_packages.sh or install the packages listed in this file.
 
 |
