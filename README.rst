@@ -76,12 +76,12 @@ as your environment variable in your machine as follows:
 Create a new conda enviroment and install the required packages as follows:
 
   . code-block:: bash
-  
-    conda create -n mpi_sfrc python=3.7.5 --no-default-packages
-    conda activate mpi_sfrc
-    conda install -c anaconda h5py==3.6.0
-    pip install -r ./requirements/sfrc_requirements.txt
-    pip install -r ./requirements/unet_mri_requirements.txt
+    
+    $ conda create -n mpi_sfrc python=3.7.5 --no-default-packages
+    $ conda activate mpi_sfrc
+    $ conda install -c anaconda h5py==3.6.0
+    $ pip install -r ./requirements/sfrc_requirements.txt
+    $ pip install -r ./requirements/unet_mri_requirements.txt
 
 |
 
