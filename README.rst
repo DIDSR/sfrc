@@ -66,16 +66,16 @@ Usage
 Requirements
 ------------
 Install `openmpi <https://www.open-mpi.org/>`_. Export paths related to openmpi's compilers and libraries 
-as your environment variable in your machine as follows:
+as your environment variable as follows:
 
-  .. code-block:: bash
+.. code-block:: bash
      
      $ export PATH=$HOME/path/to/openmpi/bin:$PATH
      $ export LD_LIBRARY_PATH=$HOME/path/to/openmpi/lib:$LD_LIBRARY_PATH
      
 Create a new conda enviroment and install the required packages as follows:
 
-  . code-block:: bash
+.. code-block:: bash
     
     $ conda create -n mpi_sfrc python=3.7.5 --no-default-packages
     $ conda activate mpi_sfrc
