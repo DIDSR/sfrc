@@ -8,7 +8,7 @@ across Deep learning(DL) or regularization(Reg)-based outputs and their referenc
 Usage
 -----
 
-.. code-block:: bash
+.. code-block::
 
     $ main.py [-h] --input-folder INPUT_FOLDER [--output-folder OUTPUT_FOLDER] [--patch-size PATCH_SIZE] [--random_N]
               [--input-gen-folder INPUT_GEN_FOLDER] [--target-gen-folder TARGET_GEN_FOLDER] [--img-format IMG_FORMAT] 
@@ -67,14 +67,14 @@ Requirements
 Install `openmpi <https://www.open-mpi.org/>`_. Export paths related to openmpi's compilers and libraries 
 as your environment variable as follows:
 
-.. code-block:: bash
+.. code-block::
      
      $ export PATH=$HOME/path/to/openmpi/bin:$PATH
      $ export LD_LIBRARY_PATH=$HOME/path/to/openmpi/lib:$LD_LIBRARY_PATH
      
 Create a new conda enviroment and install the required packages as follows:
 
-.. code-block:: bash
+.. code-block::
     
     $ conda create -n mpi_sfrc python=3.7.5 --no-default-packages
     $ conda activate mpi_sfrc
@@ -91,7 +91,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
 1. sFRC on SRGAN-based CT upsampled (x4) outputs
 
-   .. code-block:: bash
+   .. code-block::
       
       conda activate mpi_sfrc
       OUTPUT_FNAME="./results/CT/sm_srgan_sel_sh_L067/"
@@ -105,7 +105,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
    
    OR execute the demo bash file
    
-   .. code-block:: bash 
+   .. code-block:: 
       
       bash +x demo_sfrc_run.sh 'CT' 'sel' 'sh' 1
 
@@ -115,7 +115,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
 2. sFRC on UNet- and PLSTV-based MRI outputs from a subsampled acquisition (x3)
 
-   .. code-block:: bash
+   .. code-block::
       
       cd mrsub
       bash +x demo_sfrc_run.sh 'MRI' '' 'unet' 4
@@ -130,7 +130,7 @@ The SRGAN checkpoint provided in this repository was trained using CT images fro
 `LDGC dataset <https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=52758026>`_ and as detailed in our paper.
 This checkpoint can be applied to the low-resolution CT images provided in this repository in the following manner: 
 
-.. code-block:: bash 
+.. code-block:: 
 
    cd ctsr
    bash +x demo_srgan_test.sh 'sel' 'sh' #on sharp kernel-based tuning set
@@ -140,16 +140,16 @@ Once you successfully download and preprocess smooth and sharp CT scans correspo
 yield fake patches as tabulated in TABLE I in our paper and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
-.. code-block:: bash 
+.. code-block:: 
 
    cd ctsr
    bash +x demo_srgan_test.sh '' 'sh'
    bash +x demo_srgan_test.sh '' 'sm'
-   
+
 Then set second command line input as a blank string, '', to indicate tags related to the paths 
 of CT images are test set for the sFRC analysis (as used in our paper).
 
-.. code-block:: bash 
+.. code-block:: 
 
    cd ..
    bash +x demo_sfrc_run.sh '' 'sh' 47 # on sharp test data with 47 set as no. of processors
@@ -164,7 +164,7 @@ repository: `hallucinations-tomo-recon <https://github.com/comp-imaging-sci/hall
 `Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205>`_ is 
 the original source of the MRI data. 
 
-.. code-block:: bash 
+.. code-block:: 
    
    cd mrsub/unet
    bash +x run_unet_test.sh
@@ -175,7 +175,7 @@ PLSTV-based reconstruction
 Follow the installation instructions provided in the `BART repository <https://mrirecon.github.io/bart/>`_.
 Then edit the path to BART's python wrapper in line 20 in file "./mrsub/plstv/bart_pls_tv.py".
 
-.. code-block:: bash 
+.. code-block:: 
 
    cd mrsub/plstv
    bash +x run_bart_pls_tv.sh
