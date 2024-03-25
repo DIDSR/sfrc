@@ -4,7 +4,6 @@
 #
 import argparse
 import sys
-
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 # Command line arguments
 #--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -22,14 +21,13 @@ parser.add_argument('--target-gen-folder', type=str,                 help="folde
 parser.add_argument('--img-format', type=str, default='dicom',       help='image format for input and target images. Dicom/raw/tif/png?\
                                                                      To add a new image format read function look inside the function \
                                                                      partition_read_normalize_n_augment in file mpi_utils.py.')
-# parser.add_argument('--shuffle-patches', type=str, default=None, help='options include np_shuffle or none')
 parser.add_argument('--multi-patients', action='store_true',         help='if there are multiple-subfolders related to different parents.')
 parser.add_argument('--remove-edge-padding', action='store_true',    help='remove patches at the edges of images when mod(img size, patch size) != 0.')
-parser.add_argument('--apply-hann', action='store_true',             help='apply hanning filter before the frc calculation')
+parser.add_argument('--apply-hann', action='store_true',             help='apply hanning filter before the frc calculation.')
 parser.add_argument('--frc-threshold', type=str, default='0.5',      help='frc threshold to determine correlation cut-off between the 2 methods. \
                                                                      This patch-based FRC analysis is better suited with a constant threshold such as \
                                                                      0.5, 0.75. Other common options include half-bit, all, one-bit. To add new threshold,\
-                                                                     look inside function FRC in the file frc_utils.py')
+                                                                     look inside function FRC in the file frc_utils.py.')
 parser.add_argument('--inscribed-rings', action='store_true',        help='max frequency at which correlation is calculated is img (or patch) length/2. \
                                                                      if false then frc will be calculated upto the corner of the image (or patch).')
 parser.add_argument('--anaRing', action='store_true',                help='perimeter of circle based calculation to determine data points in each ring. \
@@ -57,9 +55,9 @@ parser.add_argument('--windowing', type=str, default='soft',         help='windo
                                                                      and reference method-based outputs. For a sanity check, you may choose to confirm the marked \
                                                                      ROIs generated from this implementation by using software like ImageJ under different type of  \
                                                                      windowing.')
-parser.add_argument('--remove-ref-noise', action='store_true',       help='applies a gentle bilateral filtering to reference images')
+parser.add_argument('--remove-ref-noise', action='store_true',       help='applies a gentle bilateral filtering to reference images.')
 parser.add_argument('--img-y-padding', action='store_true',          help='pads y-dim with zeros with pad_width=(rNx-rNy).\
-                                                                     Its useful when analyzing coronal-slices')
+                                                                     Its useful when analyzing coronal-slices.')
 
 
 if __name__ == '__main__':
@@ -69,7 +67,7 @@ if __name__ == '__main__':
     #------------------------------------------------------------------------------------------------------------------------------------------------------
     # in-built additional options
     #-------------------------------------------------------------------------------------------------------------------------------------------------------
-    args.scale                      = 1 # sfrc-based comparision should be performed between outputs from 2 methods with the same dim
+    args.scale                      = 1 # sfrc-based comparison should be performed between outputs from 2 methods with the same dim
     padding_options                 = {'p512':0, 'p256':0, 'p96':0, 'p64':0, 'p48':0, 'p40':0, 'p36':0, 'p32':0} # patch-size:padding
     args.lr_padding                 = padding_options[args.patch_size]
     patch_option                    = {'p512':[512 + args.lr_padding, 512 + args.lr_padding],'p256':[256 + args.lr_padding, 256 + args.lr_padding], \
@@ -86,7 +84,7 @@ if __name__ == '__main__':
     # the MPI operations. Have a look at https://pages.tacc.utexas.edu/~eijkhout/pcse/html/mpi-data.html#Python
     args.dtype                      = 'float32' 
     
-    # max value of images in the test set with the ref and new model-based image pairs. 
+    # max value of images (i.e., test set which includes reference and DL/Regularization method-based images). 
     # this is only used when 'unity' is set as the windowing option
     # look inside the function dict_plot_of_2d_arr in plot_func.py
     # it is also used to normalize uint8 images. So that we can apply sfrc air thresholding

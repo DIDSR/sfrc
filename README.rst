@@ -32,19 +32,18 @@ Usage
                           inside the function partition_read_normalize_n_augment in file mpi_utils.py.
     --multi-patients      if there are multiple-subfolders related to different parents.
     --remove-edge-padding remove patches at the edges of images when mod(img size, patch size) != 0.
-    --apply-hann          apply hanning filter before the frc calculation
+    --apply-hann          apply hanning filter before the frc calculation.
     --frc-threshold       frc threshold to determine correlation cut-off between the 2 methods. This patch-based FRC analysis
                           is better suited with a constant threshold such as 0.5, 0.75. Other common options include half-bit, all,
-                          one-bit. To add new threshold, look inside function FRC in the file frc_utils.py
+                          one-bit. To add new threshold, look inside function FRC in the file frc_utils.py.
     --inscribed-rings     max frequency at which correlation is calculated is img (or patch) length/2. if false then frc will be
                           calculated upto the corner of the image (or patch).
     --anaRing             perimeter of circle based calculation to determine data points in each ring. Otherwise no. of pixels in
                           each ring used to determine data points in each ring.
     --rNx RNX             image x-size for raw image as input.
     --rNy RNY             image y-size for raw image as input. Default is same dim as rNx
-    --in-dtype            data type of input images. It is needed for .raw
-                          format imgs. It is also needed to set the maximum intensity value for air thresholding and windowing of
-                          patches when saving bounding box-based outputs.
+    --in-dtype            data type of input images. It is needed for images with .raw filenames. It is also needed to set the maximum 
+                          intensity value for air thresholding and windowing of patches when saving bounding box-based outputs.
     --save-patched-subplots
                           if you want to save patches with the bounding box and FRC plot results.
     --apply-bm3d          apply image-based mild bm3d smoothing before the frc calculation. It decreases the chance of quick FRC
@@ -58,8 +57,8 @@ Usage
                           Setting appropriate viewing window is very important in zeroing anomalies between a DL method- and
                           reference method-based outputs. For a sanity check, you may choose to confirm the marked ROIs generated
                           from this implementation by using software like ImageJ under different type of windowing.
-    --remove-ref-noise    applies a gentle bilateral filtering to reference images
-    --img-y-padding       pads y-dim with zeros with pad_width=(rNx-rNy). Its useful when analyzing coronal-slices
+    --remove-ref-noise    applies a gentle bilateral filtering to reference images.
+    --img-y-padding       pads y-dim with zeros with pad_width=(rNx-rNy). Its useful when analyzing coronal-slices.
 
 |
 
@@ -112,10 +111,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
    'CT' indicates sfrc on CT-based data. 'sh' and 'sel' are options to indicate paths for sharp kernel-based data and 
    tuning set for sFRC parameters used in our paper. Likewise 'sm' indicates smooth kernel-based test set. 
-   '' is the option to indicate paths of CT images used as test set for the sFRC analysis in our paper.
-   1 indicates 1 processing unit (-np) to be used in our mpi-based sFRC implementation. 
-   To apply the trained SRGAN model on all CT images from patient L067 look inside the file ctsr/create_sr_dataset/readme.txt to
-   get the required LDGC box path and on how to get the downsampled input.
+   1 indicates one processing unit (-np) to be used in our mpi-based sFRC implementation. 
 
 2. sFRC on UNet- and PLSTV-based MRI outputs from a subsampled acquisition (x3)
 
@@ -149,6 +145,12 @@ yield fake patches as tabulated in TABLE I in our paper and as depicted in the f
    cd ctsr
    bash +x demo_srgan_test.sh '' 'sh'
    bash +x demo_srgan_test.sh '' 'sm'
+   
+Then set second command line input as a blank string, '', to indicate tags related to the paths 
+of CT images are test set for the sFRC analysis (as used in our paper).
+
+.. code-block:: bash 
+
    cd ..
    bash +x demo_sfrc_run.sh '' 'sh' 47 # on sharp test data with 47 set as no. of processors
    bash +x demo_sfrc_run.sh '' 'sm' 47 #on smooth test data with 47 set as the no. of processors
