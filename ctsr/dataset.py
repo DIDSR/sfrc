@@ -11,8 +11,6 @@ import sys
 import util
 import io_func
 
-#sys.path.append('/home/prabhat.kc/Implementations/python/')
-#import global_files as gf 
 
 
 class DatasetFromHdf5(Dataset):

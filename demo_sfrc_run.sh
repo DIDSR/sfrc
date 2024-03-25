@@ -2,7 +2,6 @@
 #source /home/prabhat.kc/anaconda3/hmri_env.sh 
 #cd /projects01/didsr-aiml/prabhat.kc/code/GitRepo/mpi_sfrc/
 # ----------------------------------------------------------
-# executes for sfrc code development/selected sh
 # On Tuning set with 5 images with ht as 0.33
 #   on sharp test: 5+3+2+6+5 = 21
 #	on smooth test: 16

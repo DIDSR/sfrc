@@ -120,7 +120,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
       cd mrsub
       bash +x demo_sfrc_run.sh 'MRI' '' 'unet' 4
 
-   Change third option to 'plstv' for the plstv-based results provided in our paper. 
+   Change the third option to 'plstv' for the plstv-based results provided in our paper. 
 
 |
 
@@ -146,8 +146,8 @@ yield fake patches as tabulated in TABLE I in our paper and as depicted in the f
    bash +x demo_srgan_test.sh '' 'sh'
    bash +x demo_srgan_test.sh '' 'sm'
 
-Then set second command line input as a blank string, '', to indicate tags related to the paths 
-of CT images are test set for the sFRC analysis (as used in our paper).
+Then set the first command line input as a blank string, '', to indicate tags related to the paths 
+of CT images are test set for the sFRC analysis (as used in our paper) when executing demo_sfrc_run.sh.
 
 .. code-block:: 
 
