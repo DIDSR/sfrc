@@ -211,5 +211,15 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 |
 
 Citation
----------
-Coming soon ...
+--------
+
+::
+
+   @article{kc2024fake,
+     title={Fake detection in AI-assisted image recovery using scanning Fourier Ring Correlation (sFRC)},
+     author={Kc, Prabhat and Zeng, Rongping and Soni, Nirmal and Badano, Aldo},
+     journal={TechRxiv Preprints},
+     year={2024},
+     doi={10.36227/techrxiv.171259560.02243347/v1},
+   }
+
