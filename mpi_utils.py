@@ -12,11 +12,10 @@ from skimage.restoration import denoise_bilateral
 from mpi4py import MPI
 
 def img_paths4rm_training_directory(args):
-	'''
-	return paths of target images from input_folder with 
+	"""Return paths of target images from input_folder with 
 	sub-directories. Each with target images for SR
 	if random_N is True: It returns random N images' paths
-	'''
+	"""
 	if args.multi_patients: all_dir_paths = sorted(glob.glob(args.input_folder + '/*/'))
 	else:					all_dir_paths = sorted(glob.glob(args.input_folder))
 
@@ -33,15 +32,15 @@ def img_paths4rm_training_directory(args):
 	return (np.asarray(all_input_paths), np.asarray(all_target_paths))
 
 def partition_read_normalize_n_augment(args, bcasted_input_data, pid):
-	comm 				  = MPI.COMM_WORLD
-	chunck_sz 		 	  = bcasted_input_data['chunck']
-	all_input_paths  	  = bcasted_input_data['all_input_paths']
-	all_target_paths 	  = bcasted_input_data['all_target_paths']
-	nproc 			 	  = bcasted_input_data['nproc']
-	blend_fact_arr   	  = bcasted_input_data['blend_fact_arr']
-	output_folder    	  = bcasted_input_data['output_folder']
+	comm                  = MPI.COMM_WORLD
+	chunck_sz             = bcasted_input_data['chunck']
+	all_input_paths       = bcasted_input_data['all_input_paths']
+	all_target_paths      = bcasted_input_data['all_target_paths']
+	nproc                 = bcasted_input_data['nproc']
+	blend_fact_arr        = bcasted_input_data['blend_fact_arr']
+	output_folder         = bcasted_input_data['output_folder']
 	output_patched_folder = bcasted_input_data['output_patched_folder']
-	tot_no_of_fk 		  = bcasted_input_data['tot_fk']
+	tot_no_of_fk          = bcasted_input_data['tot_fk']
 	per_cz_fk             = bcasted_input_data['cz_fk']
 	# partition trackers to transfer
 	pre_norm_tar_min, pre_norm_tar_max   = [], []
