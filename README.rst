@@ -65,7 +65,8 @@ Usage
 
 Requirements
 ------------
-Install `openmpi <https://www.open-mpi.org/>`_. Export paths related to openmpi's compilers and libraries 
+Install `openmpi <https://www.open-mpi.org/>`_ if your machine does not have one. A guide is provided in the file
+./requirements/openmpi_setup.txt Export paths related to openmpi's compilers and libraries 
 as your environment variable as follows:
 
 .. code-block::
