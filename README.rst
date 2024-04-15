@@ -94,15 +94,11 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
    .. code-block::
       
-      conda activate mpi_sfrc
       OUTPUT_FNAME="./results/CT/sm_srgan_sel_sh_L067/"
       INPUT_FOLDER="./ctsr/results/test_sh_L067/ua_ll_smSRGANsel_in_x4/checkpoint-generator-20/"
       INPUT_GEN="test_sh_L067_cnn"
       TARGET_GEN="test_sh_L067_gt"
-      time mpirun --mca btl ^openib -np 1 \
-      python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p64'   \
-      --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} --img-format 'raw' --frc-threshold '0.5' --in-dtype 'uint16' \
-      --anaRing --inscribed-rings --rNx 512 --apply-hann --mtf-space --ht 0.33 --windowing 'soft' --save-patched-subplots
+      time mpirun --mca btl ^openib -np 1 python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p64'  --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} --img-format 'raw' --frc-threshold '0.5' --in-dtype 'uint16' --anaRing --inscribed-rings --rNx 512 --apply-hann --mtf-space --ht 0.33 --windowing 'soft' --save-patched-subplots
    
    OR execute the demo bash file
    
