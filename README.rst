@@ -109,6 +109,10 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
    'CT' indicates sfrc on CT-based data. 'sh' and 'sel' are options to indicate paths for sharp kernel-based data and 
    tuning set for sFRC parameters used in our paper. Likewise 'sm' indicates smooth kernel-based test set. 
    1 indicates one processing unit (-np) to be used in our mpi-based sFRC implementation. 
+   Note that, in this git repo, the demo example for the CT application includes only 5 CT images. 
+   As such, the no. of fakes, for the specified parameters, for sharp and smooth data will be 21 
+   and 16 respectively. Refer to the next subsection to fetch the complete test set and results as 
+   provided in our paper for the CT application. 
 
 2. sFRC on UNet- and PLSTV-based MRI outputs from a subsampled acquisition (x3)
 
