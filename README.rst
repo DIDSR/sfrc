@@ -1,7 +1,8 @@
 sFRC for detecting fakes in AI-assisted medical image postprocessing/reconstruction 
 ===================================================================================
 This implementation performs Fourier Ring Correlation (FRC)-based analysis over small patches and concomitantly (s)canning
-across Deep learning(DL) or regularization(Reg)-based outputs and their reference counterparts to identify fakes.
+across Deep learning(DL) or regularization(Reg)-based outputs and their reference counterparts to identify fakes
+as detailed in our `sFRC <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_ paper.
 
 .. contents::
 
@@ -80,7 +81,7 @@ Create a new conda enviroment and install the required packages as follows:
     $ conda activate mpi_sfrc
     $ conda install -c anaconda h5py==3.6.0
     $ pip install -r ./requirements/sfrc_requirements.txt
-    $ pip install -r ./requirements/unet_mri_requirements.txt
+    $ pip install -r ./requirements/mri_unet_requirements.txt
 
 |
 
