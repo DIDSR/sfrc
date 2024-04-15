@@ -114,7 +114,6 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
    .. code-block::
       
-      cd mrsub
       bash +x demo_sfrc_run.sh 'MRI' '' 'unet' 4
 
    Change the third option to 'plstv' for the plstv-based results provided in our paper. 
