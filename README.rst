@@ -1,7 +1,6 @@
 .. raw:: html
 
     <p align="center"><img src="paper_plots/intro_plot.png" alt="Logo" width="600"/></p>
-    <br/>
 
 sFRC for detecting fakes in AI-assisted medical image restoration (postprocessing or reconstruction) 
 ======================================================================================================
@@ -152,11 +151,13 @@ Once you successfully download and preprocess smooth and sharp CT scans correspo
 yield fake patches as tabulated in TABLE I in our paper and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
-.. code-block:: 
+4. sFRC on SRGAN (test set)
 
-   cd ctsr
-   bash +x demo_srgan_test.sh '' 'sh'
-   bash +x demo_srgan_test.sh '' 'sm'
+   .. code-block:: 
+
+      cd ctsr
+      bash +x demo_srgan_test.sh '' 'sh'
+      bash +x demo_srgan_test.sh '' 'sm'
 
 Then set the first command line input as a blank string, '', to indicate tags related to the paths 
 of CT images are test set for the sFRC analysis (as used in our paper) when executing demo_sfrc_run.sh.
