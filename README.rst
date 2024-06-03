@@ -1,6 +1,6 @@
 .. raw:: html
 
-    <p align="center"><img src="paper_plots/intro_plot.png" alt="Logo" width="200"/></p>
+    <p align="center"><img src="paper_plots/intro_plot.png" alt="Logo" width="600"/></p>
     <br/>
 
 sFRC for detecting fakes in AI-assisted medical image restoration (postprocessing or reconstruction) 
@@ -140,10 +140,12 @@ The SRGAN checkpoint provided in this repository was trained using CT images fro
 `LDGC dataset <https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=52758026>`_ and as detailed in our paper.
 This checkpoint can be applied to the low-resolution CT images provided in this repository in the following manner: 
 
-.. code-block:: 
+3. sFRC on SRGAN (tuning set)
 
-   cd ctsr
-   bash +x demo_srgan_test.sh 'sel' 'sh' #on sharp kernel-based tuning set
+   .. code-block:: 
+
+      cd ctsr
+      bash +x demo_srgan_test.sh 'sel' 'sh' #on sharp kernel-based tuning set
 
 To apply the SRGAN to all the CT images from patient L067 (as described in our paper) refer to "./ctsr/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
