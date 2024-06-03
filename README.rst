@@ -3,6 +3,8 @@ sFRC for detecting fakes in AI-assisted medical image postprocessing & reconstru
 - This implementation performs Fourier Ring Correlation (FRC)-based analysis over small patches and concomitantly (s)canning
   across Deep learning(DL) or regularization(Reg)-based outputs and their reference counterparts to objectively and automatically identify fakes
   as detailed in our `sFRC <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_ paper.
+  
+- new bullet  
 
 .. contents::
 
