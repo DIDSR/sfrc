@@ -6,7 +6,7 @@ sFRC for detecting fakes in AI-assisted medical image restoration (postprocessin
 ======================================================================================================
 
 - **sFRC**: scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically identify fakes as detailed in our 
-  `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_. You can also perform sFRC analysis to find fakes from traditional regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
+  `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. You can also perform sFRC analysis to find fakes from traditional regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
 - **Inputs**: Restored medical images from Deep learning- or Regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold.
 - **Outputs**: Small-sized red bounding boxes on input images that are deemed as fake ROIs (in AI-assisted as well as reference images), and the total number of such fake ROIs in the provided input images. 
   Demo movie files on sFRC-labeled fakes for a CT super-resolution problem is provided `here <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
@@ -139,7 +139,7 @@ The SRGAN checkpoint provided in this repository was trained using CT images fro
 `LDGC dataset <https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=52758026>`_ and as detailed in our paper.
 This checkpoint can be applied to the low-resolution CT images provided in this repository in the following manner: 
 
-3. sFRC on SRGAN (tuning set)
+3. Apply SRGAN on tuning set
 
    .. code-block:: 
 
@@ -148,10 +148,10 @@ This checkpoint can be applied to the low-resolution CT images provided in this 
 
 To apply the SRGAN to all the CT images from patient L067 (as described in our paper) refer to "./ctsr/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
-yield fake patches as tabulated in TABLE I in our paper and as depicted in the following 
+yield fake patches as tabulated in TABLE I in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_ and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
-4. sFRC on SRGAN (test set)
+4. Apply SRGAN on testing set
 
    .. code-block:: 
 
