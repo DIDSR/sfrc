@@ -30,8 +30,8 @@ parser.add_argument('--frc-threshold', type=str, default='0.5',      help='frc t
                                                                      look inside function FRC in the file frc_utils.py.')
 parser.add_argument('--inscribed-rings', action='store_true',        help='max frequency at which correlation is calculated is img (or patch) length/2. \
                                                                      if false then frc will be calculated upto the corner of the image (or patch).')
-parser.add_argument('--anaRing', action='store_true',                help='perimeter of circle based calculation to determine data points in each ring. \
-                                                                     Otherwise no. of pixels in each ring used to determine data points in each ring.')
+parser.add_argument('--anaRing', action='store_true',                help='perimeter of circle-based calculation to determine data points in each ring. \
+                                                                     Otherwise, no. of pixels in each ring used to determine data points in each ring.')
 parser.add_argument('--rNx', required=False, type=int, default=None, help="image x-size for raw image as input.")
 parser.add_argument('--rNy', required=False, type=int, default=None, help="image y-size for raw image as input. Default is same dim as rNx ")
 parser.add_argument('--in-dtype', type=str, required=True,            help="data type of input images. It is needed for .raw format imgs.\
@@ -43,7 +43,7 @@ parser.add_argument('--apply-bm3d', action='store_true',             help='apply
                                                                      missing fake artifacts. But it has advantage of increasing PPV.')
 parser.add_argument('--mtf-space', action='store_true',              help='x-axis for FRC is in the mtf space. Uses the dx info. \
                                                                      Use this option only if you have info on dx for your acquisition. \
-                                                                     Otherwise do not use this option. When this option is not used x-axis \
+                                                                     Otherwise, do not use this option. When this option is not used x-axis \
                                                                      for FRC has unit pixel(^-1).')
 parser.add_argument('--dx', type=float, default=0.48,                help='xy plane pixel spacing. Default value is set from the LDGC dataset and has \
                                                                      the unit mm. ')
@@ -57,7 +57,7 @@ parser.add_argument('--windowing', type=str, default='soft',         help='windo
                                                                      windowing.')
 parser.add_argument('--remove-ref-noise', action='store_true',       help='applies a gentle bilateral filtering to reference images.')
 parser.add_argument('--img-y-padding', action='store_true',          help='pads y-dim with zeros with pad_width=(rNx-rNy).\
-                                                                     Its useful when analyzing coronal-slices.')
+                                                                     It is useful when analyzing coronal-slices.')
 
 
 if __name__ == '__main__':
