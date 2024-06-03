@@ -99,7 +99,7 @@ DEMO execution of sFRC
 The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in our paper. 
 Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
 
-1. sFRC on SRGAN-based CT upsampled (x4) outputs
+1. sFRC on SRGAN-based CT upsampled (x4) images
 
    .. code-block::
       
@@ -151,7 +151,7 @@ Once you successfully download and preprocess smooth and sharp CT scans correspo
 yield fake patches as tabulated in TABLE I in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_ and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
-4. Apply SRGAN on testing set
+4. Apply SRGAN on test set
 
    .. code-block:: 
 
@@ -162,11 +162,13 @@ yield fake patches as tabulated in TABLE I in our `sfrc paper <10.36227/techrxiv
 Then set the first command line input as a blank string, '', to indicate tags related to the paths 
 of CT images are test set for the sFRC analysis (as used in our paper) when executing demo_sfrc_run.sh.
 
-.. code-block:: 
+5. sFRC on SRGAN-based CT upsampled (x4) test images (sharp as well as smooth)
 
-   cd ..
-   bash +x demo_sfrc_run.sh '' 'sh' 47 # on sharp test data with 47 set as no. of processors
-   bash +x demo_sfrc_run.sh '' 'sm' 47 #on smooth test data with 47 set as the no. of processors
+   .. code-block:: 
+
+      cd ..
+      bash +x demo_sfrc_run.sh '' 'sh' 47 # on sharp test data with 47 set as no. of processors
+      bash +x demo_sfrc_run.sh '' 'sm' 47 #on smooth test data with 47 set as the no. of processors
 
 |
 
@@ -177,10 +179,12 @@ repository: `hallucinations-tomo-recon <https://github.com/comp-imaging-sci/hall
 `Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205>`_ is 
 the original source of the MRI data. 
 
-.. code-block:: 
+6. Apply Unet on MRI test set
+
+   .. code-block:: 
    
-   cd mrsub/unet
-   bash +x run_unet_test.sh
+      cd mrsub/unet
+      bash +x run_unet_test.sh
 |
 
 PLSTV-based reconstruction 
@@ -188,10 +192,12 @@ PLSTV-based reconstruction
 Follow the installation instructions provided in the `BART repository <https://mrirecon.github.io/bart/>`_.
 Then edit the path to BART's python wrapper in line 20 in file "./mrsub/plstv/bart_pls_tv.py".
 
-.. code-block:: 
+7. Apply PLSTV on MRI test set
 
-   cd mrsub/plstv
-   bash +x run_bart_pls_tv.sh
+   .. code-block:: 
+
+      cd mrsub/plstv
+      bash +x run_bart_pls_tv.sh
 
 |
 
