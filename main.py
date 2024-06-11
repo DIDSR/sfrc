@@ -8,14 +8,14 @@ import sys
 # Command line arguments
 #--------------------------------------------------------------------------------------------------------------------------------------------------
 parser = argparse.ArgumentParser(description='sFRC analysis between image pairs from DL(or Reg)- & reference-based methods to identify fake artifacts')
-parser.add_argument('--input-folder',  type=str, required=True,     help='directory name containing images.')
-parser.add_argument('--output-folder', type=str, default='results', help='output folder to save bounding box-based fake labels on \
-                                                                    DL/Reg & reference image pairs, and sFRC plots.')
-parser.add_argument('--patch-size',    type=str, default='p96',     help="p96 or p64 or 48 or p32 to indicate patch sizes for the sFRC \
-                                                                    analysis. Change padding option below for a different patch size.")
-parser.add_argument('--random_N', 	   action="store_true",         help=" performs sfrc calculation on randomly selected 16 \
-                                                                    complimentary images from DL/Reg - Reference folders. \
-                                                                    For more info refer to in-built options below.")
+parser.add_argument('--input-folder', type=str, required=True,      help='directory name containing images.')
+parser.add_argument('--output-folder', type=str, default='results',  help='output folder to save bounding box-based fake labels on \
+                                                                     DL/Reg & reference image pairs, and sFRC plots.')
+parser.add_argument('--patch-size',    type=str, default='p96',      help="p96 or p64 or 48 or p32 to indicate patch sizes for the sFRC \
+                                                                     analysis. Change padding option below for a different patch size.")
+parser.add_argument('--random_N', 	   action="store_true",          help=" performs sfrc calculation on randomly selected 16 \
+                                                                     complimentary images from DL/Reg - Reference folders. \
+                                                                     For more info refer to in-built options below.")
 parser.add_argument('--input-gen-folder', type=str,                  help="folder name containing DL or regularization method-based outputs.")
 parser.add_argument('--target-gen-folder', type=str,                 help="folder name containing reference method-based outputs.")
 parser.add_argument('--img-format', type=str, default='dicom',       help='image format for input and target images. Dicom/raw/tif/png?\

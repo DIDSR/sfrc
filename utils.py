@@ -33,14 +33,40 @@ def add_rnl_white(rnl, b, mu, sigma):
     return(b + e)
 
 def normalize_data_ab(a, b, data):
-    # input (min_data, max_data) with range (max_data - min_data) is normalized to (a, b)
+    """
+    Normalizes the input data to a new range (b-a).
+    
+    inputs
+    -----
+    data: numpy array to be normalized
+    a   : min value of the normalized output
+    b   : max value of the normalized output
+    
+    yields
+    -------
+    normalized data
+    """
     min_x = min(data.ravel())
     max_x = max(data.ravel())  
     range_x = max_x - min_x 
     return((b-a)*((data-min_x)/range_x)+a)
 
 def normalize_data_ab_cd(a, b, c, d, data):
-    # input data (min_data, max_data) with range (d-c) is normalized to (a, b)
+    """
+    Normalizes the input data with a range to a new range (b-a).
+    
+    inputs
+    -----
+    data: numpy array to be normalized
+    c   : min value of input array
+    d   : max value of input array
+    a   : min value of the normalized output
+    b   : max value of the normalized output
+    
+    returns
+    -------
+    normalized data
+    """
     min_x = c
     max_x = d  
     range_x = max_x - min_x 
@@ -50,9 +76,19 @@ def normalize_data_ab_cd(a, b, c, d, data):
 # neg values dues to dose augmentation is accounted
 # rotation or ds augmentation does not yield neg values
 def modcrop(image, scale=3):
-  """ to ensure that transition between HR to LR 
+  """ 
+  To ensure that transition between HR to LR 
   and vice-versa is divisible by the scaling 
   factor without any remainder
+  
+  input
+  -----
+  image: input 2d or 3d array to be croped
+  scale: super-resolution scaling factor
+  
+  output
+  -----
+  cropped array such that mod(output, scale)=0
   """
   if len(image.shape) == 3:
     h, w, _ = image.shape
@@ -102,7 +138,8 @@ def downsample_4r_augmentation(initial_image):
 
 def bn_seed(Nlen, bratio, nratio):
 
-  """ returns a three valued (1 or 2 or 3) array with length (Nlen).
+  """ 
+  Returns a three valued (1 or 2 or 3) array with length (Nlen).
   bratio*Nlen will receive first label as 1 and the associated images
   will be blurred. Likewise nratio*Nlen will receive second label as 2
   and the corresponding images will be noised.

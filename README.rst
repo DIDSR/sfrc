@@ -216,7 +216,7 @@ mpi_sfrc is distributed under the MIT license. See `LICENSE <https://github.com/
 
 Citation
 --------
-Please cite mpi_sfrc if it helped your research work
+Please cite sFRC if it helped your research work
 
 ::
 
