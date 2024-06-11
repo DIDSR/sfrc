@@ -223,7 +223,7 @@ References
 
 License and Copyright
 ---------------------------
-sFRC is distributed under the MIT license. See `LICENSE <https://github.com/DIDSR/mpi_sfrc/blob/master/LICENSE>'_ for more information.
+sFRC is distributed under the MIT license. See `LICENSE <https://github.com/DIDSR/mpi_sfrc/blob/master/LICENSE>`_ for more information.
 
 |
 
