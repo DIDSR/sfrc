@@ -38,7 +38,8 @@ def diagonal_split(img):
     return sub_a1, sub_a2, sub_b1, sub_b2
 
 def get_frc_img(img, frc_img_lx, center=None):
-  ''' Returns a cropped image version of input image "img"
+  """
+  Returns a cropped image version of input image "img"
   img:        input image
   center:     cropping is performed with center a reference 
               point to calculate length in x and y direction.
@@ -47,7 +48,7 @@ def get_frc_img(img, frc_img_lx, center=None):
   frc_img_lx: length of cropped image in x as well as y. Also 
               the cropped image is made to be square image for
               the FRC calculation
-  '''
+  """
 
   h, w = img.shape
   cy = round(min(h, w)/2)
@@ -61,6 +62,17 @@ def get_frc_img(img, frc_img_lx, center=None):
   return frc_img
 
 def ring_indices(x, inscribed_rings=True, plot=False):
+    """
+    for a given 2d or 3d array x this function outputs
+    indices corresponding to co-centric circles with radius
+    ranging from center (itself) to the edge/corner of the 2d/3d
+    array. 
+    
+    input
+    -----
+    x (: 2d/3d array
+    i
+    """
     print("ring plots is:", plot)
     
     #read the shape and dimensions of the input image

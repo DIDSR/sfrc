@@ -103,6 +103,21 @@ def modcrop(image, scale=3):
   return image
 
 def get_sorted_random_ind(foldername, Nimgs):
+    """
+    Outputs N random numbers between 0 to total number of images
+    in path foldername
+    
+    input
+    -----
+    foldername (str): path with images to determine total number of images
+    Nimg (int): total number of random numbers to output
+    
+    output
+    ------
+    suppose foldername has 20 images and Nimgs is set has 8 then
+    this functions outputs a 1d array with 8 random numbers between
+    0 and 20. 
+    """
     data_dir = os.path.join(os.getcwd(), foldername)
     images = sorted(glob.glob(os.path.join(foldername, "*.*")))
     randind = sorted(random.sample(range(len(images)), int(Nimgs)))
