@@ -14,6 +14,8 @@ sFRC for detecting fakes in AI-assisted medical image restoration (postprocessin
 
 .. contents::
 
+|
+
 Usage
 -----
 
@@ -69,8 +71,6 @@ Usage
     --remove-ref-noise    applies a gentle bilateral filtering to reference images.
     --img-y-padding       pads y-dim with zeros with pad_width=(rNx-rNy). It is useful when analyzing coronal-slices.
 
-|
-
 Requirements
 ------------
 Install `openmpi <https://www.open-mpi.org/>`_ if your machine does not have one. A guide is provided in the file
@@ -91,8 +91,6 @@ Create a new conda enviroment and install the required packages as follows:
     $ conda install -c anaconda h5py==3.6.0
     $ pip install -r ./requirements/sfrc_requirements.txt
     $ pip install -r ./requirements/mri_unet_requirements.txt
-
-|
 
 DEMO execution of sFRC
 ----------------------------------------------------------
@@ -131,8 +129,6 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
    Change the third option to 'plstv' for the plstv-based results provided in our paper. 
 
-|
-
 Apply trained SRGAN 
 --------------------
 The SRGAN checkpoint provided in this repository was trained using CT images from the six patients provided in 
@@ -170,8 +166,6 @@ of CT images are test set for the sFRC analysis (as used in our paper) when exec
       bash +x demo_sfrc_run.sh '' 'sh' 47 # on sharp test data with 47 set as no. of processors
       bash +x demo_sfrc_run.sh '' 'sm' 47 #on smooth test data with 47 set as the no. of processors
 
-|
-
 Apply trained UNet 
 -------------------
 The trained Unet model and data provided in this repository (as well as used in our paper) have been imported from the following github
@@ -185,7 +179,6 @@ the original source of the MRI data.
    
       cd mrsub/unet
       bash +x run_unet_test.sh
-|
 
 PLSTV-based reconstruction 
 -------------------------------
@@ -198,8 +191,6 @@ Then edit the path to BART's python wrapper in line 20 in file "./mrsub/plstv/ba
 
       cd mrsub/plstv
       bash +x run_bart_pls_tv.sh
-
-|
 
 References 
 ----------
@@ -219,16 +210,15 @@ References
 
 8. Maallo, Anne; Liu, Tina; Freud, Erez; Patterson, Christina; Behrmann, Marlene (2019). Pediatric epilepsy resection MRI dataset. Carnegie Mellon University. Dataset. https://doi.org/10.1184/R1/9856205.
 
-|
 
 License and Copyright
 ---------------------------
-sFRC is distributed under the MIT license. See `LICENSE <https://github.com/DIDSR/mpi_sfrc/blob/master/LICENSE>`_ for more information.
+mpi_sfrc is distributed under the MIT license. See `LICENSE <https://github.com/DIDSR/mpi_sfrc/blob/master/LICENSE>`_ for more information.
 
-|
 
 Citation
 --------
+Please cite mpi_sfrc if it helped your research work
 
 ::
 
@@ -240,7 +230,6 @@ Citation
      doi={10.36227/techrxiv.171259560.02243347/v1},
    }
 
-|
 
 Contact
 --------
