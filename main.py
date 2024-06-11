@@ -97,7 +97,9 @@ if __name__ == '__main__':
         args.img_list_max_val= 2686
     else:
         args.img_list_max_val= 1.0
-        print('WARNING. Ensure that the max value of images is accurately set in main.py.')
+        print('*************************************************************************************')
+        print('WARNING. Ensure that the max value of images is accurately set in the file main.py.')
+        print('*************************************************************************************')
     
     # default for y-dim is same as x-dim unless specified in cmd
     if args.img_format=='raw':
@@ -132,7 +134,8 @@ if __name__ == '__main__':
     # rather than going through all the images for a quick validation of this sfrc-based analysis. 
     if args.random_N: args.N_rand_imgs  = 16 
     
-    # this codes was developed over the mpi-based patch generation code
+    # this codes was developed over the mpi-based patch generation code that extract
+    # patches from a given full image. 
     # hence, mpirun needs to be turned on. 
     args.mpi_run                        = True
     

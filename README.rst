@@ -198,17 +198,15 @@ References
 
 2. Bhadra, Sayantan, et al. "On hallucinations in tomographic image reconstruction." IEEE transactions on medical imaging 40.11 (2021): 3249-3260.
 
-3. `hallucinations-tomo-recon <https://github.com/comp-imaging-sci/hallucinations-tomo-recon>`_.
+3. Ledig, Christian, et al. "Photo-realistic single image super-resolution using a generative adversarial network." Proceedings of the IEEE conference on computer vision and pattern recognition. 2017.
 
-4. Ledig, Christian, et al. "Photo-realistic single image super-resolution using a generative adversarial network." Proceedings of the IEEE conference on computer vision and pattern recognition. 2017.
+4. Sergeev, Alexander, and Mike Del Balso. "Horovod: fast and easy distributed deep learning in TensorFlow." arXiv preprint arXiv:1802.05799 (2018).
 
-5. Sergeev, Alexander, and Mike Del Balso. "Horovod: fast and easy distributed deep learning in TensorFlow." arXiv preprint arXiv:1802.05799 (2018).
+5. Uecker, Martin, et al. "The BART toolbox for computational magnetic resonance imaging." Proc Intl Soc Magn Reson Med. Vol. 24. 2016.
 
-6. Uecker, Martin, et al. "The BART toolbox for computational magnetic resonance imaging." Proc Intl Soc Magn Reson Med. Vol. 24. 2016.
+6. Maallo, Anne Margarette S., et al. "Effects of unilateral cortical resection of the visual cortex on bilateral human white matter." NeuroImage 207 (2020): 116345.
 
-7. Maallo, Anne Margarette S., et al. "Effects of unilateral cortical resection of the visual cortex on bilateral human white matter." NeuroImage 207 (2020): 116345.
-
-8. Maallo, Anne; Liu, Tina; Freud, Erez; Patterson, Christina; Behrmann, Marlene (2019). Pediatric epilepsy resection MRI dataset. Carnegie Mellon University. Dataset. https://doi.org/10.1184/R1/9856205.
+7. Maallo, Anne; Liu, Tina; Freud, Erez; Patterson, Christina; Behrmann, Marlene (2019). Pediatric epilepsy resection MRI dataset. Carnegie Mellon University. Dataset. https://doi.org/10.1184/R1/9856205.
 
 
 License and Copyright
