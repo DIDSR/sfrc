@@ -1,46 +1,25 @@
-cff-version: 1.2.0
-title: Pyomo
+cff-version: 1.0.0
+title: mpi_sfrc
 message: >-
-  If you use Pyomo in your research, please cite the
-  Pyomo book and the Pyomo paper.
-type: software
-authors:
-  - given-names: Michael
-    family-names: Bynum
-  - given-names: Gabriel
-    family-names: Hackebeil
-  - given-names: William
-    family-names: Hart
-  - given-names: Carl
-    family-names: Laird
-identifiers:
-  - type: doi
-    value: 10.1007/978-3-319-58821-6
-    description: Pyomo — Optimization Modeling in Python
-  - type: doi
-    value: 10.1007/s12532-011-0026-8
-    description: >-
-      "Pyomo: modeling and solving mathematical
-      programs in Python"
-repository-code: 'https://github.com/Pyomo/pyomo'
-url: 'http://www.pyomo.org/'
+  If you use sFRC in your research, please cite the
+  the sfrc paper.
 preferred-citation:
   type: article
   authors:
-  - given-names: Michael
-    family-names: Bynum
-  - given-names: Gabriel
-    family-names: Hackebeil
-  - given-names: William
-    family-names: Hart
-  - given-names: Carl
-    family-names: Laird
-  doi: "10.1007/s12532-011-0026-8"
-  journal: "Mathematical Programming Computation"
-  month: 9
-  start: 219 # First page number
-  end: 260 # Last page number
-  title: "Pyomo: modeling and solving mathematical programs in Python"
-  issue: 3
-  volume: 3
-  year: 2011
+  - given-names: Prabhat
+    family-names: KC
+  - given-names: Rongping
+    family-names: Zeng
+  - given-names: Nirmal
+    family-names: Soni
+  - given-names: Aldo
+    family-names: Badano
+  doi: "10.36227/techrxiv.171259560.02243347/v1"
+  journal: "TechRxiv Preprints"
+  month: 5
+  # start: 219 # First page number
+  # end: 260 # Last page number
+  title: "Fake detection in AI-assisted image recovery using scanning Fourier Ring Correlation (sFRC)"
+  # issue: 3
+  # volume: 3
+  year: 2024
