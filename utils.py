@@ -1,4 +1,8 @@
-
+#########################################################################
+# @author: pkc 
+#
+# utils.py includes generic signal processing and mathematical functions
+#
 import os 
 import glob
 import numpy as np 
@@ -16,8 +20,20 @@ import warnings
 warnings.filterwarnings("ignore", category=RuntimeWarning) 
 
 def add_white_noise(arr, mu, sigma, factor, size):
-    """ sigma = std 
-    var = sigma^2
+    """
+    add gaussian noise to input numpy array
+    
+    inputs
+    ------
+    arr: input array where to add gaussian noise
+    sigma: standard deviation of the distribution 
+    mu: mean of distribution
+    factor: pre-factor applied to gaussian noise before adding to input arr
+    size: shape of input arr
+    
+    output
+    ------
+    numpy array with added gaussian noise
     """
     noisy_arr = arr + factor * np.random.normal(loc = mu, scale = sigma, size = size) 
     return noisy_arr
@@ -72,40 +88,40 @@ def normalize_data_ab_cd(a, b, c, d, data):
     range_x = max_x - min_x 
     return((b-a)*((data-min_x)/range_x)+a)
 
-# cv2 intakes only float32 data types
-# neg values dues to dose augmentation is accounted
-# rotation or ds augmentation does not yield neg values
 def modcrop(image, scale=3):
-  """ 
-  To ensure that transition between HR to LR 
-  and vice-versa is divisible by the scaling 
-  factor without any remainder
-  
-  input
-  -----
-  image: input 2d or 3d array to be croped
-  scale: super-resolution scaling factor
-  
-  output
-  -----
-  cropped array such that mod(output, scale)=0
-  """
-  if len(image.shape) == 3:
-    h, w, _ = image.shape
-    h = h - np.mod(h, scale)
-    w = w - np.mod(w, scale)
-    image = image[0:h, 0:w, :]
-  else:
-    h, w = image.shape
-    h = h - np.mod(h, scale)
-    w = w - np.mod(w, scale)
-    image = image[0:h, 0:w]
-  return image
+    """ 
+    To ensure that transition between HR to LR 
+    and vice-versa is divisible by the scaling 
+    factor without any remainder
+    
+    input
+    -----
+    image: input 2d or 3d array to be croped
+    scale: super-resolution scaling factor
+    
+    output
+    -----
+    cropped array such that mod((h, w) of output, scale)=0
+    """
+    if len(image.shape) == 3:
+      h, w, _ = image.shape
+      h = h - np.mod(h, scale)
+      w = w - np.mod(w, scale)
+      image = image[0:h, 0:w, :]
+    else:
+      h, w = image.shape
+      h = h - np.mod(h, scale)
+      w = w - np.mod(w, scale)
+      image = image[0:h, 0:w]
+    return image
 
 def get_sorted_random_ind(foldername, Nimgs):
     """
-    Outputs N random numbers between 0 to total number of images
-    in path foldername
+    Outputs N random numbers between 0 and the total number 
+    of images in path foldername.
+    Suppose foldername has 20 images and Nimgs is set has 8 then
+    this functions outputs a 1d array with 8 random numbers between
+    0 and 20. 
     
     input
     -----
@@ -113,10 +129,8 @@ def get_sorted_random_ind(foldername, Nimgs):
     Nimg (int): total number of random numbers to output
     
     output
-    ------
-    suppose foldername has 20 images and Nimgs is set has 8 then
-    this functions outputs a 1d array with 8 random numbers between
-    0 and 20. 
+    -------
+    random Nimgs sized 1d array.
     """
     data_dir = os.path.join(os.getcwd(), foldername)
     images = sorted(glob.glob(os.path.join(foldername, "*.*")))
@@ -124,15 +138,33 @@ def get_sorted_random_ind(foldername, Nimgs):
     return(randind)
 
 def getimages4rmdir(foldername, randN=None):
-  # sorted is true by default to remain consistant 
-  data_dir = os.path.join(os.getcwd(), foldername)
-  images = sorted(glob.glob(os.path.join(data_dir, "*.*")))
+    """
+    Outputs filename array (with path) of files 
+    in foldername 
+    ...
+    
+    input
+    -----
+    foldername (str): path where images are stored
+    randN (optional): int array on indices (if provided) will return
+                      image paths corresponding to those indices only.
+    
+    output
+    ------
+    array of filepaths.
+    """
+    # sorted is true by default to remain consistent 
+    data_dir = os.path.join(os.getcwd(), foldername)
+    images = sorted(glob.glob(os.path.join(data_dir, "*.*")))
 
-  if (randN !=None):
-    images = np.array(images)
-    images = list(images[randN]) 
-  return images
+    if (randN !=None):
+      images = np.array(images)
+      images = list(images[randN]) 
+    return images
 
+# cv2 intakes only float32 data types
+# neg values dues to dose augmentation is accounted
+# rotation or ds augmentation does not yield neg values
 def downsample_4r_augmentation(initial_image):
     
     #aug_ds_facs = np.asarray([0.9, 0.8, 0.7, 0.6])
@@ -141,8 +173,6 @@ def downsample_4r_augmentation(initial_image):
     aug_ds_input = []
     h, w = initial_image.shape
     #print(initial_image.shape)
-    #print(h, w)
-    #sys.exit()
     aug_ds_input.append(initial_image)
     for i in range(len(aug_ds_facs)):
         scale = aug_ds_facs[i]
@@ -154,10 +184,23 @@ def downsample_4r_augmentation(initial_image):
 def bn_seed(Nlen, bratio, nratio):
 
   """ 
-  Returns a three valued (1 or 2 or 3) array with length (Nlen).
-  bratio*Nlen will receive first label as 1 and the associated images
-  will be blurred. Likewise nratio*Nlen will receive second label as 2
-  and the corresponding images will be noised.
+  Returns a three valued (with 1s, 2s, & 3s) array with 
+  length (Nlen).the distribution of the three values is 
+  randomly assigned. 
+  bratio*Nlen of the array will be assigned as 1 and the associated images
+  will be blurred. Likewise nratio*Nlen will be assigned as 2
+  and the corresponding images will be noised. The remaining indices will
+  be assigned a value of 3
+  
+  input
+  ------
+  Nlen (int): length of the 1d array
+  bratio (float): 0 to 1 valued float
+  nratio (float): 0 to 1 valued float
+  
+  output
+  ------
+  1d array which consists of 1, 2, and 3 as its unique values
   """
 
   blist           = random.sample(range(Nlen), int(bratio*Nlen))
@@ -171,6 +214,7 @@ def bn_seed(Nlen, bratio, nratio):
   return(bn_seed)
 
 def min_max_4rm_img_name_arr (img_nm_arr, img_type, dtype, rNx=256):
+    ""
     dir_max, dir_min = 0.0, 0.0
     for i in range(len(img_nm_arr)):
         if img_type=='dicom':
@@ -187,6 +231,7 @@ def min_max_4rm_img_name_arr (img_nm_arr, img_type, dtype, rNx=256):
     return(dir_min, dir_max)
 
 def interpolation_hr(norm_lr, scale):
+
   h, w = norm_lr.shape
   #norm_hr = resize(norm_lr, (h *scale, w*scale), anti_aliasing=True)
   norm_hr = cv2.resize(norm_lr, (w*scale, h*scale), interpolation=cv2.INTER_AREA)

@@ -70,10 +70,10 @@ if __name__ == '__main__':
     args.scale                      = 1 # sfrc-based comparison should be performed between outputs from 2 methods with the same dim
     padding_options                 = {'p512':0, 'p256':0, 'p96':0, 'p64':0, 'p48':0, 'p40':0, 'p36':0, 'p32':0} # patch-size:padding
     args.lr_padding                 = padding_options[args.patch_size]
-    patch_option                    = {'p512':[512 + args.lr_padding, 512 + args.lr_padding],'p256':[256 + args.lr_padding, 256 + args.lr_padding], \
-                                            'p96':[96 + args.lr_padding, 96 + args.lr_padding], 'p64':[64 + args.lr_padding, 64 + args.lr_padding], \
-                                            'p48':[48 + args.lr_padding, 48 + args.lr_padding], 'p40':[40 + args.lr_padding, 40 + args.lr_padding], \
-                                            'p36':[36 + args.lr_padding, 36 + args.lr_padding], 'p32':[32 + args.lr_padding, 32 + args.lr_padding]}
+    patch_option                    = { 'p512':[512 + args.lr_padding, 512 + args.lr_padding],'p256':[256 + args.lr_padding, 256 + args.lr_padding], \
+                                        'p96':[96 + args.lr_padding, 96 + args.lr_padding], 'p64':[64 + args.lr_padding, 64 + args.lr_padding], \
+                                        'p48':[48 + args.lr_padding, 48 + args.lr_padding], 'p40':[40 + args.lr_padding, 40 + args.lr_padding], \
+                                        'p36':[36 + args.lr_padding, 36 + args.lr_padding], 'p32':[32 + args.lr_padding, 32 + args.lr_padding]}
     
     args.input_size, args.label_size= patch_option[args.patch_size]
     args.lr_stride                  = int(args.input_size - args.lr_padding)

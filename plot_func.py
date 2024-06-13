@@ -1,3 +1,10 @@
+#-----------------------------------------------
+# @author: pkc 
+#
+# plot_func.py 
+# ............
+# includes functions used to read and write files
+#
 import numpy as np 
 import pydicom
 import matplotlib as mpl
