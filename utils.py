@@ -1,8 +1,10 @@
 #########################################################################
 # @author: pkc 
 #
-# utils.py includes generic signal processing and mathematical functions
+# utils.py includes generic signal processing and mathematical operations
+# based functions.
 #
+
 import os 
 import glob
 import numpy as np 
@@ -25,11 +27,11 @@ def add_white_noise(arr, mu, sigma, factor, size):
     
     inputs
     ------
-    arr: input array where to add gaussian noise
-    sigma: standard deviation of the distribution 
-    mu: mean of distribution
-    factor: pre-factor applied to gaussian noise before adding to input arr
-    size: shape of input arr
+    arr   : input array 
+    sigma : standard deviation of the distribution 
+    mu    : mean of the distribution
+    factor: scalar pre-factor applied to gaussian noise before adding to the input array
+    size  : shape of input array
     
     output
     ------
@@ -39,8 +41,23 @@ def add_white_noise(arr, mu, sigma, factor, size):
     return noisy_arr
 
 def add_rnl_white(rnl, b, mu, sigma):
-    """ sigma = std 
-    var = sigma^2
+    """ 
+    add relative white noise such that
+    norm2(input array)/norm2(added noise) = relative ratio
+    
+    input
+    -----
+    rnl  : relative ratio
+    b    : input array
+    mu   : mean of the initialized random noise
+    sigma: standard deviation initialized random noise
+    
+    output
+    ------
+    array with added relative noise
+    note that the mu and sigma of the added noise will
+    be different than that provided as input because the 
+    objective here to add relative noise.
     """
     h, w = b.shape
     randn =  np.random.normal(loc = mu, scale = sigma, size = (h,w))
@@ -69,7 +86,7 @@ def normalize_data_ab(a, b, data):
 
 def normalize_data_ab_cd(a, b, c, d, data):
     """
-    Normalizes the input data with a range to a new range (b-a).
+    Normalizes the input data with a range (d-c) to a new range (b-a).
     
     inputs
     -----
@@ -92,7 +109,8 @@ def modcrop(image, scale=3):
     """ 
     To ensure that transition between HR to LR 
     and vice-versa is divisible by the scaling 
-    factor without any remainder
+    factor without any remainder the input image
+    is cropped relative the scaling factor
     
     input
     -----
@@ -139,8 +157,8 @@ def get_sorted_random_ind(foldername, Nimgs):
 
 def getimages4rmdir(foldername, randN=None):
     """
-    Outputs filename array (with path) of files 
-    in foldername 
+    Outputs filename array (with paths) of files 
+    in the input folder string 
     ...
     
     input
@@ -166,7 +184,18 @@ def getimages4rmdir(foldername, randN=None):
 # neg values dues to dose augmentation is accounted
 # rotation or ds augmentation does not yield neg values
 def downsample_4r_augmentation(initial_image):
+    """
+    cv2's area-based downsampled interpolation of the input array
+    ...
     
+    input
+    -----
+    initialimage (float32): input array
+    
+    output
+    ------
+    appended arrays with downsampled 2 matrices by factor 0.8 and 0.6.
+    """
     #aug_ds_facs = np.asarray([0.9, 0.8, 0.7, 0.6])
     # cv2 only works for float type 32 
     aug_ds_facs = np.asarray([0.8, 0.6])
@@ -186,7 +215,7 @@ def bn_seed(Nlen, bratio, nratio):
   """ 
   Returns a three valued (with 1s, 2s, & 3s) array with 
   length (Nlen).the distribution of the three values is 
-  randomly assigned. 
+  randomly assigned in the 1d-based output of the function. 
   bratio*Nlen of the array will be assigned as 1 and the associated images
   will be blurred. Likewise nratio*Nlen will be assigned as 2
   and the corresponding images will be noised. The remaining indices will
@@ -194,7 +223,7 @@ def bn_seed(Nlen, bratio, nratio):
   
   input
   ------
-  Nlen (int): length of the 1d array
+  Nlen (int)    : length of the 1d array
   bratio (float): 0 to 1 valued float
   nratio (float): 0 to 1 valued float
   
@@ -214,7 +243,21 @@ def bn_seed(Nlen, bratio, nratio):
   return(bn_seed)
 
 def min_max_4rm_img_name_arr (img_nm_arr, img_type, dtype, rNx=256):
-    ""
+    """
+    reads images filename list provided as array.
+    Then outputs min and max values of the images
+    
+    input
+    -----
+    img_nm_arr : array of filenames
+    img_type   : string with options such as 'dicom', 'raw', 'png', 'tif'
+    dtype      : data type of input files such as 'uint8', 'uint16'
+    rNx        : image size (used only for raw files)
+    
+    output
+    ------
+    min and max values
+    """
     dir_max, dir_min = 0.0, 0.0
     for i in range(len(img_nm_arr)):
         if img_type=='dicom':
@@ -231,20 +274,24 @@ def min_max_4rm_img_name_arr (img_nm_arr, img_type, dtype, rNx=256):
     return(dir_min, dir_max)
 
 def interpolation_hr(norm_lr, scale):
-
+  """cv2-based upsampling of input array by the parameter scale"""
   h, w = norm_lr.shape
   #norm_hr = resize(norm_lr, (h *scale, w*scale), anti_aliasing=True)
   norm_hr = cv2.resize(norm_lr, (w*scale, h*scale), interpolation=cv2.INTER_AREA)
   return norm_hr 
 
 def interpolation_lr(hr_image, scale):
-
+  """cv2-based downsampling of input array by the parameter scale"""
   h, w = hr_image.shape
   lr = cv2.resize(hr_image, (int(w*(1/scale)), int(h*(1/scale))), interpolation=cv2.INTER_AREA)
   return(lr)
 
 def add_blurr_n_noise(input_, seed):
-
+  """
+  Blur (when seed=1), or add gaussian noise 
+  (when seed=2), or leave the input array as 
+  is (when seed!=(1, 2)).
+  """
   if (seed == 1):
     # adding blurr
     corrupted    = cv2.blur(input_, (3,3))
@@ -265,7 +312,24 @@ def add_blurr_n_noise(input_, seed):
   return(corrupted)
 
 def overlap_based_sub_images(config, input_, label_):
-
+  """
+  converts full sized image pairs (input and target) into 
+  complimentary patches
+  
+  inputs:
+  -------
+  config: parser.parse_ags()
+          command line arguments and in-built options set in main.py file.
+          The options used in this parameters include patch size, strides 
+          between the patches, scaling factor for the patches and padding
+          of the patches
+  input_: degraded full-sized image used in model training or testing
+  label_: reference full-sized image used in model training or testing
+  
+  output
+  ------
+  two 3D arrays as complimentary patches from input and target image pairs
+  """
   image_size, label_size, lr_stride, scale, lr_padding = config.input_size, config.label_size, config.lr_stride, config.scale, config.lr_padding 
   hr_padding = lr_padding*scale
 
@@ -343,6 +407,8 @@ def overlap_based_sub_images(config, input_, label_):
   return(np.asarray(sub_input_of_one_input), np.asarray(sub_label_of_one_label))
 
 def rotation_based_augmentation(args, sub_input, sub_label):
+  """
+  This function is not used in the sFRC calculation.
   #-----------------------------------
   # ROTATION BASED DATA AUGMENTATION       
   #----------------------------------
@@ -352,6 +418,7 @@ def rotation_based_augmentation(args, sub_input, sub_label):
   # LR or UD in our training
   # instances
   # sub_input is of shape [chunk_size, input_size, input_size, 1]
+  """
   rotated_all_inputs = np.empty([0, args.input_size, args.input_size, 1])
   rotated_all_labels = np.empty([0, args.label_size, args.label_size, 1])
   
@@ -378,9 +445,12 @@ def rotation_based_augmentation(args, sub_input, sub_label):
   return(rotated_all_inputs, rotated_all_labels)
 
 def dose_blending_augmentation(args, sub_input, sub_label, blend_factor):
+  """
+  This function is not used in sFRC-based calculations.
   # dose blending can cause certain patches to exhibit negative values
   # Therefore minimum of these neg values should be added as (-min(patch))
   # to the corresponding input and label patches
+  """
   blended_all_inputs = np.empty([0, args.input_size, args.input_size, 1])
   blended_all_labels = np.empty([0, args.label_size, args.label_size, 1])
 
@@ -410,7 +480,33 @@ def dose_blending_augmentation(args, sub_input, sub_label, blend_factor):
   return(blended_all_inputs, blended_all_labels)
     
 def img_pair_normalization(input_image, target_image, normalization_type=None):
+  """
+  Normalizing the input (LD) and target (HD) image-pairs as per the normalization type
+  set as input string. 
   
+  input
+  -------
+  input_image        : input  as a float array
+  target_image       : target as a float array 
+  normalization_type : string options: 
+      unity_independent  : each of the image-pairs are seperately normalized to the range [0,1]
+      max_val_independent: both LD-HD pair are independently normalized to from (min_val, max_val) 
+                           to (min_val/max_val, min_val/max_val)
+      unity_wrt_ld       : both LD-HD pairs are normalized to from (min_val, max_val) to (0, 1) 
+                           with range (LD_max_val - LD_min_val)
+      max_val_wrt_ld     : both LD-HD pair is normalized to from (min_val, max_val) to 
+                           (min_val/LD_max_val, min_val/LD_max_val) 
+      std_independent    : LD-HD pair is independently stardarized based on their respective values.
+      dicom_unity        : LD-HD pairs are normalized between (0,1) considering they exhibit 
+                           (0, 2^16) as their initial range
+      dicom_std          : LD-HD pairs are standardrized  considering they exhibit 
+                           (0, 2^16) initial value range.
+      set_max_val        : LD-HD pairs are normalized by 4094
+  
+  output
+  --------
+  normalized input-target array pairs             
+  """
   if normalization_type == 'unity_independent':
     # both LD-HD pair are independently normalized to from (min_val, max_val) to (0, 1)
     out_input_image  = normalize_data_ab(0.0, 1.0, input_image)
@@ -468,14 +564,16 @@ def img_pair_normalization(input_image, target_image, normalization_type=None):
   return(out_input_image, out_target_image)
 
 def air_thresholding(args, sub_input, sub_label, sub_label_un, return_ind=False):
-  """among patches where 
+  """
+  air threshold patches in which 
   (10% of (total no. of its pixel) is below pix thres value)
-  & (the patch average is below mean threshold)
-  they will be air thresholded i.e., trashed out as not having
-  enough information for training Deep learning models.
+  & (the patch average is below mean threshold),
+  i.e., trash them out for not having
+  enough information for either training Deep learning models
+  or correlation-based comparison.
   
   It might be advisable to change mean thres value depending on 
-  air values (total dark contrast). 
+  air values (or minimum value). 
   i.e. sometimes training data is not scaled and air is at its original
   HU unit i.e., -1024 HU. Also, sometimes, pixel value of 25 or in int16 
   image with pixel value of 200 may correspond to air.
@@ -485,9 +583,9 @@ def air_thresholding(args, sub_input, sub_label, sub_label_un, return_ind=False)
   mean_thresh  = 100 
   
   This air thresholding was developed using LDGC training data where the 
-  maximum HU intensity was 2686. Hence, for other data modality with a 
-  range in its intensity values pix_thresh and mean_thresh will have to be
-  accordingly adjusted
+  maximum HU intensity was 2686. Hence, for other modality-based data with a 
+  different range in its intensity values, 
+  pix_thresh and mean_thresh will have to be accordingly adjusted
   """
   pix_thresh   = args.img_list_max_val*200/2686 #*1.5 -> mri
   count_thresh = int(0.1* (args.input_size**2))
@@ -513,10 +611,29 @@ def air_thresholding(args, sub_input, sub_label, sub_label_un, return_ind=False)
 
 def patchwise_sfrc(args, sub_input, sub_label, ch_ind, pid, chunk_sz, img_name, output_folder, output_patched_folder):
   """
-  ch_ind                : is outer level index to a paired image
-  sub_input             : patches corresponding to a single image from first method
-  sub_target            : patches corresponding to a single image from second method
-  output_patched_folder : 
+  Extracts complimentary patches from a given image pairs (input-target), performs sFRC and outputs
+  fakes as red bounded box.
+  
+  input
+  -------
+  args                  : parser.parse_ags() from the command line
+  ch_ind                : chunk index in the range(total number of input images pairs/No. of processors)
+  pid                   : rank number in from mpi
+  chunk_sz              : total number of input images pairs/No. of processors
+  sub_input             : patches corresponding to an image from first method for the sFRC calculation
+  sub_target            : patches corresponding to an image from second method for sFRC calculation
+  img_name              : image string name of either input or target images used to extract image number from the 
+                          stack of image-pairs in which you seek to perform the sFRC.
+  output_folder         : folder name to store sfrc-based corelation curve for all the patches in a given input-target
+                          image pairs
+  output_patched_folder : folder name to store sfrc-based fake ROIs indicated using red-bounded box.
+                          it includes additional tags in terms of threshold, filtering, MTF vs FRC space used
+                          
+  output
+  -------
+  two folders with images stored as
+  (1) red-bounded box deemed as fakes in input images
+  (2) sFRC line curves on the patches from input-target image pairs
   """
   if sub_input.shape != sub_label.shape:
     print('ERROR! Mismatch between the dim of patches from the 2 methods.')
@@ -526,9 +643,9 @@ def patchwise_sfrc(args, sub_input, sub_label, ch_ind, pid, chunk_sz, img_name, 
   
   frc_len = int(args.label_size/2)
   each_rank_pw_stacked_frc = np.empty([0, frc_len], dtype=args.dtype)
-  # ----------------------------------------------------------------------------------------------
-  # going through patches within an image-pair (i.e. a pair from 2 methods used to calculate FRC)
-  # ----------------------------------------------------------------------------------------------
+  # -----------------------------------------------------------------------------------------------------
+  # sequentially through patches within a given image-pair (i.e. a pair from 2 methods used to calculate FRC)
+  # -----------------------------------------------------------------------------------------------------
   img_str = img_name
   img_str = img_str.split('/')[-1]
   img_tp  = img_str.split('.')[-2] #img type ref vs method with string based on the image name... eg gt_0

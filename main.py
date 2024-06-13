@@ -13,7 +13,7 @@ parser.add_argument('--output-folder', type=str, default='results',  help='outpu
                                                                      DL/Reg & reference image pairs, and sFRC plots.')
 parser.add_argument('--patch-size',    type=str, default='p96',      help="p96 or p64 or 48 or p32 to indicate patch sizes for the sFRC \
                                                                      analysis. Change padding option below for a different patch size.")
-parser.add_argument('--random_N', 	   action="store_true",          help=" performs sfrc calculation on randomly selected 16 \
+parser.add_argument('--random_N',      action="store_true",          help=" performs sfrc calculation on randomly selected 16 \
                                                                      complimentary images from DL/Reg - Reference folders. \
                                                                      For more info refer to in-built options below.")
 parser.add_argument('--input-gen-folder', type=str,                  help="folder name containing DL or regularization method-based outputs.")
@@ -101,7 +101,7 @@ if __name__ == '__main__':
         print('WARNING. Ensure that the max value of images is accurately set in the file main.py.')
         print('*************************************************************************************')
     
-    # default for y-dim is same as x-dim unless specified in cmd
+    # default for y-dim is same as x-dim unless specified as command line argument using rNy
     if args.img_format=='raw':
         if args.rNy == None:
             args.rNy=args.rNx
@@ -114,14 +114,14 @@ if __name__ == '__main__':
     # It is set to yield un-normalized images from the 2 methods.
     # however, after patch-pair is formed they are normalized before the frc comparison. 
     # This way it will be easier to save patched plots at different window level. 
-    args.normalization_type			    = None
+    args.normalization_type              = None
     
     # the below air threshold is for patching from old code. 
     # and not for patches for the sFRC calculation 
     # air_threshold is hard coded to apply for sFRC. 
     # look in the function patchwise_sfrc in utils.py.
     # however threshold values for uint8 type (or ) may need to be re-tuned. 
-    args.air_threshold 					= False
+    args.air_threshold                  = False
     
     # sFRC is not calculated on any augmented patches. 
     # so turning off patch augmentation options.

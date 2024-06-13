@@ -12,7 +12,8 @@ from skimage.restoration import denoise_bilateral
 from mpi4py import MPI
 
 def img_paths4rm_training_directory(args):
-	"""Return paths of target images from input_folder with 
+	"""
+	Return paths of target images from input_folder with 
 	sub-directories. Each with target images for SR
 	if random_N is True: It returns random N images' paths
 	"""
