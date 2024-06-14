@@ -643,9 +643,9 @@ def patchwise_sfrc(args, sub_input, sub_label, ch_ind, pid, chunk_sz, img_name, 
   
   frc_len = int(args.label_size/2)
   each_rank_pw_stacked_frc = np.empty([0, frc_len], dtype=args.dtype)
-  # -----------------------------------------------------------------------------------------------------
+  # --------------------------------------------------------------------------------------------------------------
   # sequentially through patches within a given image-pair (i.e. a pair from 2 methods used to calculate FRC)
-  # -----------------------------------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------------------------------------------
   img_str = img_name
   img_str = img_str.split('/')[-1]
   img_tp  = img_str.split('.')[-2] #img type ref vs method with string based on the image name... eg gt_0
@@ -668,9 +668,9 @@ def patchwise_sfrc(args, sub_input, sub_label, ch_ind, pid, chunk_sz, img_name, 
       _gt_patch = frc_utils.apply_hanning_2d(_gt_patch)
       _me_patch = frc_utils.apply_hanning_2d(_me_patch)
 
-    # patch wise FRC comparision
+    # patch wise FRC comparisons
     # FRC thresholding such as one-bit or half-bit the default info_split of true may need to be changed to false
-    # for contast thresholds such as 0.5, it does not matter whether info_split is turned on or off
+    # for contrast thresholds such as 0.5, it does not matter whether info_split is turned on or off
     xc, corr_avg, xt, thres_val = frc_utils.FRC(_gt_patch, _me_patch, thresholding=args.frc_threshold, inscribed_rings=args.inscribed_rings, analytical_arc_based=args.anaRing)
     each_rank_pw_stacked_frc    = np.append(each_rank_pw_stacked_frc, corr_avg.reshape(1, frc_len), axis=0)
 

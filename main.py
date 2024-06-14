@@ -8,7 +8,7 @@ import sys
 # Command line arguments
 #--------------------------------------------------------------------------------------------------------------------------------------------------
 parser = argparse.ArgumentParser(description='sFRC analysis between image pairs from DL(or Reg)- & reference-based methods to identify fake artifacts')
-parser.add_argument('--input-folder', type=str, required=True,      help='directory name containing images.')
+parser.add_argument('--input-folder', type=str, required=True,       help='directory name containing images.')
 parser.add_argument('--output-folder', type=str, default='results',  help='output folder to save bounding box-based fake labels on \
                                                                      DL/Reg & reference image pairs, and sFRC plots.')
 parser.add_argument('--patch-size',    type=str, default='p96',      help="p96 or p64 or 48 or p32 to indicate patch sizes for the sFRC \
@@ -34,9 +34,9 @@ parser.add_argument('--anaRing', action='store_true',                help='perim
                                                                      Otherwise, no. of pixels in each ring used to determine data points in each ring.')
 parser.add_argument('--rNx', required=False, type=int, default=None, help="image x-size for raw image as input.")
 parser.add_argument('--rNy', required=False, type=int, default=None, help="image y-size for raw image as input. Default is same dim as rNx ")
-parser.add_argument('--in-dtype', type=str, required=True,            help="data type of input images. It is needed for .raw format imgs.\
-                                                                      It is also needed to set the maximum intensity value for air thresholding \
-                                                                      and windowing of patches when saving bounding box-based outputs.")
+parser.add_argument('--in-dtype', type=str, required=True,           help="data type of input images. It is needed for .raw format imgs.\
+                                                                     It is also needed to set the maximum intensity value for air thresholding \
+                                                                     and windowing of patches when saving bounding box-based outputs.")
 parser.add_argument('--save-patched-subplots', action='store_true',  help='if you want to save patches with the bounding box and FRC plot results.')
 parser.add_argument('--apply-bm3d', action='store_true',             help='apply image-based mild bm3d smoothing before the frc calculation. \
                                                                      It decreases the chance of quick FRC drop. which means it increases the chance of\
@@ -112,8 +112,9 @@ if __name__ == '__main__':
     
     # option below dictates DL/reg & ref image pair normalization. 
     # It is set to yield un-normalized images from the 2 methods.
-    # however, after patch-pair is formed they are normalized before the frc comparison. 
-    # This way it will be easier to save patched plots at different window level. 
+    # This way it will be easier to save patched plots at different window level.
+    # However, note that after patched-pairs are formed, they are normalized 
+    # before the frc caculation. 
     args.normalization_type              = None
     
     # the below air threshold is for patching from old code. 

@@ -1,3 +1,8 @@
+##############################################################
+# @author: pkc 
+#
+# io_func.py includes functions used to read and write files
+#
 import numpy as np
 import numpy.fft as fft
 import matplotlib.pyplot as plt 
@@ -5,10 +10,14 @@ import itertools
 import sys
 
 def diagonal_split(img):
-    '''
+    """
     This function takes an input image and splits it diagonally into four sub-regions.
     The input image must have dimensions that are divisible by 4.
-    '''
+    
+    input
+    -----
+    img: array with shape divisible by 4
+    """
     # Get the shape of the input image
     h, w = img.shape
     # Check that the image has dimensions divisible by 4
@@ -39,17 +48,16 @@ def diagonal_split(img):
 
 def get_frc_img(img, frc_img_lx, center=None):
   """
-  Returns a cropped image version of input image "img"
-  img:        input image
-  center:     cropping is performed with center a reference 
+  Returns a cropped array version of the input array "img"
+  img:      : input array
+  center    : cropping is performed with center a reference 
               point to calculate length in x and y direction.
               Unless otherwise stated center is basically center
-              of input image "img"
+              of input array "img"
   frc_img_lx: length of cropped image in x as well as y. Also 
               the cropped image is made to be square image for
               the FRC calculation
   """
-
   h, w = img.shape
   cy = round(min(h, w)/2)
   if center is None:
@@ -63,15 +71,25 @@ def get_frc_img(img, frc_img_lx, center=None):
 
 def ring_indices(x, inscribed_rings=True, plot=False):
     """
-    for a given 2d or 3d array x this function outputs
+    for a given 2d or 3d array, x, this function outputs
     indices corresponding to co-centric circles with radius
-    ranging from center (itself) to the edge/corner of the 2d/3d
+    ranging from center to the edge/corner of the 2d/3d
     array. 
     
     input
     -----
-    x (: 2d/3d array
-    i
+    x               : 2d/3d array
+    inscribed_rings : True- yields co-centric rings till the 
+                      edge of the array.
+                      False- yields co-centric rings till the
+                      corner of the array.
+    plot            : if true outputs figurative plot to illustrate
+                      the co-centric rings for the given input array
+    
+    output
+    ------
+    list of array corresponding to coordinates corresponding to
+    co-centric rings of the given input array.
     """
     print("ring plots is:", plot)
     
@@ -196,7 +214,7 @@ def spinavej(x, inscribed_rings=True):
     ''' 
     In the next step output is generated. The output is an array of length
     maxindex. The elements in this array corresponds to the sum of all the elements
-    in the original array correponding to the integer position of the output array 
+    in the original array corresponding to the integer position of the output array 
     divided by the number of elements in the index array with the same value as the
     integer position. 
     
@@ -346,6 +364,11 @@ def FRC( i1, i2, thresholding='half-bit', inscribed_rings=True, analytical_arc_b
     return (x_fsc, FSC, x_T, T)
 
 def frc_4rm_snr(indices, signal, noise):
+    """
+    --------not used in sFRC project-----------
+    This function is used to show relation between
+    FRC and SNR for the full image-based comparisions
+    """
     snrFSC = []
     n = 1
     for i in range(len(indices)):
@@ -361,9 +384,10 @@ def frc_4rm_snr(indices, signal, noise):
 
 
 def apply_hanning_2d(img):
-  ''' used for experimental images to minimize 
-  boundry effects
-  '''
+  """" 
+  applies hanning filter for the given 
+  input array to minimize the boudary effects
+  """
   hann_filt = np.hanning(img.shape[0])
   hann_filt = hann_filt.reshape(img.shape[0], 1)
   #hann_filt = np.power(hann_filt, 2)

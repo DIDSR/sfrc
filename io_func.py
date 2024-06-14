@@ -14,8 +14,9 @@ import sys
 def imread(path, mode='L', type=np.uint8, is_grayscale=True):
   """
   Reads typical image files such as .png, .tif using scipy.
-  [*] Default mode color scale of the input image file is gray-scale, 
-      else image is read as YCbCr format.
+  Default reading color scale of the input image file is 
+  gray-scale, otherwise image based on the string provided
+  as mode.
   
   input
   -----

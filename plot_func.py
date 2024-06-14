@@ -15,7 +15,7 @@ from shapely import LineString, get_coordinates
 import sys
 
 def add_subplot_border(ax, width=1, color=None ):
-
+    """function used to add """
     fig = ax.get_figure()
 
     # Convert bottom-left and top-right to display coordinates

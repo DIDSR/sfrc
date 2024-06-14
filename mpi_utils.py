@@ -106,22 +106,22 @@ def partition_read_normalize_n_augment(args, bcasted_input_data, pid):
 		input_image, target_image = utils.img_pair_normalization(input_image, target_image, args.normalization_type)
 
 		if args.apply_bm3d:
-			# before applying bm3d both images must be normalized
-			ref_max, ref_min 		    = np.max(target_image), np.min(target_image)
-			me_max,  me_min 		    = np.max(input_image), np.min(input_image)
+			#---------------before applying bm3d both images must be normalized-------------------------------------
+			ref_max, ref_min            = np.max(target_image), np.min(target_image)
+			me_max,  me_min             = np.max(input_image), np.min(input_image)
 			binput_image, btarget_image = utils.img_pair_normalization(input_image, target_image, 'unity_independent')
 
-			btarget_image 			    = bm3d.bm3d(btarget_image, sigma_psd=0.05, stage_arg=bm3d.BM3DStages.ALL_STAGES)
-			binput_image  			    = bm3d.bm3d(binput_image, sigma_psd=0.05, stage_arg=bm3d.BM3DStages.ALL_STAGES)
+			btarget_image               = bm3d.bm3d(btarget_image, sigma_psd=0.05, stage_arg=bm3d.BM3DStages.ALL_STAGES)
+			binput_image                = bm3d.bm3d(binput_image, sigma_psd=0.05, stage_arg=bm3d.BM3DStages.ALL_STAGES)
 			
-			target_image   				= utils.normalize_data_ab(ref_min, ref_max, btarget_image)
-			input_image 				= utils.normalize_data_ab(me_min, me_max, binput_image)
+			target_image                = utils.normalize_data_ab(ref_min, ref_max, btarget_image)
+			input_image                 = utils.normalize_data_ab(me_min, me_max, binput_image)
 
 		if args.remove_ref_noise:
-			ref_max, ref_min 		    = np.max(target_image), np.min(target_image)
-			_, gtarget_image 			= utils.img_pair_normalization(input_image, target_image, 'unity_independent')
-			gtarget_image  				= denoise_bilateral(gtarget_image, win_size=7, sigma_color=0.02, sigma_spatial=5)
-			target_image   				= utils.normalize_data_ab(ref_min, ref_max, gtarget_image)
+			ref_max, ref_min            = np.max(target_image), np.min(target_image)
+			_, gtarget_image            = utils.img_pair_normalization(input_image, target_image, 'unity_independent')
+			gtarget_image               = denoise_bilateral(gtarget_image, win_size=7, sigma_color=0.02, sigma_spatial=5)
+			target_image                = utils.normalize_data_ab(ref_min, ref_max, gtarget_image)
 
 		post_norm_tar_min.append(np.min(target_image)); post_norm_tar_max.append(np.max(target_image))
 		if(args.air_threshold): t_input_patch, t_target_patch = augment_n_return_patch(args, input_image, target_image, j, pid, blend_factor, target_image_un)
@@ -188,20 +188,10 @@ def augment_n_return_patch(args, input_image, target_image, i, pid, blend_factor
 
 		if args.scale ==1: input_ = input_
 		else:			   input_ = utils.interpolation_lr(input_, args.scale)
-		# if bicubic initilization is applied to input images
-		# as in the case of SRCNN model
-		# if args.bicubic_init:
-		#	cinput_ = utils.interpolation_hr(cinput_, args.scale)
-			
+
 		if args.blurr_n_noise: cinput_ = utils.add_blurr_n_noise(input_, seed[i])
 		else:				   cinput_ = input_
-		# print('seed=', seed[i])
-		# if (pid==0 and i==0):
-		#	print('scale', args.scale, 'input shape', cinput_.shape, 'target shape', label_.shape)
-		#	pf.plot2dlayers(cinput_, title='input')
-		#	pf.plot2dlayers(label_, title='target')
 
-		# cinput_ = input_
 		sub_input, sub_label = utils.overlap_based_sub_images(args, cinput_, label_)
 		
 		if(args.air_threshold):
@@ -241,19 +231,3 @@ def bufftoarr(buff, tot_element_count, ph, pw, pc):
  	pz = int(tot_element_count/(ph*pw))
  	arr = buff.reshape(pz, ph, pw, pc)
  	return(arr)
-'''
-def torch_shuffle(np_input, np_target):
-	torch_input     = torch.from_numpy(np_input)
-	torch_target    = torch.from_numpy(np_target)
-
-	torch_input     = torch_input.to(device='cuda')
-	torch_target    = torch_target.to(device='cuda')
-
-	shuff_idx          = torch.randperm(torch_input.shape[0])
-	shuff_torch_input  = torch_input[shuff_idx].view(torch_input.size())
-	shuff_torch_target = torch_target[shuff_idx].view(torch_target.size())
-	shuff_np_in        = shuff_torch_input.cpu().numpy()
-	shuff_np_out       = shuff_torch_target.cpu().numpy()
-
-	return (shuff_np_in, shuff_np_out)
-'''
