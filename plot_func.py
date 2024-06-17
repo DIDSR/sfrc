@@ -3,7 +3,7 @@
 #
 # plot_func.py 
 # ............
-# includes functions used to read and write files
+# includes functions used in plotting
 #
 import numpy as np 
 import pydicom
@@ -39,9 +39,20 @@ def add_subplot_border(ax, width=1, color=None ):
 def find_earliest_lp_intersection(x_coord, line1, line2):
     """
     intakes two line plots, plotted over the same x-coordinate.
-    Then outputs x-
-        line1: y values of first line plot
-    line2: y values of second line plot
+    Then outputs the y-coordinate where the two lines intersect. 
+    In case they intersect at multiple points, the y-coordinate 
+    corresponding to the minimum x-coordinate is returned 
+    
+    input
+    -------
+    x_coord: 1d arrat
+    line1: y values of the first line
+    line2: y values of the second line 
+    
+    output
+    -----
+    single valued y-coordinate where the two line
+    intersect
     """
     first_line   = LineString(np.column_stack((x_coord, line1)))
     second_line  = LineString(np.column_stack((x_coord, line2)))
@@ -65,10 +76,21 @@ def find_earliest_lp_intersection(x_coord, line1, line2):
 
 def plot2dlayers(arr, xlabel=None, ylabel=None, title=None, cmap=None, colorbar=True):
     """
-    'brg' is the best colormap for reb-green-blue image
-    'brg_r': in 'brg' colormap green color area will have
-        high values whereas in 'brg_r' blue area will have
-        the highest values
+    customized version using matplotlib to imshow array as 2D image
+    
+    input
+    -----
+    arr   : 2D array
+    xlabel: string to set x-coordinate label in the plot
+    ylabel: string to set x-coordinate label in the plot
+    title : string to set title in the plot
+    cmap  : string to set colormap of the 2D plot
+            'brg' is the optimal colormap for reb-green-blue image
+            'brg_r': in 'brg' colormap green color area will have
+             high values whereas in 'brg_r' blue area will have
+             the highest values
+             'Greys_r': is the default colormap
+    colorbar: bool if true diplays colorbar
     """
     if xlabel is None:
         xlabel=''
@@ -89,10 +111,28 @@ def plot2dlayers(arr, xlabel=None, ylabel=None, title=None, cmap=None, colorbar=
 
 def multi2dplots(nrows, ncols, fig_arr, axis, passed_fig_att=None):
     """
-    usagae : 
+    customized function to show different layers of a 3D array 
+    as 2D subplots
+    
+    usage
+    ------
     multi2dplots(1, 2, lena_stack, axis=0, passed_fig_att={'colorbar': False, \
     'split_title': np.asanyarray(['a','b']),'out_path': 'last_lr.tif'})
     where lena_stack is of size (2, 512, 512)
+    
+    input
+    -----
+    nrows       : no. of rows in the subplots
+    ncols       : no. of columns in the subplots
+    fig_arr     : 3D array used for the subplots
+    axis        : axis that is held constant and the 2D plot is demostrated
+                  along the other two axes
+    passed_fig_att : customized arguments imported from pyplot's subplot kwargs
+                     See the default arguments below
+                     
+    output
+    -----
+    subplots as figure
     """
     default_att= {"suptitle": '',
             "split_title": np.asanyarray(['']*(nrows*ncols)),
@@ -144,6 +184,24 @@ def multi2dplots(nrows, ncols, fig_arr, axis, passed_fig_att=None):
         plt.savefig(fig_att["out_path"])
 
 def dict_plot_of_2d_arr(args, rows, cols, bool_mat, arr_2d, cmap='Greys_r', save_plot=False, disp_plot=False, output_path='', plt_title=None):
+  """
+  customized version of pyplot's subplot function that displays and saves
+  subplots with bounded red box on the subplots indicated using a boolean
+  matrix
+  
+  input
+  ------ 
+  args      :parser.parse_ags()
+             makes use of command line arguments on dtype and windowing
+             used in CT imaging. For a more info on windowing review  
+             https://radiopaedia.org/articles/windowing-ct?lang=us#:~:text=The%20window%20level%20(WL)%2C,be%20brighter%20and%20vice%20versa. 
+  rows      :number of rows of subplots
+  cols      :number of columns of subplots
+  arr_2d    :stacked 2 
+  bool_mat  :a boolean matrix with 0s and 1s. 
+             subplot whose corresponding value is 1 will be borded
+             with a bounding box. 
+  """
   # rows, cols indicate number of subplots along rows & columns
   # rows*cols = len(arr_2d)
   
@@ -269,7 +327,7 @@ def dict_plot_of_patched_frc(bool_hallu_1darr, args, fx_coord, stacked_frc, tx_c
         frc_space=False
 
     if frc_space:
-        # then x-coording corresponds to frc-space
+        # then x-coordinate corresponds to frc-space
         # with the range (0, 1) compress to (0, 0.5)
         fx_coord = fx_coord/2.0
         tx_coord = tx_coord/2.0

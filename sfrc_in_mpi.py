@@ -12,7 +12,7 @@ import h5py
 
 
 def sfrc_in_mpi(args):
-	# MPI declarations
+	#------ MPI declarations--------------------------
 	comm = MPI.COMM_WORLD
 	rank = comm.Get_rank()
 	size = comm.Get_size()
@@ -20,18 +20,18 @@ def sfrc_in_mpi(args):
 	root = 0
 	dtype = args.dtype
 	
-	# -------------------------------------
+	# ---------------------------------------------------
 	#  Variables to be used for 
-	# 	 Reduce Operations
-	# -----------------------------------
+	#  mpi-based reduce Operations
+	# -----------------------------------------------------
 	partition_img_sum = np.zeros(1, dtype=dtype)
 	# float declarations
 	global_pre_norm_tar_min  = np.zeros(1, dtype=dtype)
 	global_pre_norm_tar_max  = np.zeros(1, dtype=dtype)
 	global_post_norm_tar_min = np.zeros(1, dtype=dtype)
 	global_post_norm_tar_max = np.zeros(1, dtype=dtype)
-	per_cz_fk            = np.zeros(1, dtype=dtype)
-	tot_no_of_fk		 = np.zeros(1, dtype=dtype)
+	per_cz_fk                = np.zeros(1, dtype=dtype)
+	tot_no_of_fk             = np.zeros(1, dtype=dtype)
 	# dict diclarations
 	partitioned_data = None
 

@@ -71,6 +71,9 @@ def get_frc_img(img, frc_img_lx, center=None):
 
 def ring_indices(x, inscribed_rings=True, plot=False):
     """
+    This function is primarily used to calculated number
+    of indices in a given ring.
+    
     for a given 2d or 3d array, x, this function outputs
     indices corresponding to co-centric circles with radius
     ranging from center to the edge/corner of the 2d/3d
@@ -88,7 +91,7 @@ def ring_indices(x, inscribed_rings=True, plot=False):
     
     output
     ------
-    list of array corresponding to coordinates corresponding to
+    list of array on coordinates corresponding to
     co-centric rings of the given input array.
     """
     print("ring plots is:", plot)
@@ -167,10 +170,31 @@ def ring_indices(x, inscribed_rings=True, plot=False):
     return(indices)
 
 def spinavej(x, inscribed_rings=True):
-    ''' 
+    """
     modification of code by sajid and
     Based on the MATLAB code by Michael Wojcik
-    '''
+    
+    This function is used to extract rings for the numerator-based
+    dot product and denominator-based power spectrum calculations
+    in the FRC formula.
+    In contrast to the previous function ring_indices, the indices
+    from this function are interpolated between floor and ceiling
+    for an intial index from a given mesh. Hence, is a better estimation
+    on rings for a given image.
+    
+    input
+    -----
+    x : 2d array
+    incribed_rings: A bool value.
+                    True- yields co-centric rings till the 
+                    edge of the array.
+                    False- yields co-centric rings till the
+                    corner of the array.
+    output
+    ------
+    list of array on coordinates corresponding to
+    co-centric rings for a given input array.
+    """
     shape = np.shape(x)     
     dim = np.size(shape)
     ''' 
@@ -241,10 +265,40 @@ def is_float(string):
         return False
 
 def FRC( i1, i2, thresholding='half-bit', inscribed_rings=True, analytical_arc_based=True, info_split=True):
-    # --------------------------------------------------------
-    # Based on the MATLAB code by Michael Wojcik
-    # modification of python code by sajid
-
+    """
+    Fourier Ring Correlation
+    For a thorough overview on this correlation-based metric 
+    look through the workbook
+    https://github.com/prabhatkc/siFRC/blob/master/lenaFRC.ipynb
+    
+    input
+    ------
+    i1                  :numpy 2d array
+    i2                  :numpy 2d array
+    thresholding        :string on threshold. options include 'half-bit', 
+                        'one-bit', 'em' and number as a string such as
+                        '0.75' and '0.5'. For sFRC '0.75' and  '0.5' have
+                         been found to be effective. 
+    inscribed_rings     :bool as True or False. True- yields co-centric rings 
+                         till the edge of the two input arrays for the FRC.
+                         False- yields co-centric rings till the
+                         corner of the two arrays.
+    analytical_arc_based: bool as True or False. True - internally determines
+                          perimeter of a FRC ring to estimate number of indices
+                          in the ring. Else uses len function to determine the
+                          number of indices in a given FRC ring. 
+    info_split          : whenever diagonal splitting technique is used to acquire
+                          image-pairs for the FRC calculation, the thresholds are 
+                          internally adjusted to account for the split in information
+                          
+                          
+    output
+    -----
+    four 1d arrays
+    x-coordinate of threshold, threshold values, x-coordinate of FRC, FRC values
+    x-coordinate of threshold = x-coordinate of FRC
+    """
+    
     # Check whether the dimensions of input image is  square or not
     if ( np.shape(i1) != np.shape(i2) ) :
         print('\n [!] input images must have the same dimensions\n')
@@ -386,7 +440,7 @@ def frc_4rm_snr(indices, signal, noise):
 def apply_hanning_2d(img):
   """" 
   applies hanning filter for the given 
-  input array to minimize the boudary effects
+  input array to minimize the boundary effects
   """
   hann_filt = np.hanning(img.shape[0])
   hann_filt = hann_filt.reshape(img.shape[0], 1)
