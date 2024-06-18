@@ -140,5 +140,5 @@ if __name__ == '__main__':
     # hence, mpirun needs to be turned on. 
     args.mpi_run                        = True
     
-    if(args.mpi_run==True): from sfrc_in_mpi import sfrc_in_mpi; sfrc_in_mpi(args)	
+    if(args.mpi_run==True): from src import sfrc_in_mpi as mpi_sfrc; mpi_sfrc.sfrc_in_mpi(args)	
 	
