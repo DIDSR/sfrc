@@ -94,7 +94,7 @@ Create a new conda enviroment and install the required packages as follows:
 
 DEMO execution of sFRC
 ----------------------------------------------------------
-The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_. 
+The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. 
 Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
 
 1. sFRC on SRGAN-based CT upsampled (x4) images
@@ -114,25 +114,25 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
       bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 1
 
    'CT' indicates sfrc on CT-based data. 'sh' and 'tune' are options to indicate paths for sharp kernel-based data and 
-   tuning set for sFRC parameters used in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_. Likewise 'sm' indicates smooth kernel-based test set. 
+   tuning set for sFRC parameters used in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. Likewise 'sm' indicates smooth kernel-based test set. 
    1 indicates one processing unit (-np) to be used in our mpi-based sFRC implementation. 
    Note that, in this git repo, the demo example for the CT application includes only 5 CT images. 
    As such, the no. of fakes, for the specified parameters, for sharp and smooth data will be 21 
    and 16 respectively. Refer to the next subsection to fetch the complete test set and results as 
-   provided in our paper for the CT application. 
+   provided in the sFRC paper for the CT application. 
 
 2. sFRC on UNet- and PLSTV-based MRI outputs from a subsampled acquisition (x3)
 
    .. code-block::
       
-      bash +x demo_sfrc_run.sh 'MRI' '' 'unet' 4
+      bash +x demo_sfrc_run.sh 'MRI' 'test' 'unet' 4
 
-   Change the third option to 'plstv' for the plstv-based results provided in our paper. 
+   Change the third option to 'plstv' for the plstv-based results provided in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. 
 
 Apply trained SRGAN 
 --------------------
 The SRGAN checkpoint provided in this repository was trained using CT images from the six patients provided in 
-`LDGC dataset <https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=52758026>`_ and as detailed in our paper.
+`LDGC dataset <https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=52758026>`_ and as detailed in the sFRC paper.
 This checkpoint can be applied to the low-resolution CT images provided in this repository in the following manner: 
 
 3. Apply SRGAN on tuning set
@@ -142,9 +142,9 @@ This checkpoint can be applied to the low-resolution CT images provided in this 
       cd ct_superresolution
       bash +x demo_srgan_test.sh 'tune' 'sh' #on sharp kernel-based tuning set
 
-To apply the SRGAN to all the CT images from patient L067 (as described in our paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
+To apply the SRGAN to all the CT images from patient L067 (as described in the sFRC paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
-yield fake patches as tabulated in TABLE I in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_ and as depicted in the following 
+yield fake patches as tabulated in TABLE I in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_ and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
 4. Apply SRGAN on test set
@@ -156,19 +156,19 @@ yield fake patches as tabulated in TABLE I in our `sfrc paper <10.36227/techrxiv
       bash +x demo_srgan_test.sh 'test' 'sm'
 
 Then set the first command line input as 'test' to indicate tags related to the paths 
-of CT images are test set for the sFRC analysis (as used in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_) when executing demo_sfrc_run.sh.
+of CT images are test set for the sFRC analysis (as used in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_) when executing demo_sfrc_run.sh.
 
 5. sFRC on SRGAN-based CT upsampled (x4) test images (sharp as well as smooth)
 
    .. code-block:: 
 
       cd ..
-      bash +x demo_sfrc_run.sh '' 'sh' 47 # on sharp test data with 47 set as no. of processors
-      bash +x demo_sfrc_run.sh '' 'sm' 47 #on smooth test data with 47 set as the no. of processors
+      bash +x demo_sfrc_run.sh 'test' 'sh' 47 # on sharp test data with 47 set as no. of processors
+      bash +x demo_sfrc_run.sh 'test' 'sm' 47 #on smooth test data with 47 set as the no. of processors
 
 Apply trained UNet 
 -------------------
-The trained Unet model and data provided in this repository (as well as used in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_) have been imported from the following github
+The trained Unet model and data provided in this repository (as well as used in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_) have been imported from the following github
 repository: `hallucinations-tomo-recon <https://github.com/comp-imaging-sci/hallucinations-tomo-recon>`_. Also, 
 `Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205>`_ is 
 the original source of the MRI data. 
