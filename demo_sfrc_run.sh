@@ -23,7 +23,7 @@ if [[ "$mode" == "CT" ]]
 then
   echo "kernel option is: " $ker_opt
   OUTPUT_FNAME="./results/CT/sm_srgan_${data_opt}_${ker_opt}_L067/"
-  INPUT_FOLDER="./ctsr/results/test_${ker_opt}_L067/ua_ll_smSRGAN${data_opt}_in_x4/checkpoint-generator-20/"
+  INPUT_FOLDER="./ct_superresolution/results/test_${ker_opt}_L067/ua_ll_smSRGAN${data_opt}_in_x4/checkpoint-generator-20/"
   INPUT_GEN="test_${ker_opt}_L067_cnn"
   TARGET_GEN="test_${ker_opt}_L067_gt"
   time mpirun --mca btl ^openib -np $nranks \
@@ -34,7 +34,7 @@ then
   --windowing 'soft' --save-patched-subplots
 elif [[ "$mode" == "MRI" ]]
 then
-  INPUT_FOLDER="./mrsub/recon_data/"
+  INPUT_FOLDER="./mr_subsampling/recon_data/"
   INPUT_GEN="masked_${data_opt}_${ker_opt}_recons_ood"
   TARGET_GEN="masked_${data_opt}_gt_ood"
   OUTPUT_FNAME="./results/MRI/ood_${data_opt}_${ker_opt}/"

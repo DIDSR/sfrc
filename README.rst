@@ -10,7 +10,7 @@ sFRC for detecting fakes in AI-assisted medical image restoration (postprocessin
 - **Inputs**: Restored medical images from Deep learning- or Regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold.
 - **Outputs**: Small-sized red bounding boxes on input images that are deemed as fake ROIs (in AI-assisted as well as reference images), and the total number of such fake ROIs in the provided input images. 
   Demo movie files on sFRC-labeled fakes for a CT super-resolution problem is provided `here <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
-- **Demo**: On two image restoration problems: CT super-resolution (**ctsr**), and MRI sub-sampling (**mrsub**).
+- **Demo**: On two image restoration problems: CT super-resolution (**ct_superresolution**), and MRI sub-sampling (**mr_subsampling**).
 
 .. contents::
 
@@ -102,7 +102,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
    .. code-block::
       
       OUTPUT_FNAME="./results/CT/sm_srgan_sel_sh_L067/"
-      INPUT_FOLDER="./ctsr/results/test_sh_L067/ua_ll_smSRGANsel_in_x4/checkpoint-generator-20/"
+      INPUT_FOLDER="./ct_superresolution/results/test_sh_L067/ua_ll_smSRGANsel_in_x4/checkpoint-generator-20/"
       INPUT_GEN="test_sh_L067_cnn"
       TARGET_GEN="test_sh_L067_gt"
       time mpirun --mca btl ^openib -np 1 python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p64'  --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} --img-format 'raw' --frc-threshold '0.5' --in-dtype 'uint16' --anaRing --inscribed-rings --rNx 512 --apply-hann --mtf-space --ht 0.33 --windowing 'soft' --save-patched-subplots
@@ -139,10 +139,10 @@ This checkpoint can be applied to the low-resolution CT images provided in this 
 
    .. code-block:: 
 
-      cd ctsr
+      cd ct_superresolution
       bash +x demo_srgan_test.sh 'sel' 'sh' #on sharp kernel-based tuning set
 
-To apply the SRGAN to all the CT images from patient L067 (as described in our paper) refer to "./ctsr/create_sr_dataset/readme.txt".
+To apply the SRGAN to all the CT images from patient L067 (as described in our paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
 yield fake patches as tabulated in TABLE I in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_ and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
@@ -151,7 +151,7 @@ yield fake patches as tabulated in TABLE I in our `sfrc paper <10.36227/techrxiv
 
    .. code-block:: 
 
-      cd ctsr
+      cd ct_superresolution
       bash +x demo_srgan_test.sh '' 'sh'
       bash +x demo_srgan_test.sh '' 'sm'
 
@@ -177,19 +177,19 @@ the original source of the MRI data.
 
    .. code-block:: 
    
-      cd mrsub/unet
+      cd mr_subsampling/unet
       bash +x run_unet_test.sh
 
 PLSTV-based reconstruction 
 -------------------------------
 Follow the installation instructions provided in the `BART repository <https://mrirecon.github.io/bart/>`_.
-Then edit the path to BART's python wrapper in line 20 in file "./mrsub/plstv/bart_pls_tv.py".
+Then edit the path to BART's python wrapper in line 20 in file "./mr_subsampling/plstv/bart_pls_tv.py".
 
 7. Apply PLSTV on MRI test set
 
    .. code-block:: 
 
-      cd mrsub/plstv
+      cd mr_subsampling/plstv
       bash +x run_bart_pls_tv.sh
 
 References 
