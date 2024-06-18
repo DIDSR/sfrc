@@ -14,7 +14,7 @@ num_recons = 5
 
 recon_dir = './experiments/'+model+'/reconstructions/'
 
-ensemble_dir_ood = './masked__unet_recons_ood/'
+ensemble_dir_ood = './masked_test_unet_recons_ood/'
 if not os.path.exists(ensemble_dir_ood):
     os.makedirs(ensemble_dir_ood)
 

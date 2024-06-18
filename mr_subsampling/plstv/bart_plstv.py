@@ -37,7 +37,7 @@ dist_type = args.dist_type
 idx = args.idx
 
 dim = 320 # Image dimensions: dimxdim
-recon_dir = './masked__plstv_recons_'+dist_type+'/' # Directory for saving the reconstructed images
+recon_dir = './masked_test_plstv_recons_'+dist_type+'/' # Directory for saving the reconstructed images
 if not os.path.exists(recon_dir):
     os.makedirs(recon_dir)
 
