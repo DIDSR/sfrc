@@ -1,16 +1,16 @@
-#source /home/prabhat.kc/anaconda3/base_env.sh
-#source /home/prabhat.kc/anaconda3/hmri_env.sh 
-#cd /projects01/didsr-aiml/prabhat.kc/code/GitRepo/mpi_sfrc/
+# source /home/prabhat.kc/anaconda3/base_env.sh
+# source /home/prabhat.kc/anaconda3/hmri_env.sh 
+# cd /projects01/didsr-aiml/prabhat.kc/code/GitRepo/mpi_sfrc/
 # ----------------------------------------------------------
 # On Tuning set with 5 images with ht as 0.33
-#   on sharp test: 5+3+2+6+5 = 21
-#	on smooth test: 16
+#   on sharp tuning set: 5+3+2+6+5 = 21
+#	on smooth tuning set: 16
 # ----------------------------------------------------------
 # 
-# 
-# bash +x demo_sfrc_run.sh 'CT' '' 'sh' 1 
-# bash +x demo_sfrc_run.sh 'CT' '' 'sm' 47
-# bash +x demo_sfrc_run.sh 'MRI' '' 'unet' 4
+# bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 1 
+# bash +x demo_sfrc_run.sh 'CT' 'tune' 'sm'  1
+# bash +x demo_sfrc_run.sh 'MRI' 'test' 'unet' 4
+
 mode=$1     # "CT" or "MRI"
 data_opt=$2 # "tune" sfrc on tuning set or 'test' sfrc on test set
 ker_opt=$3  # "sh" sharp kernel or "sm" smooth kernel for CT || "unet" or "plstv" for MRI
@@ -23,7 +23,7 @@ if [[ "$mode" == "CT" ]]
 then
   echo "kernel option is: " $ker_opt
   OUTPUT_FNAME="./results/CT/sm_srgan_${data_opt}_${ker_opt}_L067/"
-  INPUT_FOLDER="./ct_superresolution/results/test_${ker_opt}_L067/ua_ll_smSRGAN${data_opt}_in_x4/checkpoint-generator-20/"
+  INPUT_FOLDER="./ct_superresolution/results/${ker_opt}_L067/ua_ll_smSRGAN_${data_opt}_in_x4/checkpoint-generator-20/"
   INPUT_GEN="test_${ker_opt}_L067_cnn"
   TARGET_GEN="test_${ker_opt}_L067_gt"
   time mpirun --mca btl ^openib -np $nranks \
