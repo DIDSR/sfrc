@@ -72,16 +72,15 @@ def sfrc_in_mpi(args):
 			all_input_paths  = all_input_paths [:-N_last_paths]
 		
 		#--------------------------------------------
-		# dose blend option is not used in sfrc calculations
-		# hence, the blending array is simply used as a NULL
-		# placeholder in all the rank distribution subrountines
-		# in this package. 
+		# Dose blend option is not used in sfrc calculations.
+		# Hence, the blending array is simply employed as a NULL
+		# placeholder in all the rank distribution-based
+		# functions in this package. 
 		#--------------------------------------------
 		if (args.dose_blend):
 			blend_fact_arr = np.random.uniform(0.5,1.2,size=len(all_target_paths))
 		else: 
 			blend_fact_arr =np.zeros((len(all_target_paths),1), dtype=dtype)
-		# print(blend_fact_arr)
 		per_ip_fk_arr = np.zeros((len(all_target_paths),1))
 
 		chunck = int(len(all_target_paths)/nproc) 
@@ -111,7 +110,7 @@ def sfrc_in_mpi(args):
 			print('This error is trashed out automatically through in-build')
 			print('air thresholding function applied before marking candidate patches')
 			print('**************************************************************************************************')
-		# creating output folder to save frc plots
+		#-------------------------------------------creating output folder to save sfrc curves and fake ROIs as bounded subplots--------------------------------------------------------------------------------------------------------------
 		if args.mtf_space:
 			output_folder = args.output_folder + (args.patch_size) + '_lp__frc_thres_' + str(args.frc_threshold) + '_hn_' + str(args.apply_hann)[0] + '_bm_' + str(args.apply_bm3d)[0] + '_bf_' +  str(args.remove_ref_noise)[0] + '_mtfS_T' + '/'
 		else:
@@ -128,8 +127,7 @@ def sfrc_in_mpi(args):
 		else:
 			output_patched_folder=None
 		
-		# print('blend factors before broadcast', blend_fact_arr)
-		# input-output variables from each rank
+		#---------------------------------------input-output variables for each rank that is initialized by root--------------------------------------------------------------------------------------------
 		bcasted_input_data = {'all_target_paths': all_target_paths, 'all_input_paths': all_input_paths,\
 							  'chunck': chunck, 'nproc':nproc, 'blend_fact_arr': blend_fact_arr, 'output_folder': output_folder,\
 							  'output_patched_folder':output_patched_folder, 'tot_fk': tot_no_of_fk, 'cz_fk': per_cz_fk}
@@ -140,5 +138,6 @@ def sfrc_in_mpi(args):
 	bcasted_input_data  = comm.bcast(bcasted_input_data, root=root)
 	comm.Barrier()
 	
+	#----------------------sFRC operation ----------------------------------
 	mpi_utils.partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, rank)
 	comm.Barrier()
