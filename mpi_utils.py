@@ -249,6 +249,6 @@ def bufftoarr(buff, tot_element_count, ph, pw, pc):
 	reshapes a 1d array to a higher dimensional 4D array
 	based on the sizes provided as input
 	""" 
- 	pz = int(tot_element_count/(ph*pw))
- 	arr = buff.reshape(pz, ph, pw, pc)
- 	return(arr)
+	pz = int(tot_element_count/(ph*pw))
+	arr = buff.reshape(pz, ph, pw, pc)
+	return(arr)
