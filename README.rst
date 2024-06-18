@@ -94,15 +94,15 @@ Create a new conda enviroment and install the required packages as follows:
 
 DEMO execution of sFRC
 ----------------------------------------------------------
-The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in our paper. 
+The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_. 
 Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
 
 1. sFRC on SRGAN-based CT upsampled (x4) images
 
    .. code-block::
       
-      OUTPUT_FNAME="./results/CT/sm_srgan_sel_sh_L067/"
-      INPUT_FOLDER="./ct_superresolution/results/test_sh_L067/ua_ll_smSRGANsel_in_x4/checkpoint-generator-20/"
+      OUTPUT_FNAME="./results/CT/sm_srgan_tune_sh_L067/"
+      INPUT_FOLDER="./ct_superresolution/results/test_sh_L067/ua_ll_smSRGAN_tune_in_x4/checkpoint-generator-20/"
       INPUT_GEN="test_sh_L067_cnn"
       TARGET_GEN="test_sh_L067_gt"
       time mpirun --mca btl ^openib -np 1 python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p64'  --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} --img-format 'raw' --frc-threshold '0.5' --in-dtype 'uint16' --anaRing --inscribed-rings --rNx 512 --apply-hann --mtf-space --ht 0.33 --windowing 'soft' --save-patched-subplots
@@ -111,10 +111,10 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
    
    .. code-block:: 
       
-      bash +x demo_sfrc_run.sh 'CT' 'sel' 'sh' 1
+      bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 1
 
-   'CT' indicates sfrc on CT-based data. 'sh' and 'sel' are options to indicate paths for sharp kernel-based data and 
-   tuning set for sFRC parameters used in our paper. Likewise 'sm' indicates smooth kernel-based test set. 
+   'CT' indicates sfrc on CT-based data. 'sh' and 'tune' are options to indicate paths for sharp kernel-based data and 
+   tuning set for sFRC parameters used in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_. Likewise 'sm' indicates smooth kernel-based test set. 
    1 indicates one processing unit (-np) to be used in our mpi-based sFRC implementation. 
    Note that, in this git repo, the demo example for the CT application includes only 5 CT images. 
    As such, the no. of fakes, for the specified parameters, for sharp and smooth data will be 21 
@@ -140,7 +140,7 @@ This checkpoint can be applied to the low-resolution CT images provided in this 
    .. code-block:: 
 
       cd ct_superresolution
-      bash +x demo_srgan_test.sh 'sel' 'sh' #on sharp kernel-based tuning set
+      bash +x demo_srgan_test.sh 'tune' 'sh' #on sharp kernel-based tuning set
 
 To apply the SRGAN to all the CT images from patient L067 (as described in our paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
@@ -152,11 +152,11 @@ yield fake patches as tabulated in TABLE I in our `sfrc paper <10.36227/techrxiv
    .. code-block:: 
 
       cd ct_superresolution
-      bash +x demo_srgan_test.sh '' 'sh'
-      bash +x demo_srgan_test.sh '' 'sm'
+      bash +x demo_srgan_test.sh 'test' 'sh'
+      bash +x demo_srgan_test.sh 'test' 'sm'
 
-Then set the first command line input as a blank string, '', to indicate tags related to the paths 
-of CT images are test set for the sFRC analysis (as used in our paper) when executing demo_sfrc_run.sh.
+Then set the first command line input as 'test' to indicate tags related to the paths 
+of CT images are test set for the sFRC analysis (as used in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_) when executing demo_sfrc_run.sh.
 
 5. sFRC on SRGAN-based CT upsampled (x4) test images (sharp as well as smooth)
 
@@ -168,7 +168,7 @@ of CT images are test set for the sFRC analysis (as used in our paper) when exec
 
 Apply trained UNet 
 -------------------
-The trained Unet model and data provided in this repository (as well as used in our paper) have been imported from the following github
+The trained Unet model and data provided in this repository (as well as used in our `sfrc paper <10.36227/techrxiv.171259560.02243347/v1>`_) have been imported from the following github
 repository: `hallucinations-tomo-recon <https://github.com/comp-imaging-sci/hallucinations-tomo-recon>`_. Also, 
 `Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205>`_ is 
 the original source of the MRI data. 
