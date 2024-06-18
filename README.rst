@@ -179,6 +179,7 @@ the original source of the MRI data.
    
       cd mr_subsampling/unet
       bash +x run_unet_test.sh
+      cd ..
 
 PLSTV-based reconstruction 
 -------------------------------
