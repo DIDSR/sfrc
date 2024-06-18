@@ -40,7 +40,7 @@ Usage
     --input-gen-folder    folder name containing DL or regularization method-based outputs.
     --target-gen-folder   folder name containing reference method-based outputs.
     --img-format          image format for input and target images. Dicom/raw/tif/png? To add a new image format read function look 
-                          inside the function partition_read_normalize_n_augment in file mpi_utils.py.
+                          inside the function partition_read_n_sfrc_plot_n_calc in file mpi_utils.py.
     --multi-patients      if there are multiple-subfolders related to different parents.
     --remove-edge-padding remove patches at the edges of images when mod(img size, patch size) != 0.
     --apply-hann          apply hanning filter before the frc calculation.

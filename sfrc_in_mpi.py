@@ -13,11 +13,11 @@ import h5py
 
 def sfrc_in_mpi(args):
 	#----------- MPI declarations--------------------------
-	comm = MPI.COMM_WORLD
-	rank = comm.Get_rank()
-	size = comm.Get_size()
-	dest = 0
-	root = 0
+	comm  = MPI.COMM_WORLD
+	rank  = comm.Get_rank()
+	nproc = comm.Get_size()
+	dest  = 0
+	root  = 0
 	dtype = args.dtype
 	
 	# -----------------------------------------------------
@@ -36,9 +36,10 @@ def sfrc_in_mpi(args):
 	partitioned_data = None
 
 	# ------------------------------------
-	# Read Raw images &
-	# Declare required variables
-	# to be broadcasted
+	# Read images &
+	# Declare required variables 
+	# & arrays to be broadcasted
+	# from root to other ranks
 	# -----------------------------------
 	if rank==root:
 
@@ -49,23 +50,19 @@ def sfrc_in_mpi(args):
 		print('----------------------------------------')
 		if args.img_format != 'dicom':
 			print('')
-			print('*****WARNING*********')
+			print('***********************WARNING*******************')
 			print(' Images are not in dicom format.')
-			print(' Ensure that the IMG format for input-targets pair and their sizes are accurately set \n in the function partition_read_normalize_n_augment in file mpi_utils.py.')
-			print('*********************')
-		# read all images in the input-target folder pair
+			print(' Ensure that the IMG format for input-targets pair and their sizes are accurately set')
+			print(' in the function partition_read_n_sfrc_plot_n_calc in file mpi_utils.py.')
+			print('************************************************')
+			
+		#--------------read all images in the input-target folder pair-----------------------
 		all_input_paths, all_target_paths = mpi_utils.img_paths4rm_training_directory(args)
 
-		# finding the min and max of the image list
-		# in_min, in_max = utils.min_max_4rm_img_name_arr(all_input_paths, args.img_format, args.in_dtype, args.rNx)
-		# tar_min, tar_max = utils.min_max_4rm_img_name_arr(all_target_paths, args.img_format, args.in_dtype, args.rNx)
-		# print(in_min, in_max)
-		# print(tar_min, tar_max)
-		# sys.exit()
-
-		# No. of images (or image chunck) to be processed by each processor
+		#-------------------------------------------------------------------------------
+		# No. of images (or images in a chunk) to be processed by each processor
 		# Ensuring that N_images % nproc = 0
-		nproc = size
+		#-------------------------------------------------------------------------------
 		if (np.mod(len(all_target_paths), nproc)!=0):
 			print('\n==>Total no. of image pairs to be compared is', len(all_target_paths), 'using', nproc, 'ranks.')
 			print('==>Hence, removing last', np.mod(len(all_target_paths), nproc), 'image path(s)', end =' ')
@@ -73,11 +70,16 @@ def sfrc_in_mpi(args):
 			N_last_paths = np.mod(len(all_target_paths), nproc)
 			all_target_paths = all_target_paths[:-N_last_paths]
 			all_input_paths  = all_input_paths [:-N_last_paths]
-
+		
+		#--------------------------------------------
+		# dose blend option is not used in sfrc calculations
+		# hence, the blending array is simply used as a NULL
+		# placeholder in all the rank distribution subrountines
+		# in this package. 
+		#--------------------------------------------
 		if (args.dose_blend):
 			blend_fact_arr = np.random.uniform(0.5,1.2,size=len(all_target_paths))
 		else: 
-			# dummmy place holder
 			blend_fact_arr =np.zeros((len(all_target_paths),1), dtype=dtype)
 		# print(blend_fact_arr)
 		per_ip_fk_arr = np.zeros((len(all_target_paths),1))
@@ -114,12 +116,11 @@ def sfrc_in_mpi(args):
 			output_folder = args.output_folder + (args.patch_size) + '_lp__frc_thres_' + str(args.frc_threshold) + '_hn_' + str(args.apply_hann)[0] + '_bm_' + str(args.apply_bm3d)[0] + '_bf_' +  str(args.remove_ref_noise)[0] + '_mtfS_T' + '/'
 		else:
 			output_folder = args.output_folder + (args.patch_size) + '_lp_frc_thres_' + str(args.frc_threshold) + '_hn_' + str(args.apply_hann)[0] + '_bm_' + str(args.apply_bm3d)[0] + '_bf_' +  str(args.remove_ref_noise)[0] + '_frcS_T' + '/'
-		print('\n==> Plots are saved in the folder:\n    ', output_folder)
 		if not os.path.isdir(output_folder): os.makedirs(output_folder)
 
 		# creating output folder to save patched subplots
 		if args.save_patched_subplots:
-			output_patched_folder = args.output_folder + (args.patch_size) + '_img_' + args.windowing + '_frcT_' + str(args.frc_threshold)+ '_halluT_' + str(args.ht) + '_bm_' + str(args.apply_bm3d)[0] + '_bf_' +  str(args.remove_ref_noise)[0]+'/'
+			output_patched_folder      = args.output_folder + (args.patch_size) + '_img_' + args.windowing + '_frcT_' + str(args.frc_threshold)+ '_halluT_' + str(args.ht) + '_bm_' + str(args.apply_bm3d)[0] + '_bf_' +  str(args.remove_ref_noise)[0]+'/'
 			method_patched_folder_name = output_patched_folder + 'method/'
 			ref_patched_folder_name    = output_patched_folder + 'ref/'
 			if not os.path.isdir(method_patched_folder_name): os.makedirs(method_patched_folder_name)
@@ -133,12 +134,11 @@ def sfrc_in_mpi(args):
 							  'chunck': chunck, 'nproc':nproc, 'blend_fact_arr': blend_fact_arr, 'output_folder': output_folder,\
 							  'output_patched_folder':output_patched_folder, 'tot_fk': tot_no_of_fk, 'cz_fk': per_cz_fk}
 
-
 	else:
 		bcasted_input_data  = None
 
 	bcasted_input_data  = comm.bcast(bcasted_input_data, root=root)
 	comm.Barrier()
 	
-	mpi_utils.partition_read_normalize_n_augment(args, bcasted_input_data, rank)
+	mpi_utils.partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, rank)
 	comm.Barrier()

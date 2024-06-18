@@ -20,7 +20,7 @@ parser.add_argument('--input-gen-folder', type=str,                  help="folde
 parser.add_argument('--target-gen-folder', type=str,                 help="folder name containing reference method-based outputs.")
 parser.add_argument('--img-format', type=str, default='dicom',       help='image format for input and target images. Dicom/raw/tif/png?\
                                                                      To add a new image format read function look inside the function \
-                                                                     partition_read_normalize_n_augment in file mpi_utils.py.')
+                                                                     partition_read_n_sfrc_plot_n_calc in file mpi_utils.py.')
 parser.add_argument('--multi-patients', action='store_true',         help='if there are multiple-subfolders related to different parents.')
 parser.add_argument('--remove-edge-padding', action='store_true',    help='remove patches at the edges of images when mod(img size, patch size) != 0.')
 parser.add_argument('--apply-hann', action='store_true',             help='apply hanning filter before the frc calculation.')
@@ -88,7 +88,7 @@ if __name__ == '__main__':
     # this is only used when 'unity' is set as the windowing option
     # look inside the function dict_plot_of_2d_arr in plot_func.py
     # it is also used to normalize uint8 images. So that we can apply sfrc air thresholding
-    # look into partition_read_normalize_n_augment function in mpi_utils under image format type png or tif
+    # look into partition_read_n_sfrc_plot_n_calc function in mpi_utils under image format type png or tif
     if args.in_dtype == 'uint8': 
         # for MRI dataset
         args.img_list_max_val= 255.0 

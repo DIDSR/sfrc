@@ -13,9 +13,28 @@ from mpi4py import MPI
 
 def img_paths4rm_training_directory(args):
 	"""
-	Return paths of target images from input_folder with 
-	sub-directories. Each with target images for SR
-	if random_N is True: It returns random N images' paths
+	Returns paths of input-target image pairs.
+	It is considered that the input and target image files
+	are stored inside the same folder called "input_folder"
+	and vary by tag/folder_name input_gen_folder and target_gen_folder.
+	
+	input
+	-----
+	args : parser.parse_ags() from the command line. The following arguments
+	       are used in this function
+	       input_gen_folder : string tag/foldername where input images are stored
+	       target_gen_folder: string tag/foldername where input images are stored
+	       multi_patients   : (bool) in case the input-target folders are subfolders
+	                          stored inside different patient folders. 
+	       random_N         : (bool) used as developmental or debugging tool to randomly
+	                          output couple of input-target pairs instead of all the images
+	                          stored in the input-target folder. 
+	output
+	------
+	two arrays with input and target
+	path files with filepath names
+	assorted in the ascending order. 
+
 	"""
 	if args.multi_patients: all_dir_paths = sorted(glob.glob(args.input_folder + '/*/'))
 	else:					all_dir_paths = sorted(glob.glob(args.input_folder))
@@ -32,7 +51,7 @@ def img_paths4rm_training_directory(args):
 		all_target_paths.extend(target_paths)
 	return (np.asarray(all_input_paths), np.asarray(all_target_paths))
 
-def partition_read_normalize_n_augment(args, bcasted_input_data, pid):
+def partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, pid):
 	comm                  = MPI.COMM_WORLD
 	chunck_sz             = bcasted_input_data['chunck']
 	all_input_paths       = bcasted_input_data['all_input_paths']
@@ -94,7 +113,6 @@ def partition_read_normalize_n_augment(args, bcasted_input_data, pid):
 		blend_factor=blend_fact_arr[pid*chunck_sz+j]
 			#print(pid, chunck, blend_factor)
 		if (pid==0 and j==0): 
-			# print("\n==>First target image in the raw stack (i.e. before patching) is of shape", target_image.shape)
 			print('')
 			print("    Method-based images are outputs from a new DL/regularization-based method.")
 			print("    Reference images are outputs from  standard-of-care method.")
@@ -136,23 +154,18 @@ def partition_read_normalize_n_augment(args, bcasted_input_data, pid):
 
 		if(pid==0): 
 			print("=========================================")
-			print(j+1, ' of ', chunck_sz, 'chunks done with', per_cz_fk, 'fakes')
+			print(j+1, ' of ', chunck_sz, 'chunks processed.  with', per_cz_fk, 'fakes')
 			tot_no_of_fk = tot_no_of_fk + per_cz_fk
 			print("=========================================")
 		comm.Barrier()
-	if(pid==0): print('total number of', args.patch_size,'sized fake patches:', tot_no_of_fk)
-	'''
-	# PARTs below not requireed for SFRC
-	# returning buffers
-	partitioned_data ={'chunck_pre_norm_min':np.full(1, min(pre_norm_tar_min)),\
-					   'chunck_pre_norm_max':np.full(1, max(pre_norm_tar_max)),\
-					   'chunck_post_norm_min':np.full(1, min(post_norm_tar_min)),\
-					   'chunck_post_norm_max':np.full(1, max(post_norm_tar_max)),\
-					   'chunck_input_patch_inbuff':each_rank_input_patch_inbuff,\
-					   'chunck_target_patch_inbuff':each_rank_target_patch_inbuff}	
-	return(partitioned_data)
-	'''
-	
+	if(pid==0): 
+		print('')
+		print('--------------------------------------------------------------------------------------------------')
+		print('total number of', args.patch_size,'sized fake patches across all the input images:', tot_no_of_fk)
+		print('the sFRC curves and bounded box-based subplots as fakes ROIs are stored in:', output_folder)
+		print('--------------------------------------------------------------------------------------------------')
+		print('')
+
 def augment_n_return_patch(args, input_image, target_image, i, pid, blend_factor, target_image_un=None):
 	''' 
 	here i is index within a chunk. Eg if a rank is processing 4 images 
@@ -224,10 +237,18 @@ def augment_n_return_patch(args, input_image, target_image, i, pid, blend_factor
 	return(each_img_input_patch, each_img_target_patch)
 	
 def arrtobuff(arr):
+	"""
+	converts a higher dimensional array (2D or 3D or 4D) 
+	into a rastered 1d array
+	""" 
 	buff = arr.ravel()
 	return(buff)
 
 def bufftoarr(buff, tot_element_count, ph, pw, pc):
+	"""
+	reshapes a 1d array to a higher dimensional 4D array
+	based on the sizes provided as input
+	""" 
  	pz = int(tot_element_count/(ph*pw))
  	arr = buff.reshape(pz, ph, pw, pc)
  	return(arr)
