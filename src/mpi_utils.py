@@ -2,12 +2,12 @@ import sys
 import os
 import numpy as np
 import glob
-import utils
+from . import utils
 
 import random
 import bm3d
-import io_func
-import plot_func as pf
+from . import io_func
+from . import plot_func as pf
 from skimage.restoration import denoise_bilateral
 from mpi4py import MPI
 
@@ -174,10 +174,9 @@ def augment_n_return_patch(args, input_image, target_image, i, pid, blend_factor
 	augmentation part is turned off and only patching part is 
 	executed to extract patches from a given input-target image
 	pairs in a distributed fashion using mpi
-	"""
 	here i is index within a chunk. Eg if a rank is processing 4 images 
 	then i = 0, 1, 2, 3
-
+	"""
 	if args.ds_augment:
 		input_aug_images  = utils.downsample_4r_augmentation(input_image)
 		target_aug_images = utils.downsample_4r_augmentation(target_image)

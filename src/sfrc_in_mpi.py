@@ -1,11 +1,11 @@
 import os
-import utils
+from . import utils
+from . import mpi_utils 
+
 import numpy as np
 import sys
 
-
 import argparse
-import mpi_utils 
 from mpi4py import MPI
 import random
 import h5py

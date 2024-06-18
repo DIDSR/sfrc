@@ -12,10 +12,10 @@ import random
 import cv2
 import sys
 
-import plot_func as pf
 from random import randrange
-import frc_utils
-import io_func
+from . import plot_func as pf
+from . import frc_utils
+from . import io_func
 
 # Ignoring RuntimeWarnings  
 import warnings
