@@ -15,7 +15,23 @@ from shapely import LineString, get_coordinates
 import sys
 
 def add_subplot_border(ax, width=1, color=None ):
-    """function used to add """
+    """
+    function used to add border to a given 
+    axes in a subplot
+    
+    input
+    -----
+    ax  : usage ax[ith_row, jth_col] such that the indicated 
+          [ith_row, jth_co] index with depict a bounded border 
+          in the subplot
+    width: width of the bounded border
+    color: string on the color of the border
+    
+    output
+    -----
+    indicated axes interm of ax[i_th row, j_th col] will
+    have a border
+    """
     fig = ax.get_figure()
 
     # Convert bottom-left and top-right to display coordinates
@@ -197,7 +213,7 @@ def dict_plot_of_2d_arr(args, rows, cols, bool_mat, arr_2d, cmap='Greys_r', save
              https://radiopaedia.org/articles/windowing-ct?lang=us#:~:text=The%20window%20level%20(WL)%2C,be%20brighter%20and%20vice%20versa. 
   rows      :number of rows of subplots
   cols      :number of columns of subplots
-  arr_2d    :stacked 2 
+  arr_2d    :stacked 2d arrays
   bool_mat  :a boolean matrix with 0s and 1s. 
              subplot whose corresponding value is 1 will be borded
              with a bounding box. 
@@ -263,7 +279,41 @@ def dict_plot_of_2d_arr(args, rows, cols, bool_mat, arr_2d, cmap='Greys_r', save
   if disp_plot: plt.show()
 
 def plot_n_save_img(threshold, fx_coord, frc_val, tx_coord, thres_val, output_img_name=None, save_img=True, display_img=False, plt_title='', mtf_space=False):  
+    """
+    plots, displays and save FRC curve of a full-sized image pairs
     
+    input
+    ------
+    threshold      : string on the threshold used. Eg 'half-bit'
+                     '0.5', '0.75'. It is used to set 
+                     label for the threshold used in the legend of 
+                     the full-image-based FRC plot. 
+                     If string 'all' is used, then the legend is set
+                     as 'one-bit', 'half-bit', 'EM' and 'num-constant'.
+                    'all' is used as a helping option to see all the
+                     threshold cutoff at the time of the code development.
+    fx_coord       : 1d array of x-coordinate used in the frc plot
+    frc_val        : 1d array of FRC value used in the FRC plot
+    tx_coord       : 1d array of x-coordinate corresponding to threshold values
+                     used in the frc plot. it is same as fx_coord
+    thres_val      : 1d array or a list with 4 arrays corresponding to the 
+                     four threshold: 'one-bit, half-bit, EM, 0.5. 
+    save_img       : (bool) with True or False. If true then the FRC plot is
+                     saved.
+    output_img_name: (str) and If!=None and save_img option is True, 
+                     then save the FRC plot with 
+                     the filename supplied through this option.
+    display_img    : displays the FRC plot as a GUI output
+    plt_tile       : string as the title of the plot
+    mtf_space      : bool (True or False). If true then the rings in the FRC have 
+                     0.5 as center. Else, the rings will have 0.0 as its center. mtf_space
+                     accounts for the pixel spacing. Look in the main.py file description. 
+                     and in the function patchwise_frc where info on pixel spacing is 
+                     incorporated when determining x-coordinates
+    
+    output
+    ------
+    """
     # if FRC space is true
     if mtf_space!=True: 
         frc_space=True
@@ -281,8 +331,9 @@ def plot_n_save_img(threshold, fx_coord, frc_val, tx_coord, thres_val, output_im
         plt.plot(fx_coord[:-1], frc_val[:-1], label = 'chip-FRC', color='black')
         plt.plot(tx_coord[:-1], (thres_val[0])[:-1], label='one-bit', color='green')
         plt.plot(tx_coord[:-1], (thres_val[1])[:-1], label='half-bit', color='red')
-        plt.plot(tx_coord[:-1], (thres_val[2])[:-1], label='0.5 -Thres', color='brown')
-        plt.plot(tx_coord[:-1], (thres_val[3])[:-1], label='EM', color='Orange')
+        plt.plot(tx_coord[:-1], (thres_val[2])[:-1], label='EM', color='Orange')
+        plt.plot(tx_coord[:-1], (thres_val[3])[:-1], label='num-constant', color='brown')
+
     else:
         plt.plot(fx_coord[:-1], frc_val[:-1], label = 'FRC', color='black')
         plt.plot(tx_coord[:-1], thres_val[:-1], label=threshold, color='red')
@@ -307,11 +358,55 @@ def plot_n_save_img(threshold, fx_coord, frc_val, tx_coord, thres_val, output_im
     if save_img: plt.savefig(output_img_name); plt.close()
 
 def dict_plot_of_patched_frc(bool_hallu_1darr, args, fx_coord, stacked_frc, tx_coord, thres_val, output_img_name=None, save_img=False, display_img=False, plt_title=None, mtf_space=False):
-    '''
+    """
+    customized version of pyplot's subplot function that displays, saves
+    subplots patch-wise sFRC plot for a given image pair. It also outputs
+    a boolean 2D matrix with 1's corresponding to the 
+    patches that are hallucinated as determined using sFRC curve and the 
+    hallucination threshold ht. Its other
+    output is the sum of the boolean matrix, i.e., no of fakes for a given 
+    image-pair
+    
+    input 
+    ----
+    bool_hallu_1darr: a boolean 1d array with 0s and 1s.
+                      In sFRC calculations, this 1d input vector
+                      is initialized with 1's along the patches 
+                      where there is enough contrast to be hallucinated 
+                      i.e., patches that pass air_threshold. Look in the function 
+                      patchwise_sfrc in the file utils.py
+    args            : parser.parse_ags()
+                      this function makes use of command line arguments on 
+                      threshold and ht. 
+    fx_coord        : 1d array of x-coordinate used in the sfrc plot
+    frc_val         : 1d array of FRC value used in the FRC plot
+    tx_coord        : 1d array of x-coordinate corresponding to threshold values
+                      used in the sfrc plot. it is same as fx_coord
+    thres_val       : 1d array or a list with 4 arrays corresponding to the 
+                      four threshold: 'one-bit, half-bit, EM, 0.5. 
+    save_img        : (bool) with True or False. If true then the FRC plot is
+                      saved.
+    output_img_name : (str) and If!=None and save_img option is True, 
+                      then save the FRC plot with 
+                      the filename supplied through this option.
+    display_img     : displays the FRC plot as a GUI output
+    plt_title       : string as the title of all the subplots (on the top).
+    mtf_space       : bool (True or False). If true then the rings in the FRC have 
+                      0.5 as center. Else, the rings will have 0.0 as its center. mtf_space
+                      accounts for the pixel spacing. Look in the main.py file description. 
+                      and in the function patchwise_frc where info on pixel spacing is 
+                      incorporated when determining x-coordinates
+    use direction
+    -------------
     (1) enumerate lists array row-wise. So different patch-based frc should be stacked row-wise  
     (2) row and cols of subplots is dictated by no of patches used to formulated stacked_frc arr.
         i.e., height of the arr
-    '''
+    
+    outputs
+    ------
+    (1) patch-wise sFRC plots either display and/or saved as image
+    (2) boolean 2d matrix and the sum of the boolean matrix
+    """
     # rows, cols indicate number of subplots along rows & columns
     # rows*cols = len(arr_2d)
     Npatches, _    = stacked_frc.shape

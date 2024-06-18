@@ -11,7 +11,8 @@ import sys
 
 def diagonal_split(img):
     """
-    This function takes an input image and splits it diagonally into four sub-regions.
+    This function takes a 2D image array and splits it 
+    diagonally into four sub-regions.
     The input image must have dimensions that are divisible by 4.
     
     input
@@ -140,7 +141,8 @@ def ring_indices(x, inscribed_rings=True, plot=False):
         maxindex = np.max(index)
     #output = np.zeros(int(maxindex),dtype = complex)
 
-    ''' In the next step the output is generated. The output is an array of length
+    ''' 
+    In the next step the output is generated. The output is an array of length
     maxindex. The elements in this array corresponds to the sum of all the elements
     in the original array correponding to the integer position of the output array 
     divided by the number of elements in the index array with the same value as the
@@ -266,7 +268,7 @@ def is_float(string):
 
 def FRC( i1, i2, thresholding='half-bit', inscribed_rings=True, analytical_arc_based=True, info_split=True):
     """
-    Fourier Ring Correlation
+    calculates Fourier Ring Correlation for the the two input array.
     For a thorough overview on this correlation-based metric 
     look through the workbook
     https://github.com/prabhatkc/siFRC/blob/master/lenaFRC.ipynb
@@ -283,13 +285,13 @@ def FRC( i1, i2, thresholding='half-bit', inscribed_rings=True, analytical_arc_b
                          till the edge of the two input arrays for the FRC.
                          False- yields co-centric rings till the
                          corner of the two arrays.
-    analytical_arc_based: bool as True or False. True - internally determines
-                          perimeter of a FRC ring to estimate number of indices
-                          in the ring. Else uses len function to determine the
-                          number of indices in a given FRC ring. 
-    info_split          : whenever diagonal splitting technique is used to acquire
-                          image-pairs for the FRC calculation, the thresholds are 
-                          internally adjusted to account for the split in information
+    analytical_arc_based:bool as True or False. True - internally determines
+                         perimeter of a FRC ring to estimate number of indices
+                         in the ring. Else uses len function to determine the
+                         number of indices in a given FRC ring. 
+    info_split          :whenever diagonal splitting technique is used to acquire
+                         image-pairs for the FRC calculation, the thresholds are 
+                         internally adjusted to account for the split in information
                           
                           
     output
@@ -390,14 +392,15 @@ def FRC( i1, i2, thresholding='half-bit', inscribed_rings=True, analytical_arc_b
       elif(thresholding == 'num'):      T = t_val*np.ones(np.shape(n))
       elif(thresholding == 'em'):       T = (1/7)*np.ones(np.shape(n))
       else:
+        t_val = 0.5
+        
         t1 = (0.5+2.4142*inv_sqrt_n)/(1.5+1.4142*inv_sqrt_n)
         t2 = (0.2071+1.9102*inv_sqrt_n)/(1.2071+0.9102*inv_sqrt_n) # information split twice 
-        t3 = 0.5*np.ones(np.shape(n))
-
-        t4 = (1/7)*np.ones(np.shape(n))
-        t5 = 0.75*np.ones(np.shape(n))
-        #t6 = 0.76*np.ones(np.shape(n))
-        T = [t1, t2, t3, t4, t5]
+        t3 = (1/7)*np.ones(np.shape(n))
+        t4 = t_val*np.ones(np.shape(n))
+        #t4 = 0.5*np.ones(np.shape(n))
+        #t5 = 0.75*np.ones(np.shape(n))
+        T = [t1, t2, t3, t4 ]
     else:  
       if  (thresholding == 'one-bit'): T = (1+3*inv_sqrt_n)/(2+2*inv_sqrt_n) # pixel split
       elif(thresholding == 'half-bit'):T = (0.4142+2.287*inv_sqrt_n)/ (1.4142+1.287*inv_sqrt_n) # diagonal split 
@@ -407,13 +410,15 @@ def FRC( i1, i2, thresholding='half-bit', inscribed_rings=True, analytical_arc_b
       elif(thresholding == 'num'):     T = t_val*np.ones(np.shape(n))
       elif(thresholding == 'em'):      T = (1/7)*np.ones(np.shape(n))
       else:
+          t_val = 0.5
+          
           t1 = (1+3*inv_sqrt_n)/(2+2*inv_sqrt_n)
           t2 = (0.4142+2.287*inv_sqrt_n)/ (1.4142+1.287*inv_sqrt_n) 
-          t3 = 0.5*np.ones(np.shape(n))
-          t4 = (1/7)*np.ones(np.shape(n))
-          t5 = 0.75*np.ones(np.shape(n))
-          #t6 = 0.76*np.ones(np.shape(n))
-          T = [t1, t2, t3, t4,t5,t6]
+          t3 = (1/7)*np.ones(np.shape(n))
+          t4 = t_val*np.ones(np.shape(n))
+          #t5 = 0.75*np.ones(np.shape(n))
+          #t6 = 0.50*np.ones(np.shape(n))
+          T = [t1, t2, t3, t4 ]
 
     return (x_fsc, FSC, x_T, T)
 

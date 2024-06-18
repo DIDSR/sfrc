@@ -408,7 +408,7 @@ def overlap_based_sub_images(config, input_, label_):
 
 def rotation_based_augmentation(args, sub_input, sub_label):
   """
-  This function is not used in the sFRC calculation.
+  -----This function is not used in the sFRC calculation-----------
   #-----------------------------------
   # ROTATION BASED DATA AUGMENTATION       
   #----------------------------------
@@ -446,7 +446,7 @@ def rotation_based_augmentation(args, sub_input, sub_label):
 
 def dose_blending_augmentation(args, sub_input, sub_label, blend_factor):
   """
-  This function is not used in sFRC-based calculations.
+  ------This function is not used in sFRC-based calculations--------------
   # dose blending can cause certain patches to exhibit negative values
   # Therefore minimum of these neg values should be added as (-min(patch))
   # to the corresponding input and label patches
