@@ -21,7 +21,7 @@ def add_subplot_border(ax, width=1, color=None ):
     
     input
     -----
-    ax  : usage ax[ith_row, jth_col] such that the indicated 
+    ax   : usage ax[ith_row, jth_col] such that the indicated 
           [ith_row, jth_co] index with depict a bounded border 
           in the subplot
     width: width of the bounded border

@@ -12,7 +12,7 @@ import h5py
 
 
 def sfrc_in_mpi(args):
-	#------ MPI declarations--------------------------
+	#----------- MPI declarations--------------------------
 	comm = MPI.COMM_WORLD
 	rank = comm.Get_rank()
 	size = comm.Get_size()
@@ -20,7 +20,7 @@ def sfrc_in_mpi(args):
 	root = 0
 	dtype = args.dtype
 	
-	# ---------------------------------------------------
+	# -----------------------------------------------------
 	#  Variables to be used for 
 	#  mpi-based reduce Operations
 	# -----------------------------------------------------
