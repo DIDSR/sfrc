@@ -8,9 +8,9 @@
 # ----------------------------------------------------------
 # 
 # 
-# bash +x demo_sfrc_run 'CT' '' 'sh' 1 
-# bash +x demo_sfrc_run 'CT' '' 'sm' 47
-# bash +x demo_sfrc_run 'MRI' '' 'unet' 4
+# bash +x demo_sfrc_run.sh 'CT' '' 'sh' 1 
+# bash +x demo_sfrc_run.sh 'CT' '' 'sm' 47
+# bash +x demo_sfrc_run.sh 'MRI' '' 'unet' 4
 mode=$1     # "CT" or "MRI"
 data_opt=$2 # "sel" sfrc on tuning set or '' sfrc on test set
 ker_opt=$3  # "sh" sharp kernel or "sm" smooth kernel for CT || "unet" or "plstv" for MRI

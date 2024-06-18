@@ -52,6 +52,8 @@ def img_paths4rm_training_directory(args):
 	return (np.asarray(all_input_paths), np.asarray(all_target_paths))
 
 def partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, pid):
+	"""
+	"""
 	comm                  = MPI.COMM_WORLD
 	chunck_sz             = bcasted_input_data['chunck']
 	all_input_paths       = bcasted_input_data['all_input_paths']
@@ -134,7 +136,8 @@ def partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, pid):
 			
 			target_image                = utils.normalize_data_ab(ref_min, ref_max, btarget_image)
 			input_image                 = utils.normalize_data_ab(me_min, me_max, binput_image)
-
+		
+		# -------------------using bilateral filtering to remove gently remove noise --------------------------------
 		if args.remove_ref_noise:
 			ref_max, ref_min            = np.max(target_image), np.min(target_image)
 			_, gtarget_image            = utils.img_pair_normalization(input_image, target_image, 'unity_independent')
@@ -167,10 +170,14 @@ def partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, pid):
 		print('')
 
 def augment_n_return_patch(args, input_image, target_image, i, pid, blend_factor, target_image_un=None):
-	''' 
+	"""
+	augmentation part is turned off and only patching part is 
+	executed to extract patches from a given input-target image
+	pairs in a distributed fashion using mpi
+	"""
 	here i is index within a chunk. Eg if a rank is processing 4 images 
 	then i = 0, 1, 2, 3
-	'''
+
 	if args.ds_augment:
 		input_aug_images  = utils.downsample_4r_augmentation(input_image)
 		target_aug_images = utils.downsample_4r_augmentation(target_image)
