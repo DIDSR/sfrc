@@ -135,7 +135,8 @@ Apply trained SRGAN
 --------------------
 The SRGAN checkpoint provided in this repository was trained using CT images from the six patients provided in 
 `LDGC dataset <https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=52758026>`_ and as detailed in the sFRC paper.
-This checkpoint can be applied to the low-resolution CT images provided in this repository in the following manner: 
+This checkpoint can be applied to the low-resolution CT images provided in this repository to upscale them by a factor of 4
+in the following manner: 
 
 3. Apply SRGAN on tuning set
 
@@ -165,8 +166,8 @@ of CT images are test set for the sFRC analysis (as used in the `sFRC paper <10.
    .. code-block:: 
 
       cd ..
-      bash +x demo_sfrc_run.sh 'test' 'sh' 47 # on sharp test data with 47 set as no. of processors
-      bash +x demo_sfrc_run.sh 'test' 'sm' 47 #on smooth test data with 47 set as the no. of processors
+      bash +x demo_sfrc_run.sh 'CT' 'test' 'sh' 47 # on sharp test data with 47 set as no. of processors
+      bash +x demo_sfrc_run.sh 'CT' 'test' 'sm' 47 #on smooth test data with 47 set as the no. of processors
 
 Apply trained UNet 
 -------------------
