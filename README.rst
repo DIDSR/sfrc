@@ -1,6 +1,6 @@
 .. raw:: html
 
-    <p align="center"><img src="paper_plots/intro_plot.png" alt="Logo" width="600"/></p>
+    <p align="center"><img src="paper_plots/sFRC_1_20_smSRGAN_shtest.gif" alt="Logo" width="600"/></p>
 
 sFRC for detecting fakes in AI-assisted medical image restoration (postprocessing or reconstruction) 
 ======================================================================================================
