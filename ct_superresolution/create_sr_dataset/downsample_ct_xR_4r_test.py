@@ -18,12 +18,12 @@ def main():
 	if sm_L067: #smooth
 		sel_img_4r_L067 = [39, 69, 149, 189, 217] # images used to tune sFRC
 		in_dir_name     = home_dir + '/common_data/LDGC/full_3mm/full_3mm_smooth/L067/full_3mm'
-		out_dir_name    = home_dir + '/code/GitRepo/mpi_sfrc/ctsr/data/test_sm_L067/ua_ll_3mm'
+		out_dir_name    = home_dir + '/code/GitRepo/mpi_sfrc/ct_superresolution/data/test_sm_L067/ua_ll_3mm'
 
 	else: #sharp
 		sel_img_4r_L067 = [39, 69, 148, 188, 216] # last three images are one step below due to the fact that sh L067 in LDGC is missing 107 
 		in_dir_name    = home_dir + '/common_data/LDGC/full_3mm/full_3mm_sharp/L067/full_3mm_sharp_sorted'
-		out_dir_name   = home_dir + '/code/GitRepo/mpi_sfrc/ctsr/data/test_sh_L067/ua_ll_3mm'
+		out_dir_name   = home_dir + '/code/GitRepo/mpi_sfrc/ct_superresolution/data/test_sh_L067/ua_ll_3mm'
 
 	scale 		   = 4
 	input_img_type = 'dicom'

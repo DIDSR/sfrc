@@ -1,11 +1,13 @@
+import sys
+sys.path.append('../')
 import numpy as np
 import numpy.fft as fft
-import frc_utils
-import io_func
-import frc_utils
-import plot_func as pf 
+from src import frc_utils
+from src import io_func
+from src import frc_utils
+from src import plot_func as pf 
 import os
-import utils
+from src import utils
 
 def get3_comp_of_img(img, band1_ep, band2_ep, band3_ep):
     h, w   = img.shape
@@ -49,9 +51,9 @@ def get3_fft_bands_of_img(img, band1_ep, band2_ep, band3_ep):
 plot_fig = False
 save_fig = True 
 # crop img path
-gt_path  = './paper_plots/plot2/crop_img_uint8_L_50_w_400/gt_000069.png'
-cnn_path = './paper_plots/plot2/crop_img_uint8_L_50_w_400/srgan_000069.png'
-out_path = './paper_plots/plot2/main_fig/'
+gt_path  = './plot2/crop_img_uint8_L_50_w_400/gt_000069.png'
+cnn_path = './plot2/crop_img_uint8_L_50_w_400/srgan_000069.png'
+out_path = './plot2/main_fig/'
 
 gt_img  = io_func.imageio_imread(gt_path)
 cnn_img = io_func.imageio_imread(cnn_path)
