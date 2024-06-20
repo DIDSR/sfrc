@@ -9,7 +9,8 @@ sFRC for detecting fakes in AI-assisted medical image restoration (postprocessin
   `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. You can also perform sFRC analysis to find fakes from traditional regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
 - **Inputs**: Restored medical images from Deep learning- or Regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold.
 - **Outputs**: Small-sized red bounding boxes on input images that are deemed as fake ROIs (in AI-assisted as well as reference images), and the total number of such fake ROIs in the provided input images. 
-  Demo movie files on sFRC-labeled fakes for a CT super-resolution problem is provided `here <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
+  An illustration on sFRC-based output – on SRGAN (left) and sharp-FBP (right) images  – using 20 image pairs from the sFRC paper for the CT super-resolution problem is provided above. 
+  Movie files on sFRC-labeled fakes for the entire CT test set is provided `here <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 - **Demo**: On two image restoration problems: CT super-resolution (**ct_superresolution**), and MRI sub-sampling (**mr_subsampling**).
 
 .. contents::
