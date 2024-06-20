@@ -193,7 +193,7 @@ Then edit the path to BART's python wrapper in line 20 in file "./mr_subsampling
 
    .. code-block:: 
 
-      cd mr_subsampling/plstv
+      cd plstv
       bash +x run_bart_pls_tv.sh
 
 References 
