@@ -88,9 +88,11 @@ Create a new conda enviroment and install the required packages as follows:
     
     $ conda create -n mpi_sfrc python=3.7.5 --no-default-packages
     $ conda activate mpi_sfrc
-    $ conda install -c anaconda h5py==3.6.0
+    $ conda install -c anaconda h5py==3.6.0 # other h5py versions may incur memory leak
+    # to install packages for performing sFRC-based calculations
     $ pip install -r ./requirements/sfrc_requirements.txt
-    $ pip install -r ./requirements/mri_unet_requirements.txt
+    # to install packages to perform CT super-resolution and MRI reconstruction
+    $ pip install -r ./requirements/im_recon_requirements.txt 
 
 DEMO execution of sFRC
 ----------------------------------------------------------
@@ -113,7 +115,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
       
       bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 1
 
-   'CT' indicates sfrc on CT-based data. 'sh' and 'tune' are options to indicate paths for sharp kernel-based data and 
+   'CT' indicates sFRC applied on CT-based data. 'sh' and 'tune' are options to indicate paths for sharp kernel-based data and 
    tuning set for sFRC parameters used in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. Likewise 'sm' indicates smooth kernel-based test set. 
    1 indicates one processing unit (-np) to be used in our mpi-based sFRC implementation. 
    Note that, in this git repo, the demo example for the CT application includes only 5 CT images. 

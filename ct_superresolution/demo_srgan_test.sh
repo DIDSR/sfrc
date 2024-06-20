@@ -58,9 +58,9 @@ export CUDA_VISIBLE_DEVICES=0
 RESOLVE_PY=resolve_sr.py
 MODEL_FOLDER="./checkpoints/srgan/"
 NORM_TYPE="unity_independent"
-INPUT_FOLDER="./data/test_${ker_opt}_L067/ua_ll_3mm_LR${data_opt}_x4/"
-GT_FOLDER="./data/test_${ker_opt}_L067/ua_ll_3mm_HR${data_opt}_x4/"
-OUTPUT_FOLDER="./results/test_${ker_opt}_L067/ua_ll_smSRGAN${data_opt}_in_x4/"
+INPUT_FOLDER="./data/test_${ker_opt}_L067/ua_ll_3mm_LR_${data_opt}_x4/"
+GT_FOLDER="./data/test_${ker_opt}_L067/ua_ll_3mm_HR_${data_opt}_x4/"
+OUTPUT_FOLDER="./results/test_${ker_opt}_L067/ua_ll_smSRGAN$_{data_opt}_in_x4/"
 
 python $RESOLVE_PY --m 'srgan' --input-folder ${INPUT_FOLDER} --model-folder ${MODEL_FOLDER} --gt-folder ${GT_FOLDER} \
 --output-folder ${OUTPUT_FOLDER} --cuda --normalization-type $NORM_TYPE --input-img-type 'raw' --specific-epoch \
