@@ -26,7 +26,7 @@ then
   INPUT_FOLDER="./ct_superresolution/results/${ker_opt}_L067/ua_ll_smSRGAN_${data_opt}_in_x4/checkpoint-generator-20/"
   INPUT_GEN="test_${ker_opt}_L067_cnn"
   TARGET_GEN="test_${ker_opt}_L067_gt"
-  time mpirun --mca btl ^openib -np $nranks \
+  mpirun --mca btl ^openib -np $nranks \
   python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p64'   \
   --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} \
   --img-format 'raw' --frc-threshold '0.5' --in-dtype 'uint16' \
@@ -50,7 +50,7 @@ then
     echo "Re-check method type cmd input for MRI. It can be unet or plstv"
     break
   fi
-  time mpirun --mca btl ^openib -np $nranks \
+  mpirun --mca btl ^openib -np $nranks \
   python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p48'   \
   --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} \
   --img-format 'png' --frc-threshold '0.75' --in-dtype 'uint8'\
