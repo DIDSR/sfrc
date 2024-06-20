@@ -156,16 +156,16 @@ def partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, pid):
 		comm.Barrier()
 
 		if(pid==0): 
-			print("=========================================")
-			print(j+1, ' of ', chunck_sz, 'chunks processed.  with', per_cz_fk, 'fakes')
+			print("======================================================")
+			print(j+1,' of ', chunck_sz, 'chunks processed. This chunk has', per_cz_fk, 'fakes')
 			tot_no_of_fk = tot_no_of_fk + per_cz_fk
-			print("=========================================")
+			print("=====================================================")
 		comm.Barrier()
 	if(pid==0): 
 		print('')
 		print('--------------------------------------------------------------------------------------------------')
 		print('total number of', args.patch_size,'sized fake patches across all the input images:', tot_no_of_fk)
-		print('the sFRC curves and bounded box-based subplots as fakes ROIs are stored in:', output_folder)
+		print('the sFRC curves and bounded box-based subplots as fakes ROIs are stored in:', args.output_folder)
 		print('--------------------------------------------------------------------------------------------------')
 		print('')
 
