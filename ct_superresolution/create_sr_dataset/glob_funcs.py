@@ -6,11 +6,19 @@ import scipy.misc
 
 def modcrop(image, scale=3):
   """
-  To scale down and up the original image, first thing to do is to have no remainder while scaling operation.
+  To ensure that transition between HR to LR 
+  and vice-versa is divisible by the scaling 
+  factor without any remainder the input image
+  is cropped relative the scaling factor
   
-  We need to find modulo of height (and width) and scale factor.
-  Then, subtract the modulo from height (and width) of original image size.
-  There would be no remainder even after scaling operation.
+  input
+  -----
+  image: input 2d or 3d array to be croped
+  scale: super-resolution scaling factor
+  
+  output
+  -----
+  cropped array such that mod((h, w) of output, scale)=0
   """
   if len(image.shape) == 3:
     h, w, _ = image.shape
@@ -26,6 +34,19 @@ def modcrop(image, scale=3):
 
 
 def normalize_data_ab(a, b, data):
+    """
+    Normalizes the input data to a new range (b-a).
+    
+    inputs
+    -----
+    data: numpy array to be normalized
+    a   : min value of the normalized output
+    b   : max value of the normalized output
+    
+    yields
+    -------
+    normalized data
+    """
     # input (min_data, max_data) with range (max_data - min_data) is normalized to (a, b)
     min_x = min(data.ravel())
     max_x = max(data.ravel())  
@@ -33,15 +54,44 @@ def normalize_data_ab(a, b, data):
     return((b-a)*((data-min_x)/range_x)+a)
 
 def normalize_data_ab_cd(a, b, c, d, data):
-    # input data (min_data, max_data) with range (d-c) is normalized to (a, b)
+    """
+    Normalizes the input data with a range (d-c) to a new range (b-a).
+    
+    inputs
+    -----
+    data: numpy array to be normalized
+    c   : min value of input array
+    d   : max value of input array
+    a   : min value of the normalized output
+    b   : max value of the normalized output
+    
+    returns
+    -------
+    normalized data
+    """
     min_x = c
     max_x = d  
     range_x = max_x - min_x 
     return((b-a)*((data-min_x)/range_x)+a)
 
 def add_rnl_white(rnl, b, mu, sigma):
-    """ sigma = std 
-    var = sigma^2
+    """ 
+    add relative white noise such that
+    norm2(input array)/norm2(added noise) = relative ratio
+    
+    input
+    -----
+    rnl  : relative ratio
+    b    : input array
+    mu   : mean of the initialized random noise
+    sigma: standard deviation initialized random noise
+    
+    output
+    ------
+    array with added relative noise
+    note that the mu and sigma of the added noise will
+    be different than that provided as input because the 
+    objective here to add relative noise.
     """
     h, w = b.shape
     randn =  np.random.normal(loc = mu, scale = sigma, size = (h,w))
@@ -50,28 +100,40 @@ def add_rnl_white(rnl, b, mu, sigma):
     return(b + e)
 
 def pydicom_imread(path):
-  """ reads dicom image with filename path 
-  and dtype be its original form
+  """ 
+  reads image stored in a dicom file 
+  in the dtype that was originally used to
+  store the corresponding image array
+  
+  input
+  -----
+  path (str): dicom image path 
+  
+  output
+  ------
+  array in type foat32
   """
   input_image = pydicom.dcmread(path)
   return(input_image.pixel_array.astype('float32'))
 
 def imageio_imread(path):
   """
-   imageio based imread reads image in its orginal form even if its in
-   - ve floats
+  imageio based reading function that reads specified file
+  in its original format even if its in - ve floats
+  Note that the image data is returned as-is, and may not always 
+  have a dtype of uint8
   """
-  return(imageio.imread(path).astype('float32'))
+  return(imageio.imread(path))
 
 def imsave(image, path, type=None):
   
   """
-    imageio will save values in its orginal form even if its float
-    if type='original' is specified
-    else scipy save will save the image in (0 - 255 values)
-    scipy new update has removed imsave from scipy.misc due
-    to reported errors ... so just use imwrite from imageio 
-    by declaring orginal and changing the data types accordingly
+  imageio will save values in its orginal form even if its float
+  if type='original' is specified
+  else scipy save will save the image in (0 - 255 values)
+  scipy new update has removed imsave from scipy.misc due
+  to reported errors ... so just use imwrite from imageio 
+  by declaring orginal and changing the data types accordingly
   """
   if type is "original":
     return(imageio.imwrite(path, image))
@@ -80,10 +142,21 @@ def imsave(image, path, type=None):
 
 def plot2dlayers(arr, xlabel=None, ylabel=None, title=None, cmap=None, colorbar=True):
     """
-    'brg' is the best colormap for reb-green-blue image
-    'brg_r': in 'brg' colormap green color area will have
-        high values whereas in 'brg_r' blue area will have
-        the highest values
+    customized version using matplotlib to imshow array as 2D image
+    
+    input
+    -----
+    arr   : 2D array
+    xlabel: string to set x-coordinate label in the plot
+    ylabel: string to set x-coordinate label in the plot
+    title : string to set title in the plot
+    cmap  : string to set colormap of the 2D plot
+            'brg' is the optimal colormap for reb-green-blue image
+            'brg_r': in 'brg' colormap green color area will have
+             high values whereas in 'brg_r' blue area will have
+             the highest values
+             'Greys_r': is the default colormap
+    colorbar: bool if true diplays colorbar
     """
     if xlabel is None:
         xlabel=''
@@ -101,12 +174,31 @@ def plot2dlayers(arr, xlabel=None, ylabel=None, title=None, cmap=None, colorbar=
     plt.ylabel(ylabel)
     plt.title(title)
     plt.show()
-    
 
 def multi2dplots(nrows, ncols, fig_arr, axis, passed_fig_att=None):
     """
-      gf.multi2dplots(1, 2, lena_stack, axis=0, passed_fig_att={'colorbar': False, 'split_title': np.asanyarray(['a','b']),'out_path': 'last_lr.tif'})
-      where lena_stack is of size (2, 512, 512)
+    customized function to show different layers of a 3D array 
+    as 2D subplots
+    
+    usage
+    ------
+    multi2dplots(1, 2, lena_stack, axis=0, passed_fig_att={'colorbar': False, \
+    'split_title': np.asanyarray(['a','b']),'out_path': 'last_lr.tif'})
+    where lena_stack is of size (2, 512, 512)
+    
+    input
+    -----
+    nrows       : no. of rows in the subplots
+    ncols       : no. of columns in the subplots
+    fig_arr     : 3D array used for the subplots
+    axis        : axis that is held constant and the 2D plot is demostrated
+                  along the other two axes
+    passed_fig_att : customized arguments imported from pyplot's subplot kwargs
+                     See the default arguments below
+                     
+    output
+    -----
+    subplots as figure
     """
     default_att= {"suptitle": '',
             "split_title": np.asanyarray(['']*(nrows*ncols)),

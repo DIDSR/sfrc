@@ -30,11 +30,11 @@ def main():
 	in_dtype	   = 'uint16'
 	out_dtype      = in_dtype
     
-	hr_out_dir = os.path.join(out_dir_name + '_HR_x' + str(scale) + '/')
-	lr_out_dir = os.path.join(out_dir_name + '_LR_x' + str(scale) +'/')
+	hr_out_dir = os.path.join(out_dir_name + '_HR_test_x' + str(scale) + '/')
+	lr_out_dir = os.path.join(out_dir_name + '_LR_test_x' + str(scale) +'/')
 	
-	sel_hr_out_dir = os.path.join(out_dir_name + '_HRsel_x' + str(scale) + '/')
-	sel_lr_out_dir = os.path.join(out_dir_name + '_LRsel_x' + str(scale) +'/')
+	sel_hr_out_dir = os.path.join(out_dir_name + '_HR_tune_x' + str(scale) + '/')
+	sel_lr_out_dir = os.path.join(out_dir_name + '_LR_tune_x' + str(scale) +'/')
 	
 	if not os.path.isdir(hr_out_dir): os.makedirs(hr_out_dir)
 	if not os.path.isdir(lr_out_dir): os.makedirs(lr_out_dir)
