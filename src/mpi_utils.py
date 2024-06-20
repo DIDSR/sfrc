@@ -53,6 +53,15 @@ def img_paths4rm_training_directory(args):
 
 def partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, pid):
 	"""
+	main functio that read input-target image pairs, transforms them into
+	patches, calculates sFRC and outputs/display sFRC curves and bounded 
+	red boxes as fake ROIs
+	
+	input
+	-----
+	args               :  parser.parse_ags() from the command line. 
+	bcasted_input_data : parameters set or gathered using the root rank (rank 0)
+	pid                : rank number from mpi
 	"""
 	comm                  = MPI.COMM_WORLD
 	chunck_sz             = bcasted_input_data['chunck']
@@ -171,11 +180,31 @@ def partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, pid):
 
 def augment_n_return_patch(args, input_image, target_image, i, pid, blend_factor, target_image_un=None):
 	"""
+	inputs full sized image pairs and outputs their complimentary
+	patches as 4D array with patches stack along axis=0 and the 
+	forth axis (axis=3) has size=1.
+	
 	augmentation part is turned off and only patching part is 
 	executed to extract patches from a given input-target image
 	pairs in a distributed fashion using mpi
-	here i is index within a chunk. Eg if a rank is processing 4 images 
-	then i = 0, 1, 2, 3
+	here i is index for different chunks. Each given rank processes
+	different image within a given chunk
+	input
+	------
+	args         : parser.parse_ags() from the command line. This function primarily makes 
+	               use of the patch_size parameter set as command line argument. 
+	input_image  : full-sized input image as 2d array (from DL or reg-based reconstruction)
+	target_image : full-size reference image as 2D array (from standard-of-care like FBP)
+	i            : chunk index (integer value between 0 and (No. of images/no. of processors)
+	pid          : rank number in mpi
+	blend_factor : not used for sFRC calculation. Its is a zero vector 
+	               with length size same as the no. of images to be processed 
+	               provided as command line argument
+	target_image_un : un-normalized target image as 2d array
+	
+	output
+	------
+	complimentary patches from the full-size input-target pair
 	"""
 	if args.ds_augment:
 		input_aug_images  = utils.downsample_4r_augmentation(input_image)
