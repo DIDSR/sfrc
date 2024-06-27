@@ -2,12 +2,12 @@
 
     <p align="center"><img src="paper_plots/sFRC_1_20_smSRGAN_shtest.gif" alt="Logo" width="600"/></p>
 
-sFRC for detecting fakes in AI-assisted medical image restoration (postprocessing or reconstruction) 
-======================================================================================================
+sFRC for detecting fakes in AI-assisted & iterative-based medical image restoration (postprocessing or reconstruction) 
+========================================================================================================================
 
 - **sFRC**: scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically identify fakes as detailed in our 
-  `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. You can also perform sFRC analysis to find fakes from traditional regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
-- **Inputs**: Restored medical images from Deep learning- or Regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold.
+  `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. You can also perform sFRC analysis to find fakes from iterative regularization-based methods by simply comparing images from -based vs. reference methods. 
+- **Inputs**: Restored medical images from Deep learning- or Iterative regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold.
 - **Outputs**: Small-sized red bounding boxes on input images that are deemed as fake ROIs (in AI-assisted as well as reference images), and the total number of such fake ROIs in the provided input images.
   These ROIs as red bounded box indicate that those regions have not been faithfully reconstructed. They may exhibit imaging errors that are readily non-discernible fakes to human eyes. Some of the 
   fakes/hallucination observed in our study include over-smoothing, in-homogeneity, tiny structural changes, removal of subtle features/signals, distortion of small organelles, addition of minute 
