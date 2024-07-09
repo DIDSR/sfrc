@@ -2,7 +2,7 @@
 
     <p align="center"><img src="paper_plots/sFRC_1_20_smSRGAN_shtest.gif" alt="Logo" width="600"/></p>
 
-sFRC for detecting fakes in AI-assisted & iterative-based medical image restoration (postprocessing or reconstruction) 
+sFRC for detecting fakes in medical image restoration 
 ========================================================================================================================
 
 - **sFRC**: scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically identify fakes as detailed in our 
