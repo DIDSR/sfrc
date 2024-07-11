@@ -1,27 +1,54 @@
+sFRC for detecting fakes in medical image restoration 
+========================================================================================================================
+**sFRC** scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically identify fakes as detailed in our 
+`sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. You can also perform sFRC analysis to find fakes from iterative regularization-based methods by simply comparing images from -based vs. reference methods. 
+
 .. raw:: html
 
     <p align="center"><img src="paper_plots/sFRC_1_20_smSRGAN_shtest.gif" alt="Logo" width="600"/></p>
 
-sFRC for detecting fakes in medical image restoration 
-========================================================================================================================
 
-**sFRC**: scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically identify fakes as detailed in our 
-`sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. You can also perform sFRC analysis to find fakes from iterative regularization-based methods by simply comparing images from -based vs. reference methods. 
+
 - **Inputs**: Restored medical images from Deep learning- or Iterative regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold.
 
 .. raw:: html
+   
+   <div align="center">
 
-    <p align="center"><img src="paper_plots/illustration1.png" alt="sfrc illustration" width="400"/></p>
+.. figure:: paper_plots/illustration1.png
+   :alt: some image
+   :width: 500px
+
+*Fig 1: An illustration of inputs sFRC as test images from AI-based and physics-based methods and hallucination threshold. The figure also depicts outputs as red-bounding boxes on AI-based images to indicate fake patches.* 
+
+.. raw:: html
+
+   </div>
 
 - **Outputs**: Small-sized red bounding boxes on input images that are deemed as fake ROIs (in AI-assisted as well as reference images), and the total number of such fake ROIs in the provided input images.
   These ROIs as red bounded box indicate that those regions have not been faithfully reconstructed. They may exhibit imaging errors that are readily non-discernible fakes to human eyes. Some of the 
   fakes/hallucination observed in our study include over-smoothing, in-homogeneity, tiny structural changes, removal of subtle features/signals, distortion of small organelles, addition of minute 
   indentation-/blood vessel-/plaque-like structures, coalescing of small organelles, unwarranted foldings, contrast migration anomaly etc. 
   
-  An illustration on sFRC-based output – on SRGAN (left) and sharp-FBP (right) images  – using 20 image pairs from the sFRC paper for the CT super-resolution problem is provided above. 
+  A gif-based illustration on sFRC-based output – on SRGAN (left) and sharp-FBP (right) images  – using 20 image pairs from the sFRC paper for the CT super-resolution problem is provided above. 
   Movie files on sFRC-labeled fakes for the entire CT test set is provided `here <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
+
+.. raw:: html
+   
+   <div align="center">
+
+.. figure:: paper_plots/illustration2.png
+   :width: 700
+
+*Fig 2:  Red bounding boxes as outputs from sFRC. The bounding boxes on (a) physics-based and (b) AI-based images indicate reference anatomy and fakes detected by sFRC. The AI-based image was restored from subsampled MRI data acquired using an acceleration factor of three (i.e., using only 33% of raw measurement data). The reference image was restored using physics-based inverse Fourier transform on the fully sampled data (i.e., using 100% of raw measurement data). A zoomed view in (d) of the red bounded patches from the AI-based image reveals aliasing, thickening of grey matter with the loss of a subtle sulcus feature, banding artifacts with black stripes crossing into grey matter, removal of the dark signal as compared to their reference patches in (c).*
+
+.. raw:: html
+
+   </div>
+
 - **Demo**: On two image restoration problems: CT super-resolution (**ct_superresolution**), and MRI sub-sampling (**mr_subsampling**).
 
+|
 .. contents::
 
 |
