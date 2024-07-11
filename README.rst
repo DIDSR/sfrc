@@ -1,7 +1,7 @@
 sFRC for detecting fakes in medical image restoration 
 ========================================================================================================================
 **sFRC** scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically identify fakes as detailed in our 
-`sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. You can also perform sFRC analysis to find fakes from iterative regularization-based methods by simply comparing images from -based vs. reference methods. 
+`sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. You can also perform sFRC analysis to find fakes from iterative regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
 
 .. raw:: html
 
@@ -19,7 +19,7 @@ sFRC for detecting fakes in medical image restoration
    :alt: some image
    :width: 500px
 
-*Fig 1: An illustration of inputs sFRC as test images from AI-based and physics-based methods and hallucination threshold. The figure also depicts outputs as red-bounding boxes on AI-based images to indicate fake patches.* 
+*Fig 1: An illustration of inputs to sFRC as test images from AI-based and physics-based methods and hallucination threshold. The figure also depicts outputs as red-bounding boxes on AI-based images to indicate fake patches.* 
 
 .. raw:: html
 
