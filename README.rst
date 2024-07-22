@@ -19,7 +19,7 @@ sFRC for detecting fakes in medical image restoration
    :alt: some image
    :width: 500px
 
-*Fig 1: An illustration of inputs to sFRC as test images from novel methods (such as AI or Iterative-based) and reference methods (such as physics-based), and hallucination threshold. The figure also depicts outputs as red-bounding boxes on images from the novel and reference methods to indicate fake patches and actual anatomy in the corresponding reference patches. The bottom plot depicts an example of using sFRC for a subsampled MRI restoration problem. The novel method is AI-based, and the reference method is inverse Fourier transform (iFT). From the zoomed patches we can explicitly see the removal of a dark signal in the AI-based image as compared to the iFT image.
+*Fig 1:  An illustration of inputs to sFRC as test images from novel methods (such as AI or Iterative-based) and reference methods (such as physics-based), and hallucination threshold. The figure also depicts outputs as red-bounding boxes on images from the novel and reference methods to indicate fake patches and actual anatomy in the corresponding reference patches. The bottom plot depicts an example of using sFRC for a subsampled MRI restoration problem. The novel method is AI-based, and the reference method is inverse Fourier transform (iFT). From the zoomed patches we can explicitly see the removal of a dark signal in the AI-based image as compared to the iFT image.
 
 .. raw:: html
 
