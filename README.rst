@@ -25,6 +25,21 @@ sFRC for detecting fakes in medical image restoration
 
    </div>
 
+- **Hallucination Threshold**: The hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as fake by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_]
+
+.. raw:: html
+   
+   <div align="center">
+
+.. figure:: paper_plots/git_illustration2.png
+   :alt: some image
+   :width: 500px
+
+*Fig 2: An illustration on setting the hallucination threshold for the sFRC analysis.*
+.. raw:: html
+
+   </div>
+
 - **Outputs**: Small-sized red bounding boxes on input images that are deemed as fake ROIs (in AI-assisted as well as reference images), and the total number of such fake ROIs in the provided input images.
   These ROIs as red bounded box indicate that those regions have not been faithfully reconstructed. They may exhibit imaging errors that are readily non-discernible fakes to human eyes. Some of the 
   fakes/hallucination observed in our study include over-smoothing, in-homogeneity, tiny structural changes, removal of subtle features/signals, distortion of small organelles, addition of minute 
