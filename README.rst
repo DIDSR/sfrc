@@ -25,7 +25,7 @@ sFRC for detecting fakes in medical image restoration
 
    </div>
 
-- **Hallucination Threshold**: The hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as fake by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_]. The FRC threshold is usually set the same for a given modality. In this work, we used y=0.5 and y=0.75 as the FRC thresholds for the CT superresolution and MRI subsampling problems respectively.  
+- **Hallucination Threshold**: The hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as fake by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_]. Using the known fake patches, patch-wise FRC curves are obtained. Then the hallucination threshold is set as the maximum of the x-coordinate values corresponding to the set of x-coordinates due to the intersection between the FRC curves and the FRC thresholds.The FRC threshold is usually set the same for a given modality. In this work, we used y=0.5 and y=0.75 as the FRC thresholds for the CT superresolution and MRI subsampling problems respectively.  
 
 .. raw:: html
    
