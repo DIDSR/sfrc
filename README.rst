@@ -37,10 +37,10 @@ sFRC for detecting fakes in medical image restoration
    
    <div align="center">
 
-.. figure:: paper_plots/illustration2.png
+.. figure:: paper_plots/git_illustration3.png
    :width: 700
 
-*Fig 2:  Red bounding boxes as outputs from sFRC. The bounding boxes on (a) physics-based and (b) AI-based images indicate reference anatomy and fakes detected by sFRC. The AI-based image was restored from subsampled MRI data acquired using an acceleration factor of three (i.e., using only 33% of raw measurement data). The reference image was restored using physics-based inverse Fourier transform on the fully sampled data (i.e., using 100% of raw measurement data). A zoomed view in (d) of the red bounded patches from the AI-based image reveals aliasing, thickening of grey matter with the loss of a subtle sulcus feature, banding artifacts with black stripes crossing into grey matter, removal of the dark signal as compared to their reference patches in (c).*
+*Fig 2:  Red bounding boxes as outputs from sFRC. The bounding boxes on an AI-based and an inverse Fourier Transform (iFT)-based images indicate fakes detected by sFRC and corresponding reference anatomy. The AI-based image was restored from subsampled MRI data acquired using an acceleration factor of three (i.e., using only 33% of raw measurement data). The reference image was restored using physics-based inverse Fourier transform on the fully sampled data (i.e., using 100% of raw measurement data). A zoomed view of a pair of patches indicates removal of the dark signal in AI-based image as compared to its reference iFT patch. *
 
 .. raw:: html
 
