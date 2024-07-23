@@ -36,6 +36,7 @@ sFRC for detecting fakes in medical image restoration
    :width: 500px
 
 *Fig 2: An illustration on setting the hallucination threshold for the sFRC analysis.*
+
 .. raw:: html
 
    </div>
