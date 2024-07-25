@@ -9,7 +9,7 @@ sFRC for detecting fakes in medical image restoration
 
 
 
-- **Inputs**: Restored medical images from Deep learning- or Iterative regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold.
+- **Inputs**: Restored medical images from Deep learning- or Iterative regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold. For a given patch obtained from a novel restoration method, the sFRC curve corresponding to the patch is used to indicate fake vs non-fake about the patch based on whether the curve drops below a pre-set hallucination threshold. Specifically, a pre-set hallucination threshold (either based on a user’s or an imaging theory-based clinical criteria/image quality criteria on what merits to be a proper reconstruction) is repeatedly and automatically applied across the testing images to identify fake patches. 
 
 .. raw:: html
    
@@ -25,8 +25,7 @@ sFRC for detecting fakes in medical image restoration
 
    </div>
 
-- **Hallucination Threshold**: It is a frequency value between 0 to 0.5*pixel\  :sup:`-1`. If 1px = 0.50 mm then hallucination threshold could be set between 0 and 1 mm \  :sup:`-1` (i.e., the endpoint of the sFRC’s Y-axis). A hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as fake by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_]. Using the known fake patches, patch-wise FRC curves are obtained. Then the hallucination threshold is set as the maximum of the x-coordinate values corresponding to the set of x-coordinates due to the intersection between the FRC curves and the FRC thresholds.The FRC threshold is usually set the same for a given modality. In this work, we used y=0.5 and y=0.75 as the FRC thresholds for the CT superresolution and MRI subsampling problems respectively.
-When tuning the hallucination threshold data point corresponding to one-third of Y-axis of an sFRC plot is a good starting point.   
+- **Hallucination Threshold**: It is a frequency value between 0 to 0.5*pixel\  :sup:`-1`. If 1 pixel = 0.50 mm then hallucination threshold could be set between 0 and 1 mm \  :sup:`-1` (where, 1 mm \  :sup:`-1` is the endpoint of the sFRC’s Y-axis). A hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as fake by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_]. Using the known fake patches, patch-wise FRC curves are obtained. Then the hallucination threshold is set as the maximum of the x-coordinate values corresponding to the set of x-coordinates due to the intersection between the FRC curves and the FRC thresholds.The FRC threshold is usually set the same for a given modality. In this work, we used y=0.5 and y=0.75 as the FRC thresholds for the CT superresolution and MRI subsampling problems respectively. When tuning the hallucination threshold, the data point corresponding to one-third of Y-axis of an sFRC plot is a good starting point.   
 
 .. raw:: html
    
