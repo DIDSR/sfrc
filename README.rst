@@ -1,7 +1,11 @@
 sFRC for detecting fakes in medical image restoration 
 ========================================================================================================================
-**sFRC** scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically identify fakes as detailed in our 
-`sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. You can also perform sFRC analysis to find fakes from iterative regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
+**sFRC** scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts in our 
+`sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. For a given patch obtained from a novel restoration method, the sFRC curve corresponding to the patch is used to indicate 
+fake vs non-fake about the patch based on whether the curve drops below a pre-set hallucination threshold. Specifically, a pre-set hallucination threshold (either based on a user’s
+or an imaging theory-based clinical criteria/image quality criteria on what merits to be a proper reconstruction) is repeatedly and automatically applied across the testing images 
+to identify fake patches.  You can also perform sFRC analysis to find fakes from iterative regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
+
 
 .. raw:: html
 
@@ -9,7 +13,7 @@ sFRC for detecting fakes in medical image restoration
 
 
 
-- **Inputs**: Restored medical images from Deep learning- or Iterative regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold. For a given patch obtained from a novel restoration method, the sFRC curve corresponding to the patch is used to indicate fake vs non-fake about the patch based on whether the curve drops below a pre-set hallucination threshold. Specifically, a pre-set hallucination threshold (either based on a user’s or an imaging theory-based clinical criteria/image quality criteria on what merits to be a proper reconstruction) is repeatedly and automatically applied across the testing images to identify fake patches. 
+- **Inputs**: Restored medical images from Deep learning- or Iterative regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold. 
 
 .. raw:: html
    
