@@ -61,9 +61,9 @@ def find_earliest_lp_intersection(x_coord, line1, line2):
     
     input
     -------
-    x_coord: 1d arrat
-    line1: y values of the first line
-    line2: y values of the second line 
+    x_coord: 1d array
+    line1  : y values of the first line
+    line2  : y values of the second line 
     
     output
     -----
