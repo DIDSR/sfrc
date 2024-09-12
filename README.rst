@@ -1,7 +1,7 @@
 sFRC for detecting fakes in medical image restoration 
 ========================================================================================================================
 **sFRC** scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts in our 
-`sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. For a given patch obtained from a novel restoration method, the sFRC curve corresponding to the patch is used to indicate 
+`sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_. For a given patch obtained from a novel restoration method, the sFRC curve corresponding to the patch is used to indicate 
 fake vs non-fake about the patch based on whether the curve drops below a pre-set hallucination threshold. Specifically, a pre-set hallucination threshold (either based on a user’s
 or an imaging theory-based clinical criteria/image quality criteria on what merits to be a proper reconstruction) is repeatedly and automatically applied across the testing images 
 to identify fake patches.  You can also perform sFRC analysis to find fakes from iterative regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
@@ -29,7 +29,7 @@ to identify fake patches.  You can also perform sFRC analysis to find fakes from
 
    </div>
 
-- **Hallucination Threshold**: It is a frequency value between 0 to 0.5*pixel\  :sup:`-1`. If 1 pixel = 0.50 mm then hallucination threshold could be set between 0 and 1 mm \  :sup:`-1` (where, 1 mm \  :sup:`-1` is the endpoint of the sFRC’s Y-axis). A hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as fake by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_]. Using the known fake patches, patch-wise FRC curves are obtained. Then the hallucination threshold is set as the maximum of the x-coordinate values corresponding to the set of x-coordinates due to the intersection between the FRC curves and the FRC thresholds.The FRC threshold is usually set the same for a given modality. In this work, we used y=0.5 and y=0.75 as the FRC thresholds for the CT superresolution and MRI subsampling problems respectively. When tuning the hallucination threshold, the data point corresponding to one-third of Y-axis of an sFRC plot is a good starting point.   
+- **Hallucination Threshold**: It is a frequency value between 0 to 0.5*pixel\  :sup:`-1`. If 1 pixel = 0.50 mm then hallucination threshold could be set between 0 and 1 mm \  :sup:`-1` (where, 1 mm \  :sup:`-1` is the endpoint of the sFRC’s Y-axis). A hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as fake by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_]. Using the known fake patches, patch-wise FRC curves are obtained. Then the hallucination threshold is set as the maximum of the x-coordinate values corresponding to the set of x-coordinates due to the intersection between the FRC curves and the FRC thresholds.The FRC threshold is usually set the same for a given modality. In this work, we used y=0.5 and y=0.75 as the FRC thresholds for the CT superresolution and MRI subsampling problems respectively. When tuning the hallucination threshold, the data point corresponding to one-third of Y-axis of an sFRC plot is a good starting point.   
 
 .. raw:: html
    
@@ -153,7 +153,7 @@ Create a new conda enviroment and install the required packages as follows:
 
 DEMO execution of sFRC
 ----------------------------------------------------------
-The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. 
+The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in the `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_. 
 Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
 
 1. sFRC on SRGAN-based CT upsampled (x4) images
@@ -173,7 +173,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
       bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 1
 
    'CT' indicates sFRC applied on CT-based data. 'sh' and 'tune' are options to indicate paths for sharp kernel-based data and 
-   tuning set for sFRC parameters used in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. Likewise 'sm' indicates smooth kernel-based test set. 
+   tuning set for sFRC parameters used in the `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_. Likewise 'sm' indicates smooth kernel-based test set. 
    1 indicates one processing unit (-np) to be used in our mpi-based sFRC implementation. 
    Note that, in this git repo, the demo example for the CT application includes only 5 CT images. 
    As such, the no. of fakes, for the specified parameters, for sharp and smooth data will be 21 
@@ -204,7 +204,7 @@ in the following manner:
 
 To apply the SRGAN to all the CT images from patient L067 (as described in the sFRC paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
-yield fake patches as tabulated in TABLE I in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_ and as depicted in the following 
+yield fake patches as tabulated in TABLE I in the `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_ and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
 4. Apply SRGAN on test set
@@ -216,7 +216,7 @@ yield fake patches as tabulated in TABLE I in the `sFRC paper <10.36227/techrxiv
       bash +x demo_srgan_test.sh 'test' 'sm'
 
 Then set the first command line input as 'test' to indicate tags related to the paths 
-of CT images are test set for the sFRC analysis (as used in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_) when executing demo_sfrc_run.sh.
+of CT images are test set for the sFRC analysis (as used in the `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_) when executing demo_sfrc_run.sh.
 
 5. sFRC on SRGAN-based CT upsampled (x4) test images (sharp as well as smooth)
 
@@ -228,7 +228,7 @@ of CT images are test set for the sFRC analysis (as used in the `sFRC paper <10.
 
 Apply trained UNet 
 -------------------
-The trained Unet model and data provided in this repository (as well as used in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_) have been imported from the following github
+The trained Unet model and data provided in this repository (as well as used in the `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_) have been imported from the following github
 repository: `hallucinations-tomo-recon <https://github.com/comp-imaging-sci/hallucinations-tomo-recon>`_. Also, 
 `Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205>`_ is 
 the original source of the MRI data. 
