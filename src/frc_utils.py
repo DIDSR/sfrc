@@ -95,7 +95,7 @@ def ring_indices(x, inscribed_rings=True, plot=False):
     list of array on coordinates corresponding to
     co-centric rings of the given input array.
     """
-    print("ring plots is:", plot)
+    #print("ring plots is:", plot)
     
     #read the shape and dimensions of the input image
     shape = np.shape(x)     

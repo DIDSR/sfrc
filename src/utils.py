@@ -587,9 +587,9 @@ def air_thresholding(args, sub_input, sub_label, sub_label_un, return_ind=False)
   different range in its intensity values, 
   pix_thresh and mean_thresh will have to be accordingly adjusted
   """
-  pix_thresh   = args.img_list_max_val*200/2686 #*1.5 -> mri
+  pix_thresh   = args.img_list_max_val*200/2686 #*1.5 #-> mri
   count_thresh = int(0.1* (args.input_size**2))
-  mean_thresh  = args.img_list_max_val*150/2686 #*2.5 -> mri
+  mean_thresh  = args.img_list_max_val*150/2686 #*2.5 #-> mri
   threshold_pass_ind = []
   # print('inside air thresholding')
   # pf.dict_plot_of_2d_arr(args, 7, 7, np.zeros((7,7)), sub_label[:, :, :, 0], save_plot=False, disp_plot=True, output_path='', plt_title=str(0))

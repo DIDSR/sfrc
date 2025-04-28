@@ -89,10 +89,18 @@ def partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, pid):
 				input_image  = np.pad(input_image,  ((0, args.rNx-args.rNy), (0, 0)))
 				target_image = np.pad(target_image, ((0, args.rNx-args.rNy), (0, 0)))
 		elif (args.img_format == 'tif' or args.img_format == 'png'):
-			input_image  = io_func.imageio_imread(all_input_paths[pid*chunck_sz+j]).astype(args.dtype)
-			target_image = io_func.imageio_imread(all_target_paths[pid*chunck_sz+j]).astype(args.dtype)
+			input_image  = io_func.imageio_imread(all_input_paths[pid*chunck_sz+j]).astype('float32')
+			target_image = io_func.imageio_imread(all_target_paths[pid*chunck_sz+j]).astype('float32')
 			#input_image  = utils.normalize_data_ab(0, args.img_list_max_val, input_image)
 			#target_image = utils.normalize_data_ab(0, args.img_list_max_val, target_image)
+			#for siemens data only
+			#input_image = input_image[:-4, :-4]
+			#target_image = target_image[:-4, :-4]
+			ih, iw        = input_image.shape
+			th, tw        = target_image.shape
+			if args.img_y_padding:
+				input_image  = np.pad(input_image,  ((0, 0), (0, ih-iw)))
+				target_image = np.pad(target_image, ((0, 0), (0, th-tw)))
 		else:
 			if(pid==0):
 				print('ERROR! No read function for the specified image type:', args.img_format)
@@ -140,8 +148,8 @@ def partition_read_n_sfrc_plot_n_calc(args, bcasted_input_data, pid):
 			me_max,  me_min             = np.max(input_image), np.min(input_image)
 			binput_image, btarget_image = utils.img_pair_normalization(input_image, target_image, 'unity_independent')
 
-			btarget_image               = bm3d.bm3d(btarget_image, sigma_psd=0.05, stage_arg=bm3d.BM3DStages.ALL_STAGES)
-			binput_image                = bm3d.bm3d(binput_image, sigma_psd=0.05, stage_arg=bm3d.BM3DStages.ALL_STAGES)
+			btarget_image               = bm3d.bm3d(btarget_image, sigma_psd=0.005, stage_arg=bm3d.BM3DStages.ALL_STAGES)
+			binput_image                = bm3d.bm3d(binput_image, sigma_psd=0.005, stage_arg=bm3d.BM3DStages.ALL_STAGES)
 			
 			target_image                = utils.normalize_data_ab(ref_min, ref_max, btarget_image)
 			input_image                 = utils.normalize_data_ab(me_min, me_max, binput_image)

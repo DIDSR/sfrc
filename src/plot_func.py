@@ -8,7 +8,11 @@
 import numpy as np 
 import pydicom
 import matplotlib as mpl
-mpl.use('Agg')
+# for proper/faster expecution of mpi such 
+# that the distributed implementation does not
+# get bottlenecked due to large number 
+
+mpl.use('Agg') # comment it for viewing plots when debugging code
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 from shapely import LineString, get_coordinates
@@ -234,6 +238,21 @@ def dict_plot_of_2d_arr(args, rows, cols, bool_mat, arr_2d, cmap='Greys_r', save
     win   = 400
     win_max = (level - rescale_intercept) + win/2.0
     win_min = (level - rescale_intercept) - win/2.0
+  elif args.windowing=='airtools_soft_artifact':
+    level = 50
+    win   = 700
+    win_max = (level - rescale_intercept) + win/2.0
+    win_min = (level - rescale_intercept) - win/2.0
+  elif args.windowing=='L105_W800_soft_artifact':
+    level = 105
+    win   = 800
+    win_max = (level - rescale_intercept) + win/2.0
+    win_min = (level - rescale_intercept) - win/2.0
+  elif args.windowing=='L260_W780_soft_artifact':
+    level = 50 + 210
+    win   = 700 + 80
+    win_max = (level - rescale_intercept) + win/2.0
+    win_min = (level - rescale_intercept) - win/2.0
   elif args.windowing=='lung':
     level = -600
     win   = 1500
@@ -255,7 +274,9 @@ def dict_plot_of_2d_arr(args, rows, cols, bool_mat, arr_2d, cmap='Greys_r', save
   else:
     win_max=None
     win_min=None
-  
+  #print('passed sfrc patcded arr for each image is:',arr_2d.shape)
+  #print('img_list_max_val is', args.img_list_max_val)
+  #multi2dplots(rows, cols, arr_2d, axis=0)
   fig, ax = plt.subplots(nrows=rows,ncols=cols, figsize=(14, 14))# plt.figure(figsize=(14, 14)) # width height
   for i, comp in enumerate(arr_2d):
       plt.subplot(rows, cols, i + 1)
@@ -497,3 +518,92 @@ def dict_plot_of_patched_frc(bool_hallu_1darr, args, fx_coord, stacked_frc, tx_c
     if save_img: plt.savefig(output_img_name); plt.close()
 
     return(bool_hallu_mat, per_img_pair_fk)
+
+def img_windowing(arr, in_dtype='uint16', windowing=None):
+  """
+  
+  input
+  ------ 
+
+  """
+  # because reading the LDGC CT data yields air as 0 HU,
+  # the intercept/bias value below scales the air contrast
+  # back to -1024 HU. 
+  if in_dtype=='uint16':
+    rescale_intercept = -1024
+  else:
+    rescale_intercept = 0.0
+
+  if windowing=='soft':
+    level = 50
+    win   = 400
+    win_max = (level - rescale_intercept) + win/2.0
+    win_min = (level - rescale_intercept) - win/2.0
+
+    arr_win = arr
+    arr_win[arr_win<win_min] = win_min
+    arr_win[arr_win>win_max] = win_max
+
+  elif windowing=='fk_ct_soft':
+    level = 50
+    win   = 700
+    win_max = (level - rescale_intercept) + win/2.0
+    win_min = (level - rescale_intercept) - win/2.0
+
+    arr_win = arr
+    arr_win[arr_win<win_min] = win_min
+    arr_win[arr_win>win_max] = win_max
+  elif windowing=='lung':
+    level   = -600
+    win     = 1500
+    win_max = (level - rescale_intercept) + win/2.0
+    win_min = (level - rescale_intercept) - win/2.0
+
+    arr_win = arr
+    arr_win[arr_win<win_min] = win_min
+    arr_win[arr_win>win_max] = win_max
+
+  #lowers_frequencies corresponding to band1 and band2 in supp
+  elif windowing=='artifact_lf': 
+    level   = 260
+    win     = 780
+    win_max = (level - rescale_intercept) + win/2.0
+    win_min = (level - rescale_intercept) - win/2.0
+
+    arr_win = arr
+    arr_win[arr_win<win_min] = win_min
+    arr_win[arr_win>win_max] = win_max
+
+  elif windowing=='band_3':
+    level   = 0
+    win     = 400
+    win_max = (level - 0) + win/2.0
+    win_min = (level - 0) - win/2.0
+
+    arr_win = arr
+    arr_win[arr_win<win_min] = win_min
+    arr_win[arr_win>win_max] = win_max
+
+  elif windowing=='band_4':
+    level   = 0
+    win     = 200
+    win_max = (level - 0) + win/2.0
+    win_min = (level - 0) - win/2.0
+
+    arr_win = arr
+    arr_win[arr_win<win_min] = win_min
+    arr_win[arr_win>win_max] = win_max
+
+  elif windowing=='band_5':
+    level   = 0
+    win     = 80
+    win_max = (level - 0) + win/2.0
+    win_min = (level - 0) - win/2.0
+
+    arr_win = arr
+    arr_win[arr_win<win_min] = win_min
+    arr_win[arr_win>win_max] = win_max
+  else:
+    arr_win = arr
+
+  return(arr_win)
