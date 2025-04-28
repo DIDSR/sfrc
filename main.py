@@ -7,9 +7,9 @@ import sys
 #-------------------------------------------------------------------------------------------------------------------------------------------------
 # Command line arguments
 #--------------------------------------------------------------------------------------------------------------------------------------------------
-parser = argparse.ArgumentParser(description='sFRC analysis between image pairs from DL(or Reg)- & reference-based methods to identify fake artifacts')
+parser = argparse.ArgumentParser(description='sFRC analysis between image pairs from DL(or Reg)- & reference-based methods to detect hallucinations')
 parser.add_argument('--input-folder', type=str, required=True,       help='directory name containing images.')
-parser.add_argument('--output-folder', type=str, default='results',  help='output folder to save bounding box-based fake labels on \
+parser.add_argument('--output-folder', type=str, default='results',  help='output folder to save bounding box-based ROIs as hallucinations on \
                                                                      DL/Reg & reference image pairs, and sFRC plots.')
 parser.add_argument('--patch-size',    type=str, default='p96',      help="p96 or p64 or 48 or p32 to indicate patch sizes for the sFRC \
                                                                      analysis. Change padding option below for a different patch size.")
@@ -40,7 +40,7 @@ parser.add_argument('--in-dtype', type=str, required=True,           help="data 
 parser.add_argument('--save-patched-subplots', action='store_true',  help='if you want to save patches with the bounding box and FRC plot results.')
 parser.add_argument('--apply-bm3d', action='store_true',             help='apply image-based mild bm3d smoothing before the frc calculation. \
                                                                      It decreases the chance of quick FRC drop. which means it increases the chance of\
-                                                                     missing fake artifacts. But it has advantage of increasing PPV.')
+                                                                     missing hallucinations. But it has advantage of increasing PPV.')
 parser.add_argument('--mtf-space', action='store_true',              help='x-axis for FRC is in the mtf space. Uses the dx info. \
                                                                      Use this option only if you have info on dx for your acquisition. \
                                                                      Otherwise, do not use this option. When this option is not used x-axis \
@@ -48,7 +48,7 @@ parser.add_argument('--mtf-space', action='store_true',              help='x-axi
 parser.add_argument('--dx', type=float, default=0.48,                help='xy plane pixel spacing. Default value is set from the LDGC dataset and has \
                                                                      the unit mm. ')
 parser.add_argument('--ht', type=float, default=0.30,                help='patches whose x-coordinates (corresponding to the points when their FRC curves \
-                                                                     intersect with the frc-threshold) fall below this ht threshold will be labeled as fake ROIs.')
+                                                                     intersect with the frc-threshold) fall below this ht threshold will be labeled as hallucinated ROIs.')
 parser.add_argument('--windowing', type=str, default='soft',         help='windowing used when generating the patched subplots.\
                                                                      options include soft, lung, bone, unity and none. \
                                                                      Setting appropriate viewing window is very important in zeroing anomalies between a DL method- \

@@ -1,11 +1,7 @@
-sFRC for detecting fakes in medical image restoration 
+sFRC for detecting hallucinations in medical image restoration 
 ========================================================================================================================
-**sFRC** scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts in our 
-`sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_. For a given patch obtained from a novel restoration method, the sFRC curve corresponding to the patch is used to indicate 
-fake vs non-fake about the patch based on whether the curve drops below a pre-set hallucination threshold. Specifically, a pre-set hallucination threshold (either based on a user’s
-or an imaging theory-based clinical criteria/image quality criteria on what merits to be a proper reconstruction) is repeatedly and automatically applied across the testing images 
-to identify fake patches.  You can also perform sFRC analysis to find fakes from iterative regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
-
+**sFRC** scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically identify hallucinations as detailed in our 
+`sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. You can also perform sFRC analysis to detect hallucinations from iterative regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
 
 .. raw:: html
 
@@ -13,7 +9,7 @@ to identify fake patches.  You can also perform sFRC analysis to find fakes from
 
 
 
-- **Inputs**: Restored medical images from Deep learning- or Iterative regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold. 
+- **Inputs**: Restored medical images from Deep learning- or Iterative regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold.
 
 .. raw:: html
    
@@ -23,13 +19,13 @@ to identify fake patches.  You can also perform sFRC analysis to find fakes from
    :alt: some image
    :width: 500px
 
-*Fig 1: An illustration of inputs to sFRC as test images from novel methods (such as AI or Iterative (IRT)-based) and reference methods (such as physics-based), and hallucination threshold. The figure also depicts outputs as red-bounding boxes on images from the novel and reference methods to indicate fake patches and actual anatomy in the corresponding reference patches.* 
+*Fig 1: An illustration of inputs to sFRC as test images from novel methods (such as AI or Iterative (IRT)-based) and reference methods (such as physics-based), and hallucination threshold. The figure also depicts outputs as red-bounding boxes on images from the novel and reference methods to indicate hallucinated patches and actual anatomy in the novel and reference patched pairs.* 
 
 .. raw:: html
 
    </div>
 
-- **Hallucination Threshold**: It is a frequency value between 0 to 0.5*pixel\  :sup:`-1`. If 1 pixel = 0.50 mm then hallucination threshold could be set between 0 and 1 mm \  :sup:`-1` (where, 1 mm \  :sup:`-1` is the endpoint of the sFRC’s Y-axis). A hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as fake by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_]. Using the known fake patches, patch-wise FRC curves are obtained. Then the hallucination threshold is set as the maximum of the x-coordinate values corresponding to the set of x-coordinates due to the intersection between the FRC curves and the FRC thresholds.The FRC threshold is usually set the same for a given modality. In this work, we used y=0.5 and y=0.75 as the FRC thresholds for the CT superresolution and MRI subsampling problems respectively. When tuning the hallucination threshold, the data point corresponding to one-third of Y-axis of an sFRC plot is a good starting point.   
+- **Hallucination Threshold**: The hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as hallucination by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_]. Using the known hallucinated patches, patch-wise FRC curves are obtained. Then the hallucination threshold is set as the maximum of the x-coordinate values corresponding to the set of x-coordinates due to the intersection between the FRC curves and the FRC thresholds.The FRC threshold is usually set the same for a given modality. In this work, we used y=0.5 and y=0.75 as the FRC thresholds for the CT superresolution and MRI subsampling problems respectively.  
 
 .. raw:: html
    
@@ -45,13 +41,13 @@ to identify fake patches.  You can also perform sFRC analysis to find fakes from
 
    </div>
 
-- **Outputs**: Small-sized red bounding boxes on input images that are deemed as fake ROIs (in AI-assisted as well as reference images), and the total number of such fake ROIs in the provided input images.
-  These ROIs as red bounded box indicate that those regions have not been faithfully reconstructed. They may exhibit imaging errors that are readily non-discernible fakes to human eyes. Some of the 
+- **Outputs**: Small-sized red bounding boxes on input images that are deemed as hallucinated ROIs (in AI-assisted as well as reference images), and the total number of such ROIs detected as hallucination in the input images.
+  These ROIs as red bounded box indicate that those regions have not been faithfully reconstructed. They may exhibit imaging errors that are readily non-discernible hallucinations to human eyes. Some of the 
   fakes/hallucination observed in our study include over-smoothing, in-homogeneity, tiny structural changes, removal of subtle features/signals, distortion of small organelles, addition of minute 
   indentation-/blood vessel-/plaque-like structures, coalescing of small organelles, unwarranted foldings, contrast migration anomaly etc. 
   
   A gif-based illustration on sFRC-based output – on SRGAN (left) and sharp-FBP (right) images  – using 20 image pairs from the sFRC paper for the CT super-resolution problem is provided above. 
-  Movie files on sFRC-labeled fakes for the entire CT test set is provided `here <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
+  Movie files showing ROIs detected as hallucinations using sFRC for the entire CT test set is provided `here <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
 .. raw:: html
    
@@ -60,7 +56,7 @@ to identify fake patches.  You can also perform sFRC analysis to find fakes from
 .. figure:: paper_plots/git_illustration3.png
    :width: 700
 
-*Fig 3:  Red bounding boxes as outputs from sFRC. The bounding boxes on an AI-based and an inverse Fourier Transform (iFT)-based images indicate fakes detected by sFRC and corresponding reference anatomy. The AI-based image was restored from subsampled MRI data acquired using an acceleration factor of three (i.e., using only 33% of raw measurement data). The reference image was restored using physics-based inverse Fourier transform on the fully sampled data (i.e., using 100% of raw measurement data). A zoomed view of a pair of patches indicates removal of the dark signal in AI-based image as compared to its reference iFT patch.*
+*Fig 3:  Red bounding boxes as outputs from sFRC. The bounding boxes on an AI-based and an inverse Fourier Transform (iFT)-based images indicate hallucinations detected by sFRC and corresponding reference anatomy. The AI-based image was restored from subsampled MRI data acquired using an acceleration factor of three (i.e., using only 33% of raw measurement data). The reference image was restored using physics-based inverse Fourier transform on the fully sampled data (i.e., using 100% of raw measurement data). A zoomed view of a pair of patches indicates removal of the dark signal in AI-based image as compared to its reference iFT patch.*
 
 .. raw:: html
 
@@ -84,12 +80,12 @@ Usage
               [--anaRing] [--rNx RNX] [--rNy RNY] --in-dtype IN_DTYPE [--save-patched-subplots] [--apply-bm3d] [--mtf-space]
               [--dx DX] [--ht HT] [--windowing WINDOWING] [--remove-ref-noise] [--img-y-padding]
 
-    sFRC analysis between image pairs from DL(or Reg)- & reference-based methods to identify fake artifacts
+    sFRC analysis between image pairs from DL(or Reg)- & reference-based methods to identify hallucinations
     
     arguments:
     -h, --help            show this help message and exit
     --input-folder        directory name containing images.
-    --output-folder       output folder to save bounding box-based fake labels on DL/Reg & reference image pairs, and sFRC plots.
+    --output-folder       output folder to save bounding box-based hallucinated labels on DL/Reg & reference image pairs, and sFRC plots.
     --patch-size          p96 or p64 or 48 or p32 to indicate patch sizes for the sFRC analysis. Change padding option in main.py for a
                           different patch size.
     --random_N            performs sfrc calculation on randomly selected 16 complimentary images from DL/Reg - Reference folders.
@@ -115,12 +111,12 @@ Usage
     --save-patched-subplots
                           if you want to save patches with the bounding box and FRC plot results.
     --apply-bm3d          apply image-based mild bm3d smoothing before the frc calculation. It decreases the chance of quick FRC
-                          drop. which means it increases the chance of missing fake artifacts. But it has advantage of increasing PPV.
+                          drop. This means it increases the chance of missing hallucinations. But it has advantage of increasing PPV.
     --mtf-space           x-axis for FRC is in the mtf space. Uses the dx info. Use this option only if you have info on dx for your
                           acquisition. Otherwise, do not use this option. When this option is not used, x-axis for FRC has unit pixel(^-1).
     --dx                  xy plane pixel spacing. Default value is set from the LDGC dataset and has the unit mm.
     --ht                  patches whose x-coordinates (corresponding to the points when their FRC curves intersect with the frc-
-                          threshold) that fall below this ht threshold will be labeled as fake ROIs.
+                          threshold) that fall below this ht threshold will be labeled as hallucinated ROIs.
     --windowing           windowing used when generating the patched subplots Options include soft, lung, bone, unity and none.
                           Setting appropriate viewing window is very important in zeroing anomalies between a DL method- and
                           reference method-based outputs. For a sanity check, you may choose to confirm the marked ROIs generated
@@ -153,7 +149,7 @@ Create a new conda enviroment and install the required packages as follows:
 
 DEMO execution of sFRC
 ----------------------------------------------------------
-The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in the `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_. 
+The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. 
 Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
 
 1. sFRC on SRGAN-based CT upsampled (x4) images
@@ -173,12 +169,14 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
       bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 1
 
    'CT' indicates sFRC applied on CT-based data. 'sh' and 'tune' are options to indicate paths for sharp kernel-based data and 
-   tuning set for sFRC parameters used in the `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_. Likewise 'sm' indicates smooth kernel-based test set. 
+   tuning set for sFRC parameters used in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. Likewise 'sm' indicates smooth kernel-based test set. 
    1 indicates one processing unit (-np) to be used in our mpi-based sFRC implementation. 
    Note that, in this git repo, the demo example for the CT application includes only 5 CT images. 
-   As such, the no. of fakes, for the specified parameters, for sharp and smooth data will be 21 
+   As such, the no. of hallucinations, for the specified parameters, for sharp and smooth data will be 21 
    and 16 respectively. Refer to the next subsection to fetch the complete test set and results as 
    provided in the sFRC paper for the CT application. 
+
+   Change the ht parameter as 0.25, 0.35, 0.34, and 0.33 to reproduce different sFRC-detected bounding boxes as hallucinations as shown in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_.
 
 2. sFRC on UNet- and PLSTV-based MRI outputs from a subsampled acquisition (x3)
 
@@ -186,7 +184,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
       
       bash +x demo_sfrc_run.sh 'MRI' 'test' 'unet' 4
 
-   Change the third option to 'plstv' for the plstv-based results provided in the `sFRC paper <10.36227/techrxiv.171259560.02243347/v1>`_. 
+   Change the third option to 'plstv' for the plstv-based results provided in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. 
 
 Apply trained SRGAN 
 --------------------
@@ -204,10 +202,17 @@ in the following manner:
 
 To apply the SRGAN to all the CT images from patient L067 (as described in the sFRC paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
-yield fake patches as tabulated in TABLE I in the `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_ and as depicted in the following 
+yield hallucinated patches as tabulated in TABLE I in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_ and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
-4. Apply SRGAN on test set
+4. Get the mid-frequency image components corresponding to each CT tuning image to manually mark the hallucinated ROIs as shown in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_.
+
+   .. code-block:: 
+
+      python ct_superresolution/banded_plots_4r_sfrc_ct_tuning.py
+
+
+5. Apply SRGAN on sFRC test set
 
    .. code-block:: 
 
@@ -216,9 +221,9 @@ yield fake patches as tabulated in TABLE I in the `sFRC paper <https://www.techr
       bash +x demo_srgan_test.sh 'test' 'sm'
 
 Then set the first command line input as 'test' to indicate tags related to the paths 
-of CT images are test set for the sFRC analysis (as used in the `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_) when executing demo_sfrc_run.sh.
+of CT images are test set for the sFRC analysis (as used in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_) when executing demo_sfrc_run.sh.
 
-5. sFRC on SRGAN-based CT upsampled (x4) test images (sharp as well as smooth)
+6. sFRC on SRGAN-based CT upsampled (x4) test images (sharp as well as smooth)
 
    .. code-block:: 
 
@@ -228,12 +233,12 @@ of CT images are test set for the sFRC analysis (as used in the `sFRC paper <htt
 
 Apply trained UNet 
 -------------------
-The trained Unet model and data provided in this repository (as well as used in the `sFRC paper <https://www.techrxiv.org/users/763069/articles/740286-fake-detection-in-ai-assisted-image-recovery-using-scanning-fourier-ring-correlation-sfrc>`_) have been imported from the following github
+The trained Unet model and data provided in this repository (as well as used in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_) have been imported from the following github
 repository: `hallucinations-tomo-recon <https://github.com/comp-imaging-sci/hallucinations-tomo-recon>`_. Also, 
 `Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205>`_ is 
 the original source of the MRI data. 
 
-6. Apply Unet on MRI test set
+7. Apply Unet on MRI test set
 
    .. code-block:: 
    
@@ -246,12 +251,25 @@ PLSTV-based reconstruction
 Follow the installation instructions provided in the `BART repository <https://mrirecon.github.io/bart/>`_.
 Then edit the path to BART's python wrapper in line 20 in file "./mr_subsampling/plstv/bart_pls_tv.py".
 
-7. Apply PLSTV on MRI test set
+8. Apply PLSTV on MRI test set
 
    .. code-block:: 
 
       cd plstv
       bash +x run_bart_pls_tv.sh
+
+Conventional artifacts (non-hallucinatory) 
+--------------------------------------------
+
+8. Refer to the readme file inside the folder conventional_artifact to simulate the four different artifacts (missing wedge, distortion, blur, noise) discussed in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. Update folder conventional_artifact/data per the options you used to simulate the artifacts or per your own experimental data. 
+
+9. Below is the demo run of the sFRC on the conventional artifacts shown in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_.
+
+   .. code-block:: 
+
+      bash +x demo_sfrc_on_artifacts.sh 'missing_wedge' 1
+
+   Change the first option to 'blur' or 'noise' or 'distortion' for the sFRC result on the other forms of conventional artifacts.    
 
 References 
 ----------
@@ -282,11 +300,11 @@ Please cite sFRC if it helped your research work
 ::
 
    @article{kc2024fake,
-     title={Fake detection in AI-assisted image recovery using scanning Fourier Ring Correlation (sFRC)},
+     title={sFRC for assessing hallucinations in  medical image restoration},
      author={Kc, Prabhat and Zeng, Rongping and Soni, Nirmal and Badano, Aldo},
      journal={TechRxiv Preprints},
-     year={2024},
-     doi={10.36227/techrxiv.171259560.02243347/v1},
+     year={2025},
+     doi={10.36227/techrxiv.171259560.02243347/v2},
    }
 
 

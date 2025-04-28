@@ -1,4 +1,4 @@
-cff-version: 1.0.0
+cff-version: 1.0.1
 title: mpi_sfrc
 message: >-
   If you use sFRC in your research, please cite the
@@ -14,12 +14,12 @@ preferred-citation:
     family-names: Soni
   - given-names: Aldo
     family-names: Badano
-  doi: "10.36227/techrxiv.171259560.02243347/v1"
+  doi: "10.36227/techrxiv.171259560.02243347/v2"
   journal: "TechRxiv Preprints"
-  month: 5
+  month: 1
   # start: 219 # First page number
   # end: 260 # Last page number
   title: "Fake detection in AI-assisted image recovery using scanning Fourier Ring Correlation (sFRC)"
   # issue: 3
   # volume: 3
-  year: 2024
+  year: 2025
