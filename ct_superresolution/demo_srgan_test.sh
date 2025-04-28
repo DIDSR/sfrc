@@ -44,10 +44,7 @@ arguments:
   
 
 COMMENT
-#source /home/prabhat.kc/anaconda3/base_env.sh
-#source /home/prabhat.kc/anaconda3/horovod_env.sh #bety1
-#source /home/prabhat.kc/anaconda3/horovod_sm80_env.sh #betsy2
-#cd /projects01/didsr-aiml/prabhat.kc/code/GitRepo/mpi_sfrc/ctsr
+
 
 data_opt=$1 #data option {tune: tuning set or 'test':entire testset}}
 ker_opt=$2 #kernel option {sh: sharp or sm: smooth}
