@@ -261,9 +261,9 @@ Then edit the path to BART's python wrapper in line 20 in file "./mr_subsampling
 Conventional artifacts (non-hallucinatory) 
 --------------------------------------------
 
-8. Refer to the readme file inside the folder conventional_artifact to simulate the four different artifacts (missing wedge, distortion, blur, noise) discussed in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. Update folder conventional_artifact/data per the options you used to simulate the artifacts or per your own experimental data. 
+9. Refer to the readme file inside the folder conventional_artifact to simulate the four different artifacts (missing wedge, distortion, blur, noise) discussed in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. Update folder conventional_artifact/data per the options you used to simulate the artifacts or per your own experimental data. 
 
-9. Below is the demo run of the sFRC on the conventional artifacts shown in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_.
+10. Below is the demo run of the sFRC on the conventional artifacts shown in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_.
 
    .. code-block:: 
 
