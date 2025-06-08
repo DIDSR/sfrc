@@ -80,21 +80,21 @@ Usage
               [--anaRing] [--rNx RNX] [--rNy RNY] --in-dtype IN_DTYPE [--save-patched-subplots] [--apply-bm3d] [--mtf-space]
               [--dx DX] [--ht HT] [--windowing WINDOWING] [--remove-ref-noise] [--img-y-padding]
 
-    sFRC analysis between image pairs from DL(or Reg)- & reference-based methods to identify hallucinations
+    sFRC analysis between image pairs from DL(or IRT)- & reference-based methods to detect hallucinations
     
     arguments:
     -h, --help            show this help message and exit
     --input-folder        directory name containing images.
-    --output-folder       output folder to save bounding box-based hallucinated labels on DL/Reg & reference image pairs, and sFRC plots.
+    --output-folder       output folder to save bounding box-based hallucinated labels on DL/IRT & reference image pairs, and sFRC plots.
     --patch-size          p96 or p64 or 48 or p32 to indicate patch sizes for the sFRC analysis. Change padding option in main.py for a
                           different patch size.
-    --random_N            performs sfrc calculation on randomly selected 16 complimentary images from DL/Reg - Reference folders.
+    --random_N            performs sfrc calculation on randomly selected 16 complimentary images from DL/IRT - Reference folders.
                           For more info refer to in-built options in main.py.
     --input-gen-folder    folder name containing DL or regularization method-based outputs.
     --target-gen-folder   folder name containing reference method-based outputs.
     --img-format          image format for input and target images. Dicom/raw/tif/png? To add a new image format read function look 
                           inside the function partition_read_n_sfrc_plot_n_calc in file mpi_utils.py.
-    --multi-patients      if there are multiple-subfolders related to different parents.
+    --multi-patients      if there are multiple-subfolders related to different patients.
     --remove-edge-padding remove patches at the edges of images when mod(img size, patch size) != 0.
     --apply-hann          apply hanning filter before the frc calculation.
     --frc-threshold       frc threshold to determine correlation cut-off between the 2 methods. This patch-based FRC analysis
@@ -149,7 +149,7 @@ Create a new conda enviroment and install the required packages as follows:
 
 DEMO execution of sFRC
 ----------------------------------------------------------
-The example codes below show how to run sfrc by using data from DL/Reg methods and their reference counterparts used in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. 
+The example codes below show how to run sfrc by using data from DL/IRT methods and their reference counterparts used in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. 
 Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
 
 1. sFRC on SRGAN-based CT upsampled (x4) images
