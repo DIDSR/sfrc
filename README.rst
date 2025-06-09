@@ -1,6 +1,6 @@
 sFRC for detecting hallucinations in medical image restoration 
 ========================================================================================================================
-**sFRC** scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically identify hallucinations as detailed in our 
+**sFRC** scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically detect hallucinations as detailed in our 
 `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. You can also perform sFRC analysis to detect hallucinations from iterative regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
 
 .. raw:: html
@@ -261,7 +261,7 @@ Then edit the path to BART's python wrapper in line 20 in file "./mr_subsampling
 Conventional artifacts (non-hallucinatory) 
 --------------------------------------------
 
-9. Refer to the readme file inside the folder conventional_artifact to simulate the four different artifacts (missing wedge, distortion, blur, noise) discussed in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. Update folder conventional_artifact/data per the options you used to simulate the artifacts or per your own experimental data. 
+9. Refer to the readme file inside the folder conventional_artifact to simulate the four different artifacts (missing wedge, distortion, blur, noise) discussed in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. Update folder conventional_artifact/data in accordance to the options you set when simulating artifacts or per your own experimental data. 
 
 10. Below is the demo run of the sFRC on the conventional artifacts shown in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_.
 
