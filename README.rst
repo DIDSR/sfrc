@@ -77,7 +77,7 @@ Usage
     $ main.py [-h] --input-folder INPUT_FOLDER [--output-folder OUTPUT_FOLDER] [--patch-size PATCH_SIZE] [--random_N]
               [--input-gen-folder INPUT_GEN_FOLDER] [--target-gen-folder TARGET_GEN_FOLDER] [--img-format IMG_FORMAT] 
               [--multi-patients] [--remove-edge-padding] [--apply-hann] [--frc-threshold FRC_THRESHOLD] [--inscribed-rings] 
-              [--anaRing] [--rNx RNX] [--rNy RNY] --in-dtype IN_DTYPE [--save-patched-subplots] [--apply-bm3d] [--mtf-space]
+              [--anaRing] [--rNx RNX] [--rNy RNY] [--in-dtype IN_DTYPE] [--save-patched-subplots] [--apply-bm3d] [--mtf-space]
               [--dx DX] [--ht HT] [--windowing WINDOWING] [--remove-ref-noise] [--img-y-padding]
 
     sFRC analysis between image pairs from Deep Learning (DL) or Iterative (IRT)- & reference-based methods to detect hallucinations
