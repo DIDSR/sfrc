@@ -80,7 +80,7 @@ Usage
               [--anaRing] [--rNx RNX] [--rNy RNY] --in-dtype IN_DTYPE [--save-patched-subplots] [--apply-bm3d] [--mtf-space]
               [--dx DX] [--ht HT] [--windowing WINDOWING] [--remove-ref-noise] [--img-y-padding]
 
-    sFRC analysis between image pairs from DL(or IRT)- & reference-based methods to detect hallucinations
+    sFRC analysis between image pairs from Deep Learning (DL) or Iterative (IRT)- & reference-based methods to detect hallucinations
     
     arguments:
     -h, --help            show this help message and exit
@@ -100,7 +100,7 @@ Usage
     --frc-threshold       frc threshold to determine correlation cut-off between the 2 methods. This patch-based FRC analysis
                           is better suited with a constant threshold such as 0.5, 0.75. Other common options include half-bit, all,
                           one-bit. To add new threshold, look inside function FRC in the file frc_utils.py.
-    --inscribed-rings     max frequency at which correlation is calculated is img (or patch) length/2. if false then frc will be
+    --inscribed-rings     max frequency at which correlation is calculated is img (or patch) length/2. if false, then frc will be
                           calculated upto the corner of the image (or patch).
     --anaRing             perimeter of circle-based calculation to determine data points in each ring. Otherwise, no. of pixels in
                           each ring used to determine data points in each ring.
@@ -111,7 +111,8 @@ Usage
     --save-patched-subplots
                           if you want to save patches with the bounding box and FRC plot results.
     --apply-bm3d          apply image-based mild bm3d smoothing before the frc calculation. It decreases the chance of quick FRC
-                          drop. This means it increases the chance of missing hallucinations. But it has advantage of increasing PPV.
+                          drop. This, in turn, has a positive effect of decreasing false positive ROIs. But it may also have a negative 
+                          effect by causing sFRC to be more lenient on hallucinated ROIs (i.e., hallucinated ROIs may bypass undetected).
     --mtf-space           x-axis for FRC is in the mtf space. Uses the dx info. Use this option only if you have info on dx for your
                           acquisition. Otherwise, do not use this option. When this option is not used, x-axis for FRC has unit pixel(^-1).
     --dx                  xy plane pixel spacing. Default value is set from the LDGC dataset and has the unit mm.
