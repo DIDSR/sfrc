@@ -9,7 +9,7 @@ sFRC for detecting hallucinations in medical image restoration
 
 
 
-- **Inputs**: Restored medical images from Deep learning- or Iterative regularization-based methods and their reference counterparts from the standard-of-care methods (such as FBP), and hallucination threshold.
+- **Inputs**: Restored medical images from Deep learning- or Iterative regularization-based methods and their reference counterparts from the standard-of-care methods (such as analytical-based Filtered BackProjection (FBP), inverse Fourier Transform (iFT)), and hallucination threshold.
 
 .. raw:: html
    
@@ -19,7 +19,7 @@ sFRC for detecting hallucinations in medical image restoration
    :alt: some image
    :width: 500px
 
-*Fig 1: An illustration of inputs to sFRC as test images from novel methods (such as AI or Iterative (IRT)-based) and reference methods (such as physics-based), and hallucination threshold. The figure also depicts outputs as red-bounding boxes on images from the novel and reference methods to indicate hallucinated patches and actual anatomy in the novel and reference patched pairs.* 
+*Fig 1: An illustration of inputs to sFRC as test images from novel methods (such as AI or Iterative (IRT)-based) and reference methods (such as FBP, iFT), and hallucination threshold. The figure also depicts outputs as red-bounding boxes on images from the novel and reference methods to indicate hallucinated patches and actual anatomy in the novel and reference patched pairs.* 
 
 .. raw:: html
 
@@ -56,7 +56,7 @@ sFRC for detecting hallucinations in medical image restoration
 .. figure:: paper_plots/git_illustration3.png
    :width: 700
 
-*Fig 3:  Red bounding boxes as outputs from sFRC. The bounding boxes on an AI-based and an inverse Fourier Transform (iFT)-based images indicate hallucinations detected by sFRC and corresponding reference anatomy. The AI-based image was restored from subsampled MRI data acquired using an acceleration factor of three (i.e., using only 33% of raw measurement data). The reference image was restored using physics-based inverse Fourier transform on the fully sampled data (i.e., using 100% of raw measurement data). A zoomed view of a pair of patches indicates removal of the dark signal in AI-based image as compared to its reference iFT patch.*
+*Fig 3:  Red bounding boxes as outputs from sFRC. The bounding boxes on an AI-based and an inverse Fourier Transform (iFT)-based images indicate hallucinations detected by sFRC and corresponding reference anatomy. The AI-based image was restored from subsampled MRI data acquired using an acceleration factor of three (i.e., using only 33% of raw measurement data). The reference image was restored using analytical-based iFT on the fully sampled data (i.e., using 100% of raw measurement data). A zoomed view of a pair of patches indicates removal of the dark signal in AI-based image as compared to its reference iFT patch.*
 
 .. raw:: html
 
