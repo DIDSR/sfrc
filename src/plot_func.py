@@ -219,7 +219,7 @@ def dict_plot_of_2d_arr(args, rows, cols, bool_mat, arr_2d, cmap='Greys_r', save
   cols      :number of columns of subplots
   arr_2d    :stacked 2d arrays
   bool_mat  :a boolean matrix with 0s and 1s. 
-             subplot whose corresponding value is 1 will be borded
+             subplot whose corresponding value is 1 will be bordered
              with a bounding box. 
   """
   # rows, cols indicate number of subplots along rows & columns
