@@ -12,9 +12,9 @@
 # bash +x demo_sfrc_run.sh 'MRI' 'test' 'unet' 4
 #
 # ***********************************************************************
-# Notes: ensure mpl.use('Agg') in src/plot_func.py is not-comment in 
+# Notes: ensure mpl.use('Agg') in src/plot_func.py is NOT COMMENTED in 
 #        case you see any segmentation fault error when sfrc is processing 
-#        large number of images over multiple threds
+#        large number of images over multiple threads
 # ***********************************************************************
 # 
 mode=$1     # "CT" or "MRI"
