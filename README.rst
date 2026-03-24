@@ -1,7 +1,7 @@
 sFRC for detecting hallucinations in medical image restoration 
 ========================================================================================================================
 **sFRC** scans and performs Fourier Ring Correlation (FRC)-based analysis over small patches between images from AI-assisted methods and their reference counterparts to objectively and automatically detect hallucinations as detailed in our 
-`sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. You can also perform sFRC analysis to detect hallucinations from iterative regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
+`sFRC paper <https://arxiv.org/abs/2603.04673>`_. You can also perform sFRC analysis to detect hallucinations from iterative regularization-based methods by simply comparing images from regularization-based vs. reference methods. 
 
 .. raw:: html
 
@@ -25,7 +25,7 @@ sFRC for detecting hallucinations in medical image restoration
 
    </div>
 
-- **Hallucination Threshold**: The hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as hallucination by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_]. Using the known hallucinated patches, patch-wise FRC curves are obtained. Then the hallucination threshold is set as the maximum of the x-coordinate values corresponding to the set of x-coordinates due to the intersection between the FRC curves and the FRC thresholds.The FRC threshold is usually set the same for a given modality. In this work, we used y=0.5 and y=0.75 as the FRC thresholds for the CT superresolution and MRI subsampling problems respectively.  
+- **Hallucination Threshold**: The hallucination threshold can be directly input by users, or set using a few patches or ROIs that are predefined as hallucination by human observers or is determined using imaging theory-based limitation for a given undersampled image restoration problem [`Bhadra et al <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8673588/>`_, `sFRC paper <https://arxiv.org/abs/2603.04673>`_]. Using the known hallucinated patches, patch-wise FRC curves are obtained. Then the hallucination threshold is set as the maximum of the x-coordinate values corresponding to the set of x-coordinates due to the intersection between the FRC curves and the FRC thresholds.The FRC threshold is usually set the same for a given modality. In this work, we used y=0.5 and y=0.75 as the FRC thresholds for the CT superresolution and MRI subsampling problems respectively.  
 
 .. raw:: html
    
@@ -150,7 +150,7 @@ Create a new conda enviroment and install the required packages as follows:
 
 DEMO execution of sFRC
 ----------------------------------------------------------
-The example codes below show how to run sfrc by using data from DL/IRT methods and their reference counterparts used in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. 
+The example codes below show how to run sfrc by using data from DL/IRT methods and their reference counterparts used in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. 
 Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
 
 1. sFRC on SRGAN-based CT upsampled (x4) images
@@ -170,14 +170,14 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
       bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 1
 
    'CT' indicates sFRC applied on CT-based data. 'sh' and 'tune' are options to indicate paths for sharp kernel-based data and 
-   tuning set for sFRC parameters used in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. Likewise 'sm' indicates smooth kernel-based test set. 
+   tuning set for sFRC parameters used in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. Likewise 'sm' indicates smooth kernel-based test set. 
    1 indicates one processing unit (-np) to be used in our mpi-based sFRC implementation. 
    Note that, in this git repo, the demo example for the CT application includes only 5 CT images. 
    As such, the no. of hallucinations, for the specified parameters, for sharp and smooth data will be 21 
    and 16 respectively. Refer to the next subsection to fetch the complete test set and results as 
    provided in the sFRC paper for the CT application. 
 
-   Change the ht parameter as 0.25, 0.35, 0.34, and 0.33 to reproduce different sFRC-detected bounding boxes as hallucinations as shown in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_.
+   Change the ht parameter as 0.25, 0.35, 0.34, and 0.33 to reproduce different sFRC-detected bounding boxes as hallucinations as shown in the supplemental part of the `sFRC paper <https://arxiv.org/abs/2603.04673>`_.
 
 2. sFRC on UNet- and PLSTV-based MRI outputs from a subsampled acquisition (x3)
 
@@ -185,7 +185,7 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
       
       bash +x demo_sfrc_run.sh 'MRI' 'test' 'unet' 4
 
-   Change the third option to 'plstv' for the plstv-based results provided in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. 
+   Change the third option to 'plstv' for the plstv-based results provided in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. 
 
 Apply trained SRGAN 
 --------------------
@@ -203,10 +203,10 @@ in the following manner:
 
 To apply the SRGAN to all the CT images from patient L067 (as described in the sFRC paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
-yield hallucinated patches as tabulated in TABLE I in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_ and as depicted in the following 
+yield hallucinated patches as tabulated in TABLE I in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_ and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
-4. Get the mid-frequency image components corresponding to each CT tuning image to manually mark the hallucinated ROIs as shown in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_.
+4. Get the mid-frequency image components corresponding to each CT tuning image to manually mark the hallucinated ROIs as shown in the supplemental part of the `sFRC paper <https://arxiv.org/abs/2603.04673>`_.
 
    .. code-block:: 
 
@@ -222,7 +222,7 @@ yield hallucinated patches as tabulated in TABLE I in the `sFRC paper <https://d
       bash +x demo_srgan_test.sh 'test' 'sm'
 
 Then set the first command line input as 'test' to indicate tags related to the paths 
-of CT images are test set for the sFRC analysis (as used in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_) when executing demo_sfrc_run.sh.
+of CT images are test set for the sFRC analysis (as used in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_) when executing demo_sfrc_run.sh.
 
 6. sFRC on SRGAN-based CT upsampled (x4) test images (sharp as well as smooth)
 
@@ -234,7 +234,7 @@ of CT images are test set for the sFRC analysis (as used in the `sFRC paper <htt
 
 Apply trained UNet 
 -------------------
-The trained Unet model and data provided in this repository (as well as used in the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_) have been imported from the following github
+The trained Unet model and data provided in this repository (as well as used in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_) have been imported from the following github
 repository: `hallucinations-tomo-recon <https://github.com/comp-imaging-sci/hallucinations-tomo-recon>`_. Also, 
 `Pediatric epilepsy resection MRI dataset <https://kilthub.cmu.edu/articles/dataset/Pediatric_epilepsy_resection_MRI_dataset/9856205>`_ is 
 the original source of the MRI data. 
@@ -262,9 +262,9 @@ Then edit the path to BART's python wrapper in line 20 in file "./mr_subsampling
 Conventional artifacts (non-hallucinatory) 
 --------------------------------------------
 
-9. Refer to the readme file inside the folder conventional_artifact to simulate the four different artifacts (missing wedge, distortion, blur, noise) discussed in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_. Update folder conventional_artifact/data in accordance to the options you set when simulating artifacts or per your own experimental data. 
+9. Refer to the readme file inside the folder conventional_artifact to simulate the four different artifacts (missing wedge, distortion, blur, noise) discussed in the supplemental part of the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. Update folder conventional_artifact/data in accordance to the options you set when simulating artifacts or per your own experimental data. 
 
-10. Below is the demo run of the sFRC on the conventional artifacts shown in the supplemental part of the `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_.
+10. Below is the demo run of the sFRC on the conventional artifacts shown in the supplemental part of the `sFRC paper <https://arxiv.org/abs/2603.04673>`_.
 
    .. code-block:: 
 
@@ -300,12 +300,12 @@ Please cite sFRC if it helped your research work
 
 ::
 
-   @article{kc2024fake,
+   @article{kc2026sfrc,
      title={sFRC for assessing hallucinations in  medical image restoration},
      author={Kc, Prabhat and Zeng, Rongping and Soni, Nirmal and Badano, Aldo},
-     journal={TechRxiv Preprints},
-     year={2025},
-     doi={10.36227/techrxiv.171259560.02243347/v2},
+     journal={arXiv preprint},
+     year={2026},
+     doi={arXiv:2603.04673},
    }
 
 
