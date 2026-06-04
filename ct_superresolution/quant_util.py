@@ -117,7 +117,22 @@ def relative_mse(f_true, f_est):
     return(nume/deno)
 
 def psnr(f_true, f_est, max_val=1.0):
-    
+    """
+    Compute the Peak Signal-to-Noise Ratio (PSNR) between two images.
+
+    PSNR is a common metric used to measure the quality of a reconstructed
+    or estimated image compared to a reference (ground truth) image.
+
+    Parameters:
+        f_true (ndarray): Ground truth (reference) image.
+        f_est (ndarray) : Estimated or reconstructed image.
+        max_val (float) : Maximum possible pixel value of the images
+                         (default is 1.0 for normalized images).
+
+    Returns:
+        float: PSNR value in decibels (dB). Higher values indicate better
+               similarity between the images.
+    """    
     imdff = f_true - f_est
     rmse = np.sqrt(np.mean(imdff **2))
     psnr = 20.0*np.log10(max_val/rmse)
