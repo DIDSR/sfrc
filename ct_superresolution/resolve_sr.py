@@ -175,7 +175,7 @@ def main():
             if gt_available:
                 gt_img = gt_img.astype(out_dtype)
                 cnn_max, cnn_min = max(np.max(gt_img), np.max(cnn_output)), min(np.min(gt_img), np.min(cnn_output))
-                cnn_rMSE = quant_util.relative_mse(gt_img, cnn_output)
+                cnn_rMSE = quant_util.relative_se(gt_img, cnn_output)
                 cnn_psnr = quant_util.psnr(gt_img, cnn_output, cnn_max)
                 cnn_ssim = compare_ssim(cnn_output.reshape(hr_h, hr_w, 1), gt_img.reshape(hr_h, hr_w, 1), multichannel=True, data_range=(cnn_max-cnn_min))
                 cnn_rMSE_arr.append(cnn_rMSE)
@@ -183,7 +183,7 @@ def main():
                 cnn_ssim_arr.append(cnn_ssim)
 
                 lr_max, lr_min = max(np.max(gt_img), np.max(lr_img)), min(np.min(gt_img), np.min(lr_img))
-                lr_rMSE = quant_util.relative_mse(gt_img, lr_img)
+                lr_rMSE = quant_util.relative_se(gt_img, lr_img)
                 lr_psnr = quant_util.psnr(gt_img, lr_img, lr_max)
                 lr_ssim = compare_ssim(lr_img.reshape(hr_h, hr_w, 1), gt_img.reshape(hr_h, hr_w, 1), multichannel=True, data_range=(lr_max-lr_min))
                 lr_rMSE_arr.append(lr_rMSE)
