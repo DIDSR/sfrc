@@ -145,8 +145,9 @@ Create a new conda enviroment and install the required packages as follows:
     $ conda install -c anaconda h5py==3.6.0 # other h5py versions may incur memory leak
     # to install packages for performing sFRC-based calculations
     $ pip install -r ./requirements/sfrc_requirements.txt
-    # to install packages to perform CT super-resolution and MRI reconstruction
-    $ pip install -r ./requirements/im_recon_requirements.txt 
+
+For the additional packages required for the MR sub-sampling and CT super-resolution tasks, 
+see `requirements/im_recon_requirements.txt.`
 
 DEMO execution of sFRC
 ----------------------------------------------------------
