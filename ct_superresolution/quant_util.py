@@ -60,6 +60,61 @@ def psnr(f_true, f_est, max_val=1.0):
     return(psnr)
 
 def quant_ana(output, target, img_type):
+    """
+    Performs quantitative analysis of a CNN model's output against a target 
+    image by computing Peak Signal-to-Noise Ratio (PSNR) and Structural 
+    Similarity Index (SSIM).
+
+    The function handles preprocessing and type conversion of both the model 
+    output and target tensors based on the specified image type, then returns 
+    both metrics as float tensors.
+
+    Parameters
+    ----------
+    output : torch.Tensor
+        The CNN model's predicted output tensor of shape (B, C, H, W), where 
+        B is batch size, C is number of channels, H is height, and W is width.
+        The function processes only the first channel (index 0).
+    target : torch.Tensor
+        The ground truth image tensor of the same shape as output (B, C, H, W).
+        The function processes only the first channel (index 0).
+    img_type : str
+        Specifies the image type, which determines how pixel values are scaled 
+        and cast before metric computation. Accepted values:
+            - 'natural'        : Converts output and target to uint8 in [0, 255]
+                                 by scaling with a factor of 255.
+            - 'natural-float'  : Normalizes output to float64 in [0, 255] using 
+                                 util.normalize_data_ab; scales target to float64 
+                                 in [0, 255].
+            - 'positive-float' : Normalizes both output and target to float32 
+                                 in [0, 1] using util.normalize_data_ab.
+            - other (default)  : Treats values as general floats (possibly 
+                                 negative); scales both output and target by 255 
+                                 without normalization or clipping.
+
+    Returns
+    -------
+    tuple of (torch.FloatTensor, torch.FloatTensor)
+        A tuple containing:
+            - _psnr : PSNR value (in dB) between the model output and target, 
+                      returned as a float tensor. Higher values indicate better 
+                      reconstruction quality.
+            - _ssim : SSIM value between the model output and target, returned 
+                      as a float tensor. Values range from -1 to 1, where 1 
+                      indicates perfect structural similarity. SSIM is computed 
+                      as an average across all channels (multichannel=True).
+
+    Notes
+    -----
+    - Both output and target tensors are moved to CPU before processing.
+    - The function uses util.normalize_data_ab for normalization in the 
+      'natural-float' and 'positive-float' cases.
+    - PSNR and SSIM are computed using external psnr() and compare_ssim() 
+      functions, respectively.
+    - when multichannel==true is set each channel will be processed independently 
+      while determining their corresponding ssim values. The final output
+      will be an average of all these channels 
+    """    
     cnn_output = output.cpu()
     target     = target.cpu()
     
