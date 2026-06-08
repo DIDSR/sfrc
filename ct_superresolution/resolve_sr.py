@@ -1,243 +1,372 @@
-
-import argparse, os
-import glob
-import numpy as np 
-from skimage.transform import rescale, resize
-from skimage.metrics import structural_similarity as compare_ssim
-import natsort
-import cv2
-
 import torch
-from torchvision.transforms import ToTensor
-import util
+import argparse
+import torch.backends.cudnn as cudnn
+import torch.nn as nn
+import torch.optim as optim
+import torch.utils.data.distributed
+from torchvision import datasets, transforms
+import horovod.torch as hvd
+import torch.nn.functional as F
+import torch.multiprocessing as mp
+import tensorboardX
+import os
+import math
+from tqdm import tqdm
 import sys
 
+from dataset import DatasetFromHdf5
+from torchsummary import summary
+import util
 import quant_util
-import io_func
+import time
+from loss import gradient_penalty
 
-#Testing settings
-parser = argparse.ArgumentParser(description='PyTorch application of trained weight on CT images')
-parser.add_argument('--model-name','--m', type=str, default='cnn3', 
-                    help='choose the network architecture name that you are going to use. Other options include redcnn, dncnn, unet, gan.')
-parser.add_argument('--input-folder', type=str, required=True, help='directory name containing noisy input test images.')
-parser.add_argument('--gt-folder', type=str, required=False, default="", help='directory name containing test Ground Truth images.')
-parser.add_argument('--model-folder', type=str, required=True, help='directory name containing saved checkpoints.')
-parser.add_argument('--output-folder', type=str, help='path to save the output results.')
-parser.add_argument('--normalization-type', type=str, required=True, help='None or unity_independent. Look into img_pair_normalization in utils.')
-parser.add_argument('--cuda', action='store_true', help='use cuda')
-parser.add_argument('--input-img-type', type=str, default='dicom', help='dicom or raw or tif?')
-parser.add_argument('--specific-epoch', action='store_true', help='If true only one specific epoch based on the chckpt-no will be applied to \
-                                                             test images. Else all checkpoints (or every saved checkpoints corresponding to each epoch)\
-                                                             will be applied to test images.')
-parser.add_argument('--chckpt-no', type=int, required=False, default=-1, help='epoch no. of the checkpoint to be loaded\
-                                                                         and then applied to noisy images from the test set. Default is the last epoch.')
-parser.add_argument('--se-plot', action='store_true', help='If true denoised images from test set is saved inside the output-folder.\
-                                                      Else only test stats are saved in .txt format inside the output-folder.')
-parser.add_argument('--in-dtype',  type=str, default="uint16", help="data type of input images. Only needed for .raw format imgs.")
-# parser.add_argument('--out-dtype', type=str, default="uint16", help="data type to save de-noised output.")
-# out-dtype option is not accurate right now. You need to have out-dtype set same as the in-dtype for now
-parser.add_argument('--resolve-patient', action='store_true', help="is CNN applied to images from different patients? \
-                                                                    If yes then images will be saved with patient tag.")
-parser.add_argument('--resolve-nps', action='store_true', help="is CNN applied to water phantom images?")
-parser.add_argument('--rNx', required=False, type=int,    default=None, help="image size for raw image as input (specifically for LR).")
-parser.add_argument('--scale', type=int, default=1, help='up-scaling factor.')
+# ====================================================================
+# Training settings
+# ====================================================================
+parser = argparse.ArgumentParser(description="PyTorch GAN DLCT",
+                                formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+parser.add_argument('--gan-name','--m', type=str, default='srgan',
+                    help='srgan or srwgan or so on')
+parser.add_argument('--nepochs', type=int, default=5,  help='number of epochs to train')
+parser.add_argument("--cuda", action="store_true", help="Use cuda?")
+parser.add_argument('--batches-per-allreduce', type=int, default=1,
+                    help='number of batches processed locally before executing allreduce across workers;'
+                    'it multiplies total batch size. (RHR: 1 loss function eqs 1 batches-per-allreduce')
+parser.add_argument('--log-dir', default='./logs',
+                    help='tensorboard parent log directory')
+parser.add_argument('--fp16-allreduce', action='store_true', default=False,
+                    help='use fp16 compression during allreduce')
+parser.add_argument("--batch-size", type=int, default=16, help="training batch size")
+# parser.add_argument("--resume", default="", type=str, help="Path to checkpoint (default: none)")
+parser.add_argument("--start-epoch", default=1, type=int, help="Manual epoch number (useful on restarts)")
+parser.add_argument("--pretrained", default="", type=str, help="path to pretrained model (default: none)")
+parser.add_argument('--checkpoint-format', default='checkpoint-{}-{epoch}.pth.tar',
+                    help='checkpoint file format')
+parser.add_argument('--base-lr', type=float, default=0.0125, help='learning rate for a single GPU')
+parser.add_argument('--seed', type=int, default=42, help='random seed')
+parser.add_argument('--warmup-epochs', type=float, default=5, help='number of warmup epochs')
+parser.add_argument('--training-fname', type=str, help='Path to training LR-HR patches in h5 format')
+parser.add_argument('--val-chk-prsc', type=str, default='natural-float', help='precision type while calculating SSIM/PSNR during validation')
+parser.add_argument('--scale', type=int, default=1, help='up-scaling factor')
+parser.add_argument('--num-channels', type=int, default=1, help='3 for rgb images and 1 for gray scale images')
 
-args = parser.parse_args()
+parser.add_argument('--val-batch-size', type=int, default=16,
+                    help='input batch size for validation and unless same ')
+parser.add_argument('--validating-fname', type=str, help='Path to HR/target image directory in validation set')
 
-print('\n----------------------------------------')
-print('Command line arguments')
-print('----------------------------------------')
-for i in args.__dict__: print((i),':',args.__dict__[i])
-print('\n----------------------------------------\n')
+parser.add_argument('--descriptor-type', type=str, required=True,
+                    help='descriptor-type from train/test.h5. used only to designate log/checkpoint paths')
+parser.add_argument('--shuffle_patches', action="store_true", help="shuffles patches at the DistributedSampler sub-routine")
+parser.add_argument('--save_log_ckpts', action="store_true", help="saves log writer and checkpoints")
+parser.add_argument('--save_ckpts_last_epoch', action="store_true", help="saves only the last checkpoints")
+parser.add_argument('--critic-iter', type=int, default=5,  help='number of additional descriminator/critic iteration within each epoch')
+parser.add_argument('--gp-lambda', type=float, default=10,  help='regularization parameter (scalar values) multiplied to the gradient penalty term in discriminator loss')
+parser.add_argument('--gen-lambda', type=float, default=100,  help='regularization parameter (scalar values) multiplied to the l1 term in generator loss')
 
-input_folder       = args.input_folder
-gt_folder          = args.gt_folder
-output_folder      = args.output_folder
-model_folder       = args.model_folder
-cuda               = args.cuda 
-normalization_type = args.normalization_type
-specific_epoch     = args.specific_epoch
-chckpt_no          = args.chckpt_no
-num_channels       = 1
-gt_available       = bool((args.gt_folder).strip())
-out_dtype          = args.in_dtype
-scale              = args.scale
+#parser.add_argument('--val-hr', type=str, help='Path to HR/target image directory in validation set')
+#parser.add_argument('--val-lr', type=str, help='Path to LR/input image directory in validation set')
 
-if (specific_epoch == True and chckpt_no != -1): chckpt_no = chckpt_no-1
 
-# =================================
-# Importing model architecture:
-# =================================
-if args.model_name == 'srgan':
-  from models.gan import Generator
-  main_model = Generator(n_residual_blocks=16, upsample_factor=scale, base_filter=64, num_channel=num_channels)
-elif args.model_name == 'fsrcnn':
-  from models.fsrcnn import FSRCNN
-  main_model = FSRCNN(num_channels=num_channels, upscale_factor=scale)
+# ====================================================================
+# Initilize program with command line arguments and CUDA dependencies
+# ====================================================================
+args                        = parser.parse_args()
+cuda                        = args.cuda and torch.cuda.is_available()
+allreduce_batch_size        = args.batch_size * args.batches_per_allreduce
+args.num_residual           = 16
+args.save_ckpts_every_epoch = not args.save_ckpts_last_epoch
+# -----------------------------------------------------------
+# Importing architectures:
+# -----------------------------------------------------------
+#
+
+'''Commenting SRGAN as srgan training is different than WGAN training -----------------------------------------------------------------------------------------------
+if args.gan_name=="srgan":
+  from models.gan import Generator, Discriminator
+  # for 32 to upscale by 4 (giving 128) requires G (nf=64)=1.5 and D=4.68 million parameters
+  modelG = Generator(n_residual_blocks=args.num_residual, upsample_factor=args.scale, base_filter=64, num_channel=args.num_channels) #in_residual_blocks=args.num_residual, upsample_factor=args.scale, base_filter=64, num_channel=args.num_channels)
+  modelD = Discriminator(base_filter=64, num_channel=args.num_channels)
+'''
+if args.gan_name=="srwgan":
+  from models.wgan import RRDBNet, Discriminator_VGG_128
+  # for 32 to upscale by 4 (giving 128) requires G (nf=32)=1.7; G(nf=64)=3.02, and D(nf=32)=3.42, D(nf=64)=13.6 million parameters
+  modelG = RRDBNet(in_nc=args.num_channels, out_nc=args.num_channels, nf=32, nb=4)
+  modelD = Discriminator_VGG_128(in_nc=args.num_channels, nf=32)
 else:
-  print("ERROR! Re-check DNN model (architecture) string!")
-  sys.exit() 
+  sys.exit('Error: double-check the model name')
 
-def main():
-    # importing model all the checkpoint NAMES saved in the training phase
-    if args.model_name == 'srgan':
-        model_names = natsort.natsorted(glob.glob(os.path.join(model_folder, "checkpoint-gene*.*")))
-    else:
-        model_names = natsort.natsorted(glob.glob(os.path.join(model_folder, "*.*")))
+if args.save_log_ckpts:
+  # declaring the CHECKPOINT fname ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  checkpoint_folder = os.path.join('checkpoints', args.gan_name + '/' + args.descriptor_type + '/hvd_cpt_for_' +'_lr_'+str(args.base_lr)+'_gp_'+str(args.gp_lambda)+ '_genlam_'+str(args.gen_lambda)+'_bs_'+str(args.batch_size))
+  if not os.path.isdir(checkpoint_folder): os.makedirs(checkpoint_folder, exist_ok=True)
+  args.checkpoint_format = os.path.join(checkpoint_folder, args.checkpoint_format)
+  # declaring the LOG fname -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  current_log_folder = os.path.join(args.log_dir, args.gan_name + '/' + args.descriptor_type + '/hvd_log_for_' +'_lr_'+str(args.base_lr)+'_gp_'+str(args.gp_lambda)+ '_genlam_'+str(args.gen_lambda)+'_bs_'+str(args.batch_size))
+  args.log_dir = current_log_folder.format(int(time.time()))
 
-    if (len(model_names)==0): sys.exit("ERROR ! unable to load checkpoint (incorrect model path).\n")
-    # =============================================================
-    # Importing checkpoint paths & creating folders to save results
-    # -------------------------------------------------------------
-    if specific_epoch is True:
-        fm_name = model_names[chckpt_no]
-        model_names = []
-        model_names.append(fm_name)
+hvd.init()
+torch.manual_seed(args.seed)
 
-        #declaring and creating folders to store results if specific check point no is fed in 
-        sp_str = model_names[0].split('/')
-        sp_str = sp_str[-1]
-        sp_str = sp_str.split('.')
-        sp_str = sp_str[0]
-        cnn_hd_test_out   = os.path.join(output_folder, sp_str)	
-        if not os.path.isdir(cnn_hd_test_out): os.makedirs(cnn_hd_test_out)
-        if gt_available: quant_fname = os.path.join(output_folder, sp_str+'_quant_vals.txt') 
-    else:
-        # when all checkpoints are used to give their respective quant results
-        # we save only quant values and not the individual CNN based Hd image results
-        if not os.path.isdir(output_folder): os.makedirs(output_folder, exist_ok=True)
-        if gt_available: quant_fname = os.path.join(output_folder, 'all_checkpoint_quant_vals.txt')
+if cuda:
+    # Horovod: pin GPU to local rank.
+    torch.cuda.set_device(hvd.local_rank())
+    torch.cuda.manual_seed(args.seed)
+cudnn.benchmark = True
 
-    # gt data is available save global metrics to a txt file
-    if gt_available:
-        quantfile = open(quant_fname, '+w')	
-        quantfile.write('chckpt-no, CNN rMSE, (+,-std), CNN PSNR [dB], (+,-std), CNN SSIM, (+,-std), BC rMSE, (+,-std), BC PSNR [dB], (+,-std), BC SSIM, (+,-std)\n')
+# If checkpoints upto ith iterations have been saved from previous computations
+# then iteration and terminal broadcast start from (i+1)th iteration
+# old checkpoints are only read if save_log_ckpts is true
+resume_from_epoch = 0
+for try_epoch in range(args.nepochs, 0, -1):
+    if os.path.exists(args.checkpoint_format.format('discriminator', epoch=try_epoch)):
+        resume_from_epoch = try_epoch
+        break
 
-    dir_min, dir_max = util.min_max_4rmdir(input_folder, args.input_img_type, args.in_dtype, rN=args.rNx)
+# Horovod: To ensure that all GPUs are initialized with same weights as that
+# of the root_rank whether random or that loaded from already trained checkpoint
+resume_from_epoch = hvd.broadcast(torch.tensor(resume_from_epoch), root_rank=0,
+                                  name='resume_from_epoch').item()
+# Display command line arguments
+if hvd.rank() == 0:
+  print('\n----------------------------------------')
+  print('Command line arguements')
+  print('----------------------------------------')
+  print("\nNo. of gpus used:", hvd.size())
+  for i in args.__dict__: print((i),':',args.__dict__[i])
+  print('\n----------------------------------------\n')
 
-    # ===================================
-    # Accessing all (or one) checkpoints
-    # ===================================
-    for ith_model in range(len(model_names)):
-        model = main_model
-        model = model.eval()
-        if cuda: model = model.cuda()
-        checkpoint = torch.load(model_names[ith_model])
-        model.load_state_dict(checkpoint['model'])
+# Horovod: print logs on the first worker
+verbose = 1 if hvd.rank() == 0 else 0
 
-        #read images from input-folder
-        lr_img_names = sorted(glob.glob(os.path.join(input_folder, "*.*")))
-        if gt_available:
-            gt_img_names = sorted(glob.glob(os.path.join(gt_folder, "*.*")))
-            lr_rMSE_arr, lr_psnr_arr, lr_ssim_arr    = [], [], []
-            cnn_rMSE_arr, cnn_psnr_arr, cnn_ssim_arr = [], [], []
+# Horovod: write TensorBoard logs on first worker.
+comment='gan_type={args.gan_name}'#'loss_func={args.loss_func}_prior_type={args.prior_type}_wd={args.wd}'
+log_writer = tensorboardX.SummaryWriter(args.log_dir) if (hvd.rank() == 0 and args.save_log_ckpts) else None
+# ==================================================================
+# load training data
+# ==================================================================
+# (1) DatasetFromHdf5 returns input, target.
+# Also if mod(len(input), no_of_GPUs*batchsize) = k, the last k
+# patches are chucked off.
+#
+# (2) likewise distributed sampler and dataloader will make batches
+# of the input and target and distribute over the given no of gpus
+#
+#torch.set_num_threads(1)
+kwargs = {'num_workers': 1, 'pin_memory': True} if cuda else {}
+# When supported, use 'forkserver' to spawn dataloader workers instead of 'fork' to prevent
+# issues with Infiniband implementations that are not fork-safe
+#if (kwargs.get('num_workers', 0) > 0 and hasattr(mp, '_supports_context') and
+#      mp._supports_context and 'forkserver' in mp.get_all_start_methods()):
+#  kwargs['multiprocessing_context'] = 'forkserver'
+train_dataset = DatasetFromHdf5(hvd, args.training_fname, hvd.size()*args.batch_size)
 
-        # ====================================
-        # Denoising all LD images from Test Set
-        # =====================================
-        for i in range(len(lr_img_names)):
-            if args.input_img_type=='dicom':
-                lr_img = io_func.pydicom_imread(lr_img_names[i])
-                if gt_available: gt_img = io_func.pydicom_imread(gt_img_names[i])
-            elif args.input_img_type=='raw':
-                lr_img = io_func.raw_imread(lr_img_names[i], (args.rNx, args.rNx), dtype=args.in_dtype)
-                if gt_available: gt_img = io_func.raw_imread(gt_img_names[i], (int(args.rNx*scale), int(args.rNx*scale)), dtype=args.in_dtype)
-            else:
-                lr_img = io_func.imageio_imread(lr_img_names[i])
-                if gt_available: gt_img = io_func.imageio_imread(gt_img_names[i])
+train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset, \
+  num_replicas=hvd.size(), rank=hvd.rank(), shuffle=args.shuffle_patches)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=allreduce_batch_size, \
+  sampler=train_sampler, **kwargs)
+if hvd.rank()==0: print("Dimension of (input <-> target) batches is: {} <-> {}".format(train_dataset.data.shape, \
+  train_dataset.target.shape))
+_, _, in_h, in_w = train_dataset.data.shape
+_, _, tg_h, tg_w = train_dataset.target.shape
 
-            if gt_available: gt_min, gt_max = np.min(gt_img), np.max(gt_img)
-            lr_h, lr_w = lr_img.shape
-            cnn_output = util.norm_n_apply_model_n_renorm(model, lr_img, dir_min, normalization_type, cuda, args.resolve_nps)
-            bic_img    = util.interpolation_hr(lr_img, scale)
-            bic_img    = bic_img.astype(out_dtype)
-            cnn_output = cnn_output.astype(out_dtype)
-            hr_h, hr_w = cnn_output.shape
+# ==================================================================
+# load validation data
+# ==================================================================
+# (1) validation input and target can come from
+#     (a) DatasetfromFolder: with full input & target images
+#     (b) DatasetFromHdf5: with input, target patches
+# Also if mod(len(input), no_of_GPUs*Val_batchsize) = k, the last k
+# patches are chucked off.
+#
+# (3) likewise distributed sampler and dataloader will make batches
+# of the input and target and distributed over the given no of gpus
+#
+# val_dataset = DatasetfromFolder(image_dir_hr=args.val_hr, image_dir_lr=args.val_lr)
+val_dataset = DatasetFromHdf5(hvd, args.validating_fname, hvd.size()*args.val_batch_size)
+val_sampler = torch.utils.data.distributed.DistributedSampler(
+    val_dataset, num_replicas=hvd.size(), rank=hvd.rank(), shuffle=args.shuffle_patches)
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=args.val_batch_size,
+                                         sampler=val_sampler, **kwargs)
 
-            # lr img is set as bicubic interpolated image
-            lr_img     = bic_img 
-            img_str    = lr_img_names[i]
-            '''
-            util.plot2dlayers(gt_img, title='gt')
-            util.plot2dlayers(lr_img, title='lr')
-            util.plot2dlayers(bic_img, title='bic')
-            util.plot2dlayers(cnn_output, title='fsrcnn')
-            sys.exit()
-            '''
-            if args.resolve_patient: 
-                patient_str = img_str.split('/')[-3]
-            img_str = img_str.split('/')[-1]
-            img_no  = img_str.split('.')[-2]
-            
-            if (i==0): 
-                    print('Per image stats:')
-                    print('----------------------------------------\n')
-            if gt_available:
-                gt_img = gt_img.astype(out_dtype)
-                cnn_max, cnn_min = max(np.max(gt_img), np.max(cnn_output)), min(np.min(gt_img), np.min(cnn_output))
-                cnn_rMSE = quant_util.relative_se(gt_img, cnn_output)
-                cnn_psnr = quant_util.psnr(gt_img, cnn_output, cnn_max)
-                cnn_ssim = compare_ssim(cnn_output.reshape(hr_h, hr_w, 1), gt_img.reshape(hr_h, hr_w, 1), multichannel=True, data_range=(cnn_max-cnn_min))
-                cnn_rMSE_arr.append(cnn_rMSE)
-                cnn_psnr_arr.append(cnn_psnr)
-                cnn_ssim_arr.append(cnn_ssim)
+# ==================================================================
+# Initializing Model and objective loss function
+# ==================================================================
 
-                lr_max, lr_min = max(np.max(gt_img), np.max(lr_img)), min(np.min(gt_img), np.min(lr_img))
-                lr_rMSE = quant_util.relative_se(gt_img, lr_img)
-                lr_psnr = quant_util.psnr(gt_img, lr_img, lr_max)
-                lr_ssim = compare_ssim(lr_img.reshape(hr_h, hr_w, 1), gt_img.reshape(hr_h, hr_w, 1), multichannel=True, data_range=(lr_max-lr_min))
-                lr_rMSE_arr.append(lr_rMSE)
-                lr_psnr_arr.append(lr_psnr)
-                lr_ssim_arr.append(lr_ssim)
-                print("IMG: %s || avg CNN [rMSE: %.4f, PSNR: %.4f, SSIM: %.4f] || avg BC [rMSE: %.4f, PSNR: %.4f, SSIM: %.4f]"\
-                %(img_str, cnn_rMSE, cnn_psnr, cnn_ssim, lr_rMSE, lr_psnr, lr_ssim))
-            else:
-                print("IMG: %s || OUT [min: %.4f, max: %.4f, img_type: %s] ||  IN [min: %.4f, max: %.4f, img_type: %s]"\
-                %(img_str, np.min(cnn_output), np.max(cnn_output), cnn_output.dtype, np.min(lr_img), np.max(lr_img), lr_img.dtype))
+# transfer models to cuda
+if cuda:
+  modelG, modelD         = modelG.cuda(), modelD.cuda()
+  # criterionG, criterionD = criterionG.cuda(), criterionD.cuda()
+# MODEL SUMMARY
+if hvd.rank()==0:
+  print('Architecture summary of the Generator Net')
+  summary(modelG, (args.num_channels, in_h, in_w))
+  print('Architecture summary of the Discriminator Net')
+  summary(modelD, (args.num_channels, tg_h, tg_w))
 
-            # ==========================================================		    
-            # saving feed forward results from specific epoch (if true)
-            # ==========================================================
-            if (specific_epoch == True and args.se_plot ==True):
-                # simply padding with zeros top-bottom and right-left. 
-                # to make the outputs 512x512
-                if args.scale==3:
-                    cnn_output = np.pad(cnn_output, ((1, 1), (1,1)))
-                    lr_img     = np.pad(lr_img, ((1,1), (1,1)))
-                    gt_img     = np.pad(gt_img, ((1,1), (1,1)))
-                if args.resolve_patient:
-                    patient_dir_cnn = cnn_hd_test_out + '/' + patient_str + '_cnn'
-                    patient_dir_bc  = cnn_hd_test_out + '/' + patient_str + '_bc'
-                    patient_dir_gt  = cnn_hd_test_out + '/' + patient_str + '_gt'
-                    if not os.path.isdir(patient_dir_cnn): os.makedirs(patient_dir_cnn, exist_ok=True)
-                    if not os.path.isdir(patient_dir_bc): os.makedirs(patient_dir_bc, exist_ok=True)
-                    if not os.path.isdir(patient_dir_gt): os.makedirs(patient_dir_gt, exist_ok=True)
-                    io_func.imsave_raw((cnn_output), patient_dir_cnn + '/' + img_no + '.raw')
-                    io_func.imsave_raw((lr_img), patient_dir_bc + '/' + img_no + '.raw') # lr_img is bicubic here
-                    io_func.imsave_raw((gt_img), patient_dir_gt + '/' + img_no + '.raw') # lr_img is bicubic here
-                else:
-                    io_func.imsave_raw((cnn_output), cnn_hd_test_out + '/' + img_no + '.raw')
-        # command line print + quantfile print
-        if gt_available:
-            # extract checkpoint no to print
-            chckpt_name = model_names[ith_model]
-            chckpt_name = chckpt_name.split('/')[-1]
-            chckpt_name = chckpt_name.split('.')[0]
-            prnt_chckpt_no = int(chckpt_name.split('-')[-1])
-            print('\n----------------------------------------------')
-            print("%s (applied on test data)" % chckpt_name)
-            print('----------------------------------------------')
+# ==================================================================
+# Initializing the optimizer type
+# ==================================================================
+# adam uses its inbuilt subroutines to determine momemtum parameter
+optimizerG = optim.Adam(modelG.parameters(), betas=(0.9, 0.999), #betas=(0.9, 0.999)
+                  lr=(args.base_lr * args.batches_per_allreduce * hvd.size()))
 
-            print("avg CNN (std) [rMSE: %.4f (%.4f), PSNR: %.4f (%.4f), SSIM: %.4f (%.4f)] \navg BC  (std) [rMSE: %.4f (%.4f), PSNR: %.4f (%.4f), SSIM: %.4f (%.4f)]" % \
-            (np.mean(cnn_rMSE_arr), np.std(cnn_rMSE_arr), np.mean(cnn_psnr_arr), np.std(cnn_psnr_arr), np.mean(cnn_ssim_arr), np.std(cnn_ssim_arr),\
-            np.mean(lr_rMSE_arr), np.std(lr_rMSE_arr), np.mean(lr_psnr_arr), np.std(lr_psnr_arr), np.mean(lr_ssim_arr), np.std(lr_ssim_arr)))
+#optimizerD = optim.SGD(modelD.parameters(), momentum=0.9, nesterov=True,
+#                  lr=((args.base_lr/100) * args.batches_per_allreduce * hvd.size()))
 
-            quantfile.write("%9d,%9.4f,%9.4f,%14.4f,%9.4f,%9.4f,%9.4f,%8.4f,%9.4f,%13.4f,%9.4f,%8.4f,%9.4f\n" \
-            % (prnt_chckpt_no, np.mean(cnn_rMSE_arr), np.std(cnn_rMSE_arr), np.mean(cnn_psnr_arr), np.std(cnn_psnr_arr), np.mean(cnn_ssim_arr), np.std(cnn_ssim_arr),\
-            np.mean(lr_rMSE_arr), np.std(lr_rMSE_arr), np.mean(lr_psnr_arr), np.std(lr_psnr_arr), np.mean(lr_ssim_arr), np.std(lr_ssim_arr)))
-        del model
+optimizerD = optim.Adam(modelD.parameters(), betas=(0.9, 0.999), #betas=(0.9, 0.999)
+                  lr=(args.base_lr * args.batches_per_allreduce * hvd.size()))
 
-    if gt_available: quantfile.close()
+# Horovod: (optional) compression algorithm.
+compression = hvd.Compression.fp16 if args.fp16_allreduce else hvd.Compression.none
 
-if __name__ == "__main__":
-    main()
+# Horovod: wrap optimizer with DistributedOptimizer.
+optimizerG = hvd.DistributedOptimizer(optimizerG, named_parameters=modelG.named_parameters(prefix='generator'), \
+  compression=compression, backward_passes_per_step=args.batches_per_allreduce)
+optimizerD = hvd.DistributedOptimizer(optimizerD, named_parameters=modelD.named_parameters(prefix='discriminator'), \
+  compression=compression, backward_passes_per_step=args.batches_per_allreduce)
+
+# Restore from a previous checkpoint, if initial_epoch is specified.
+# Horovod: restore on the first worker which will broadcast weights to other workers.
+if resume_from_epoch > 0 and hvd.rank() == 0:
+    filepathG = args.checkpoint_format.format('generator', epoch=resume_from_epoch)
+    filepathD = args.checkpoint_format.format('discriminator', epoch=resume_from_epoch)
+
+    checkpointG = torch.load(filepathG)
+    modelG.load_state_dict(checkpointG['model'])
+    optimizerG.load_state_dict(checkpointG['optimizer'])
+    checkpointD = torch.load(filepathD)
+    modelD.load_state_dict(checkpointD['model'])
+    optimizerD.load_state_dict(checkpointD['optimizer'])
+
+# Horovod: broadcast parameters & optimizer state.
+hvd.broadcast_parameters(modelG.state_dict(), root_rank=0)
+hvd.broadcast_optimizer_state(optimizerG, root_rank=0)
+
+hvd.broadcast_parameters(modelD.state_dict(), root_rank=0)
+hvd.broadcast_optimizer_state(optimizerD, root_rank=0)
+
+# ==================================================================
+# train the model
+# optimer*.zero_grad(): sets the gradient of the optimizer to zero
+# _.backward() : computes gradient w.r.t. current leaves (tensor)
+# optimizer*.step() : updates the hyperparameter
+# ==================================================================
+def train(epoch):
+  modelG.train()
+  modelD.train()
+  trainD_loss     = util.Metric('trainD_loss')
+  trainG_loss     = util.Metric('trainG_tot_loss')
+  trainG_gen_loss = util.Metric('trainG_gen_loss')
+  with tqdm(total=len(train_loader),
+              desc='Train Epoch     #{}'.format(epoch + 1),
+              disable=not verbose) as t:
+      for batch_idx, (data, target) in enumerate(train_loader):
+
+          # if hvd.rank()==0: print(batch_idx, data.shape, target.shape)
+          #adjust_learning_rate as per epoch
+          util.adjust_learning_rate_3_zones(epoch, 5, 15, args, optimizerG, hvd.size())
+          util.adjust_learning_rate_3_zones(epoch, 5, 15, args, optimizerD, hvd.size())
+          # of dim (batch_size, channel no)
+          if cuda: data, target = data.cuda(), target.cuda()
+
+          # DISCRIMINATOR TRAINING -----------------------------------------------------------------------------------------------------------
+          for c_iter in range(args.critic_iter):
+            # if hvd.rank()==0: print('critic iter:', c_iter, 'batch idx:', batch_idx, 'in shape:', data.shape, 'out shape:', target.shape)
+            fake_hr_images      = modelG(data).detach() # yields sized [batchsize, 1, :, :] with backgradient removed with device set as cuda
+            real_hr_validity    = modelD(target).reshape(-1) # reshape(-1) sqeuezes [batchsize, 1, 1, 1] to [batchsize]
+            fake_hr_validity    = modelD(fake_hr_images).reshape(-1) # reshape(-1) sqeuezes [batchsize, 1, 1, 1] to [batchsize]
+            gp                  = gradient_penalty(modelD, target, fake_hr_images, cuda)
+            d_total             = -torch.mean(real_hr_validity) + torch.mean(fake_hr_validity) + args.gp_lambda * gp
+
+            optimizerD.zero_grad()
+            trainD_loss.update(d_total, hvd)
+            d_total.backward()
+            optimizerD.step()
+            optimizerD.synchronize()
+
+
+          # GENERATOR TRAINING -----------------------------------------------------------------------------------------------------------
+          optimizerG.synchronize()
+          predicted_hr_images = modelG(data)
+          predicted_hr_labels = modelD(predicted_hr_images).reshape(-1)
+          gan_loss            = -torch.mean(predicted_hr_labels) #generative loss
+
+          # perceptual or data fedility based term is added to the GAN's generative loss
+          # to improve the conditional solution. This term is popularly reffered as content
+          # loss in GAN papers
+          l1_loss             = F.l1_loss(predicted_hr_images, target)
+          g_total             = args.gen_lambda*l1_loss + gan_loss # content + generative losses
+
+          # l2_loss             = F.mse_loss(predicted_hr_images, target)
+          # g_total             = l1_loss + args.gen_lambda*gan_loss # content + generative losses
+
+          trainG_loss.update(g_total, hvd)
+          trainG_gen_loss.update(gan_loss, hvd)
+          optimizerG.zero_grad()
+          g_total.backward()
+          # with optimizerG.skip_synchronize()
+          optimizerG.step()
+          optimizerD.synchronize()
+          # CMD LINE outputs of loss values ---------------------------------------------------------------------
+          # tsum : total loss of all batches per GPU
+          # avg  : avergage loss per GPU per batch
+          t.set_postfix({'d_loss':     trainD_loss.avg.item(),
+                         'g_tot_loss': trainG_loss.avg.item(),
+                         'g_gen_loss': trainG_gen_loss.avg.item()
+                         })
+          t.update(1)
+  # loss values saved in the log directory ---------------------------------------------------------------------------
+  if log_writer:
+    log_writer.add_scalar('train/d_loss', trainD_loss.avg, epoch)
+    log_writer.add_scalar('train/g_tot_loss', trainG_loss.avg, epoch)
+    log_writer.add_scalar('train/g_gen_loss', trainG_gen_loss.avg, epoch)
+
+
+# ==================================================================
+# validate the network using metrics such as PSRN and SSIM
+# ==================================================================
+def validate(epoch):
+  modelG.eval()
+  val_psnr = util.Metric('val_psnr')
+  val_ssim = util.Metric('val_ssim')
+
+  with tqdm(total=len(val_loader),
+            desc='Validate Epoch  #{}'.format(epoch + 1),
+            disable=not verbose) as t:
+      with torch.no_grad():
+          for batch_num, (data, target) in enumerate(val_loader):
+              if args.cuda: data, target = data.cuda(), target.cuda()
+              output = modelG(data)
+              # print('data dev type:', data.device, 'target dev type:', target.device, 'output dev type', output.device)
+              # print('data, target, output shape', data.size(), target.size(), output.size())
+              # if hvd.rank()==0: print(batch_num, data.shape, target.shape)
+              _psnr, _ssim = quant_util.quant_ana(output, target, args.val_chk_prsc) #quant ana converts gpu types to cpu inside its subroutine
+              val_psnr.update(_psnr, hvd)
+              val_ssim.update(_ssim, hvd)
+              t.set_postfix({'PSNR ': val_psnr.avg.item(),
+                             'SSIM': val_ssim.avg.item()})
+              t.update(1)
+
+  if log_writer:
+        # log_writer.add_scalar('val/loss', val_loss.avg, epoch)
+        log_writer.add_scalar('val/PSNR', val_psnr.avg, epoch)
+        log_writer.add_scalar('val/SSIM', val_ssim.avg, epoch)
+
+
+# ===================================================================================
+# Main function with train, validate and save weights
+# ===================================================================================
+for epoch in range(resume_from_epoch, args.nepochs):
+    train(epoch)
+    validate(epoch)
+    # saving every checkpoint ------------------------------------------------------
+    if (args.save_log_ckpts) and (args.save_ckpts_every_epoch):
+      util.save_gan_checkpoint("discriminator", epoch, args, hvd, modelD, optimizerD)
+      util.save_gan_checkpoint("generator", epoch, args, hvd, modelG, optimizerG)
+
+# saving only last checkpoint -------------------------------------------------------
+if (args.save_log_ckpts) and (args.save_ckpts_last_epoch):
+  print('saving chekpoing for epoch:', epoch+1)
+  util.save_gan_checkpoint("discriminator", epoch, args, hvd, modelD, optimizerD)
+  util.save_gan_checkpoint("generator", epoch, args, hvd, modelG, optimizerG)
