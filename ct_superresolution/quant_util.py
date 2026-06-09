@@ -162,3 +162,70 @@ def quant_ana(output, target, img_type):
     _ssim = torch.tensor(_ssim)
     return (_psnr.float(), _ssim.float())
 
+def hellinger_distance(img_1, img_2, thresholding=None, seg_mask=None, n_bins=256, img_range=(0,256)) :
+    """
+    Computes the Hellinger distance between the intensity distributions of 
+    two grayscale images by comparing their normalized histograms.
+
+    The Hellinger distance ranges from 0 to 1, where 0 indicates identical 
+    distributions and 1 indicates completely dissimilar distributions.
+
+    Parameters
+    ----------
+    img_1 : numpy.ndarray
+        The first grayscale image (e.g., reference or ground truth image).
+    img_2 : numpy.ndarray
+        The second grayscale image (e.g., estimated or comparison image).
+        Must have the same bit depth and value range as img_1.
+    thresholding : str or None, optional
+        Strategy for trimming histogram bins prior to comparison.
+        Accepted values:
+            - None          : Use the full histogram (default).
+            - "5p_cutoff"   : Trim the outer 2.5% of bins on each side
+                              (retaining the central 95% of bins).
+            - "10p_cutoff"  : Trim the outer 5% of bins on each side
+                              (retaining the central 90% of bins).
+            - "sig_only"    : Restrict histogram computation to pixels 
+                              within a segmentation mask (requires seg_mask).
+    seg_mask : numpy.ndarray or None, optional
+        A binary segmentation mask used when thresholding='sig_only'. 
+        Only pixels where the mask is non-zero are included in the histogram.
+        Ignored for all other thresholding options. Default is None.
+    n_bins : int, optional
+        Number of histogram bins. Default is 256.
+    img_range : tuple of (int, int), optional
+        The lower and upper bounds of the pixel intensity range used for 
+        histogram computation. Default is (0, 256).
+
+    Returns
+    -------
+    float
+        The Hellinger distance between the two images' normalized intensity 
+        histograms, in the range [0, 1].
+    """
+    if thresholding == "5p_cutoff":
+        hist_1    = cv2.calcHist([img_1], [0], None, [n_bins], [img_range[0], img_range[1]])
+        hist_2    = cv2.calcHist([img_2], [0], None, [n_bins], [img_range[0], img_range[1]])
+        lower_ind = int((2.5/100)*(np.ceil(n_bins))-1)
+        upper_ind = int((97.5/100)*(np.ceil(n_bins))-1)
+        hist_1    = hist_1[lower_ind:upper_ind]
+        hist_2    = hist_2[lower_ind:upper_ind]
+    if thresholding == "10p_cutoff":
+        hist_1    = cv2.calcHist([img_1], [0], None, [n_bins], [img_range[0], img_range[1]])
+        hist_2    = cv2.calcHist([img_2], [0], None, [n_bins], [img_range[0], img_range[1]])
+        lower_ind = int((5/100)*(np.ceil(n_bins))-1)
+        upper_ind = int((95/100)*(np.ceil(n_bins))-1)
+        hist_1    = hist_1[lower_ind:upper_ind]
+        hist_2    = hist_2[lower_ind:upper_ind]
+    elif thresholding == 'sig_only':
+        hist_1    = cv2.calcHist([img_1], [0], seg_mask, [n_bins], [img_range[0], img_range[1]])
+        hist_2    = cv2.calcHist([img_2], [0], seg_mask, [n_bins], [img_range[0], img_range[1]])
+    else:
+        hist_1    = cv2.calcHist([img_1], [0], None, [n_bins], [img_range[0], img_range[1]])
+        hist_2    = cv2.calcHist([img_2], [0], None, [n_bins], [img_range[0], img_range[1]])
+
+    hist_1_nm = hist_1/hist_1.sum()
+    hist_2_nm = hist_2/hist_2.sum()
+    #b_dist    = cv2.compareHist(hist_1_nm, hist_2_nm, cv2.HISTCMP_BHATTACHARYYA)
+    hellinger_dist = np.linalg.norm(np.sqrt(hist_1_nm) - np.sqrt(hist_2_nm)) / np.sqrt(2.0)
+    return(hellinger_dist)
