@@ -3,12 +3,16 @@
 # cd /projects01/didsr-aiml/prabhat.kc/code/GitRepo/mpi_sfrc/
 # ----------------------------------------------------------
 # On Tuning set with 5 images with ht as 0.33
+# SRGAN:
 #   on sharp tuning set: 5+3+2+6+5 = 21
-#	on smooth tuning set: 16
+#	  on smooth tuning set: 16
+# SR-WGAN:
+#   on sharp tuning set: 22
+#   on smooth tuning set: 17
 # ----------------------------------------------------------
 # 
-# bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 1 
-# bash +x demo_sfrc_run.sh 'CT' 'tune' 'sm'  1
+# bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 'srgan' 1 
+# bash +x demo_sfrc_run.sh 'CT' 'tune' 'sm'  'srgan' 1
 # bash +x demo_sfrc_run.sh 'MRI' 'test' 'unet' 4
 #
 # ***********************************************************************
