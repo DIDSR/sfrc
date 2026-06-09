@@ -20,16 +20,18 @@
 mode=$1     # "CT" or "MRI"
 data_opt=$2 # "tune" sfrc on tuning set or 'test' sfrc on test set
 ker_opt=$3  # "sh" sharp kernel or "sm" smooth kernel for CT || "unet" or "plstv" for MRI
-nranks=$4   #  no. of processors for mpi
+recon=$4    # "srgan" or "srwgan" for CT
+nranks=$1   #  no. of processors for mpi
 echo "modality is:" $mode
-echo "testing data is:" $data_opt
+echo "data for sfrc is:" $data_opt
+echo "recon is:" $recon
 echo "nprocs used is: " $nranks
 
 if [[ "$mode" == "CT" ]]
 then
   echo "kernel option is: " $ker_opt
-  OUTPUT_FNAME="./results/CT/smSRGAN_${data_opt}_${ker_opt}_L067/"
-  INPUT_FOLDER="./ct_superresolution/results/${ker_opt}_L067/ua_ll_smSRGAN_${data_opt}_in_x4/checkpoint-generator-20/"
+  OUTPUT_FNAME="./results/CT/sm${recon^^}_${data_opt}_${ker_opt}_L067/"
+  INPUT_FOLDER="./ct_superresolution/results/${ker_opt}_L067/ua_ll_sm${recon^^}_${data_opt}_in_x4/checkpoint-generator-20/"
   INPUT_GEN="test_${ker_opt}_L067_cnn"
   TARGET_GEN="test_${ker_opt}_L067_gt"
   mpirun --mca btl ^openib -np $nranks \
