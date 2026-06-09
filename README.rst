@@ -200,7 +200,7 @@ in the following manner:
    .. code-block:: 
 
       cd ct_superresolution
-      bash +x demo_srgan_test.sh 'tune' 'sh' #on sharp kernel-based tuning set
+      bash +x demo_test_sr_models.sh 'tune' 'sh' 'srgan' # apply srgan on sharp kernel-based tuning set
 
 To apply the SRGAN to all the CT images from patient L067 (as described in the sFRC paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
