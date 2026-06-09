@@ -8,6 +8,7 @@ import util
 import io_func
 from skimage.metrics import structural_similarity as compare_ssim
 import torch
+import cv2
 
 def relative_se(f_true, f_est):
     """
