@@ -195,14 +195,17 @@ The SRGAN checkpoint provided in this repository was trained using CT images fro
 This checkpoint can be applied to the low-resolution CT images provided in this repository to upscale them by a factor of 4
 in the following manner: 
 
-3. Apply SRGAN on tuning set
+3. Apply SRGAN or SR-WGAN on tuning set
 
    .. code-block:: 
 
       cd ct_superresolution
-      bash +x demo_test_sr_models.sh 'tune' 'sh' 'srgan' # apply srgan on sharp kernel-based tuning set
+      bash +x demo_test_sr_models.sh 'tune' 'sh' 'srgan'  # apply srgan on sharp kernel-based sfrc tuning set
+      bash +x demo_test_sr_models.sh 'tune' 'sh' 'srwgan' # apply srwgan on sharp kernel-based sfrc tuning set
+      bash +x demo_test_sr_models.sh 'tune' 'sm' 'srgan'  # apply srgan on smooth kernel-based sfrc tuning set
+      bash +x demo_test_sr_models.sh 'tune' 'sm' 'srwgan' # apply srwgan on smooth kernel-based sfrc tuning set
 
-To apply the SRGAN to all the CT images from patient L067 (as described in the sFRC paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
+To apply the SRGAN (or SR-WGAN) to all the CT images from patient L067 (as described in the sFRC paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
 yield hallucinated patches as tabulated in TABLE I in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_ and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
