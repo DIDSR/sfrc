@@ -21,7 +21,7 @@ mode=$1     # "CT" or "MRI"
 data_opt=$2 # "tune" sfrc on tuning set or 'test' sfrc on test set
 ker_opt=$3  # "sh" sharp kernel or "sm" smooth kernel for CT || "unet" or "plstv" for MRI
 recon=$4    # "srgan" or "srwgan" for CT
-nranks=$1   #  no. of processors for mpi
+nranks=$5   #  no. of processors for mpi
 echo "modality is:" $mode
 echo "data for sfrc is:" $data_opt
 echo "recon is:" $recon
