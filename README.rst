@@ -188,14 +188,14 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
    Change the third option to 'plstv' for the plstv-based results provided in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. 
 
-Apply trained SRGAN 
---------------------
-The SRGAN checkpoint provided in this repository was trained using CT images from the six patients provided in 
+Apply trained SRGAN and SR-WGAN
+--------------------------------
+SRGAN and SR-WGAN checkpoints provided in this repository were trained using CT images from the six patients provided in 
 `LDGC dataset <https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=52758026>`_ and as detailed in the sFRC paper.
 This checkpoint can be applied to the low-resolution CT images provided in this repository to upscale them by a factor of 4
 in the following manner: 
 
-3. Apply SRGAN or SR-WGAN on tuning set
+3. Apply SRGAN and SR-WGAN on tuning set
 
    .. code-block:: 
 
@@ -205,7 +205,7 @@ in the following manner:
       bash +x demo_test_sr_models.sh 'tune' 'sm' 'srgan'  # apply srgan on smooth kernel-based sfrc tuning set
       bash +x demo_test_sr_models.sh 'tune' 'sm' 'srwgan' # apply srwgan on smooth kernel-based sfrc tuning set
 
-To apply the SRGAN (or SR-WGAN) to all the CT images from patient L067 (as described in the sFRC paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
+To apply SRGAN and SR-WGAN to all the CT images from patient L067 (as described in the sFRC paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
 Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
 yield hallucinated patches as tabulated in TABLE I in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_ and as depicted in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
@@ -222,8 +222,8 @@ yield hallucinated patches as tabulated in TABLE I in the `sFRC paper <https://a
    .. code-block:: 
 
       cd ct_superresolution
-      bash +x demo_srgan_test.sh 'test' 'sh'
-      bash +x demo_srgan_test.sh 'test' 'sm'
+      bash +x demo_test_sr_models.sh 'test' 'sh' 'srgan'
+      bash +x demo_test_sr_models.sh 'test' 'sm' 'srgan'
 
 Then set the first command line input as 'test' to indicate tags related to the paths 
 of CT images are test set for the sFRC analysis (as used in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_) when executing demo_sfrc_run.sh.
@@ -234,7 +234,10 @@ of CT images are test set for the sFRC analysis (as used in the `sFRC paper <htt
 
       cd ..
       bash +x demo_sfrc_run.sh 'CT' 'test' 'sh' 47 # on sharp test data with 47 set as no. of processors
-      bash +x demo_sfrc_run.sh 'CT' 'test' 'sm' 47 #on smooth test data with 47 set as the no. of processors
+      bash +x demo_sfrc_run.sh 'CT' 'test' 'sm' 47 # on smooth test data with 47 set as the no. of processors
+
+To perform sFRC testing on the SR-WGAN results, re-run the code blocks in points 5 and 6 by changing the 
+reconstruction option (i.e., ``srgan``) to ``srwgan``.
 
 Apply trained UNet 
 -------------------
