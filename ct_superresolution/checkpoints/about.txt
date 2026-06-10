@@ -1,8 +1,17 @@
 * srgan/checkpoint-generator-20.pth.tar: (96_uni_augTrTaTdT/srgan/hvd_cpt_for__lr_5e-05_bs_32)
+	is trained using 6 patient data
 	is trained using input patch size as 96/4, 96/4 and target patch size as 96, 96;
 	input and target pairs are normalized to [0, 1]; 
 	additional training opt parameters include, lr: 5e-5, batch size: 32 patches
+
+* srgan_8p/checkpoint-generator-20.pth.tar: (/p96_uni_augTrTaTdT_8p_x4/srgan/hvd_cpt_for__lr_5e-05_bs_32)
+	is trained using 8 patient data
+	input patch size as 96/4, 96/4 and target patch size as 96, 96
+	input and target pairs are normalized to [0, 1]; 
+	additional training opt parameters include, lr: 5e-5, batch size: 32 patches
+
 * srwgan/checkpoint-generator-20.pth.tar: (128_uni_augTrTaTdT/srwgan/hvd_cpt_for__lr_0.0001_gp_10_genlam_1000.0_bs_64)
+	is trained using 6 patient data
 	is trained using input patch size as 128/4, 128/4 and target patch size as 128, 128;
 	input and target pairs are normalized to [0, 1]; 
 	with training opt parameter, lr: 5e-5, batch size: 32 patches
