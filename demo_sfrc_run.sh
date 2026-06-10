@@ -1,6 +1,4 @@
 
-# source /home/prabhat.kc/anaconda3/hmri_env.sh 
-# cd /projects01/didsr-aiml/prabhat.kc/code/GitRepo/mpi_sfrc/
 # ----------------------------------------------------------
 # On Tuning set with 5 images with ht as 0.33
 # SRGAN:
@@ -35,17 +33,35 @@ echo "nprocs used is: " $nranks
 
 if [[ "$mode" == "CT" ]]
 then
-  echo "kernel option is: " $ker_opt
-  OUTPUT_FNAME="./results/CT/sm${recon^^}_${data_opt}_${ker_opt}_L067/"
-  INPUT_FOLDER="./ct_superresolution/results/${ker_opt}_L067/ua_ll_sm${recon^^}_${data_opt}_in_x4/checkpoint-generator-20/"
-  INPUT_GEN="test_${ker_opt}_L067_cnn"
-  TARGET_GEN="test_${ker_opt}_L067_gt"
-  mpirun --mca btl ^openib -np $nranks --oversubscribe \
-  python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p64'   \
-  --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} \
-  --img-format 'raw' --frc-threshold '0.5' --in-dtype 'uint16' \
-  --anaRing --inscribed-rings --rNx 512 --apply-hann --mtf-space --ht 0.33 \
-  --windowing 'soft' --save-patched-subplots
+  if [[ "$recon" == "srgan" || "$recon" == "srwgan" ]]
+  then
+    echo "kernel option is: " $ker_opt
+    OUTPUT_FNAME="./results/CT/sm${recon^^}_${data_opt}_${ker_opt}_L067/"
+    INPUT_FOLDER="./ct_superresolution/results/${ker_opt}_L067/ua_ll_sm${recon^^}_${data_opt}_in_x4/checkpoint-generator-20/"
+    INPUT_GEN="test_${ker_opt}_L067_cnn"
+    TARGET_GEN="test_${ker_opt}_L067_gt"
+    mpirun --mca btl ^openib -np $nranks --oversubscribe \
+    python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p64'   \
+    --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} \
+    --img-format 'raw' --frc-threshold '0.5' --in-dtype 'uint16' \
+    --anaRing --inscribed-rings --rNx 512 --apply-hann --mtf-space --ht 0.33 \
+    --windowing 'soft' --save-patched-subplots
+  elif [[ "$recon" == "pail" ]]
+  then
+    OUTPUT_FNAME="./results/${mode}/${recon}/"
+    INPUT_FOLDER="./ct_sparseview/${recon}/"
+    INPUT_GEN="pail_recon"
+    TARGET_GEN="gt"
+    mpirun --mca btl ^openib -np $nranks --oversubscribe \
+    python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p48'   \
+    --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} \
+    --img-format 'raw' --frc-threshold '0.5' --in-dtype 'uint16' \
+    --anaRing --inscribed-rings --rNx 512 --apply-hann --mtf-space --ht 0.5 \
+    --windowing 'soft' --save-patched-subplots --rNx 512
+  else
+    echo "Re-check method type cmd input for CT. It can be srgan or srwgan or pail"
+    break
+  fi
 elif [[ "$mode" == "MRI" ]]
 then
   INPUT_FOLDER="./mr_subsampling/recon_data/"
@@ -64,7 +80,7 @@ then
     echo "Re-check method type cmd input for MRI. It can be unet or plstv"
     break
   fi
-  mpirun --mca btl ^openib -np $nranks \
+  mpirun --mca btl ^openib -np $nranks --oversubscribe \
   python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p48'   \
   --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} \
   --img-format 'png' --frc-threshold '0.75' --in-dtype 'uint8'\

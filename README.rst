@@ -189,9 +189,9 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
 
    .. code-block::
       
-      bash +x demo_sfrc_run.sh 'MRI' 'test' 'unet' 4
+      bash +x demo_sfrc_run.sh 'MRI' 'test' '' 'unet' 4
 
-   Change the third option to 'plstv' for the plstv-based results provided in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. 
+   Change the fourth option to ``plstv`` for the plstv-based results provided in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. 
 
 Apply trained SRGAN and SR-WGAN
 --------------------------------
@@ -210,9 +210,12 @@ in the following manner:
       bash +x demo_test_sr_models.sh 'tune' 'sm' 'srgan'  # apply srgan on smooth kernel-based sfrc tuning set
       bash +x demo_test_sr_models.sh 'tune' 'sm' 'srwgan' # apply srwgan on smooth kernel-based sfrc tuning set
 
-To apply SRGAN and SR-WGAN to all the CT images from patient L067 (as described in the sFRC paper) refer to "./ct_superresolution/create_sr_dataset/readme.txt".
-Once you successfully download and preprocess smooth and sharp CT scans corresponding to patient L067, the following commands will 
-yield hallucinated patches as tabulated in TABLE I in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_ and as depicted in the following 
+To apply SRGAN and SR-WGAN to the CT images corresponding to the region extending from the upper abdomen to the lower legs of patient L067 
+(as described in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_), refer to ``./ct_superresolution/create_sr_dataset/readme.txt``.
+
+Once the smooth- and sharp-kernel CT scans have been successfully downloaded, preprocessed, and upsampled using SRGAN and SR-WGAN, 
+the commands in points 5 and 6 will produce hallucinated patches consistent with those reported in Table I of the 
+`sFRC paper <https://arxiv.org/abs/2603.04673>`_ and illustrated in the following 
 `movie files <https://fdahhs.ent.box.com/s/vvfcbqxd66a2x09yld1tyk2weqs72i7s>`_.
 
 4. Get the mid-frequency image components corresponding to each CT tuning image to manually mark the hallucinated ROIs as shown in the supplemental part of the `sFRC paper <https://arxiv.org/abs/2603.04673>`_.
@@ -222,27 +225,32 @@ yield hallucinated patches as tabulated in TABLE I in the `sFRC paper <https://a
       python ct_superresolution/banded_plots_4r_sfrc_ct_tuning.py
 
 
-5. Apply SRGAN on sFRC test set
+5. Apply SRGAN and SR-WGAN on sFRC test set
 
    .. code-block:: 
 
       cd ct_superresolution
       bash +x demo_test_sr_models.sh 'test' 'sh' 'srgan'
       bash +x demo_test_sr_models.sh 'test' 'sm' 'srgan'
+      bash +x demo_test_sr_models.sh 'test' 'sh' 'srwgan'
+      bash +x demo_test_sr_models.sh 'test' 'sm' 'srwgan'
 
 Then set the first command line input as 'test' to indicate tags related to the paths 
 of CT images are test set for the sFRC analysis (as used in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_) when executing demo_sfrc_run.sh.
 
-6. sFRC on SRGAN-based CT upsampled (x4) test images (sharp as well as smooth)
+6. sFRC on SRGAN- and SR-WGAN-based CT upsampled (x4) test images (sharp as well as smooth)
 
    .. code-block:: 
 
       cd ..
-      bash +x demo_sfrc_run.sh 'CT' 'test' 'sh' 47 # on sharp test data with 47 set as no. of processors
-      bash +x demo_sfrc_run.sh 'CT' 'test' 'sm' 47 # on smooth test data with 47 set as the no. of processors
+      bash +x demo_sfrc_run.sh 'CT' 'test' 'sh' 'srgan' 47 # on sharp test data with 47 set as no. of processors
+      bash +x demo_sfrc_run.sh 'CT' 'test' 'sm' 'srgan' 47 # on smooth test data with 47 set as the no. of processors
+      bash +x demo_sfrc_run.sh 'CT' 'test' 'sh' 'srwgan' 47 # on sharp test data with 47 set as no. of processors
+      bash +x demo_sfrc_run.sh 'CT' 'test' 'sm' 'srwgan' 47 # on smooth test data with 47 set as the no. of processors
 
-To perform sFRC testing on the SR-WGAN results, re-run the code blocks in points 5 and 6 by changing the 
-reconstruction option (i.e., ``srgan``) to ``srwgan``.
+To perform the data sufficiency analysis reported in Table 1 of the Supplementary Information section of the
+ `sFRC paper <https://arxiv.org/abs/2603.04673>`_, update the model path to ``ct_superresolution/checkpoints/srgan-8p/`` 
+ in the ``demo_test_sr_models`` file referenced in Point 5 above.
 
 Apply trained UNet 
 -------------------
@@ -262,7 +270,7 @@ the original source of the MRI data.
 PLSTV-based reconstruction 
 -------------------------------
 Follow the installation instructions provided in the `BART repository <https://mrirecon.github.io/bart/>`_.
-Then edit the path to BART's python wrapper in line 20 in file "./mr_subsampling/plstv/bart_pls_tv.py".
+Then edit the path to BART's python wrapper in line 20 in file ``./mr_subsampling/plstv/bart_pls_tv.py``.
 
 8. Apply PLSTV on MRI test set
 
@@ -282,7 +290,7 @@ Conventional artifacts (non-hallucinatory)
 
       bash +x demo_sfrc_on_artifacts.sh 'missing_wedge' 1
 
-   Change the first option to 'blur' or 'noise' or 'distortion' for the sFRC result on the other forms of conventional artifacts.    
+   Change the first option to ``blur`` or ``noise`` or ``distortion`` for the sFRC result on the other forms of conventional artifacts.    
 
 References 
 ----------
