@@ -1,7 +1,7 @@
-# updates in luna
-# source /home/prabhat.kc/anaconda3/base_env.sh
-# source /home/prabhat.kc/anaconda3/hmri_env.sh 
-# cd /projects01/didsr-aiml/prabhat.kc/code/mpi_sfrc/v2/
+# bash +x demo_sfrc_on_artifacts.sh 'missing_wedge' 1
+# bash +x demo_sfrc_on_artifacts.sh 'distortion' 1
+# bash +x demo_sfrc_on_artifacts.sh 'blur' 1
+# bash +x demo_sfrc_on_artifacts.sh 'noise' 1
 artifact=$1
 nranks=$2
 INFOLDER='conventional_artifact'
