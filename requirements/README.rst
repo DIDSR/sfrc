@@ -1,6 +1,7 @@
 * For using sFRC
 
-  - The image reconstruction packages described below are not required for running sFRC. Simply follow the installation instructions provided at https://github.com/DIDSR/sfrc/tree/master#requirements. After installation, sFRC can be run using the reference and undersampled radiological images included in this repository.
+  - The image reconstruction packages described below are not required for running sFRC. Simply follow the installation instructions provided at https://github.com/DIDSR/sfrc/tree/master#requirements. After installation, the demo sFRC file (``demo_sfr_run.sh``) can be run using the reference and undersampled radiological images included in this repository.
+
 
 * For applying GAN, WGAN, and U-Net pretrained weights
 
@@ -10,9 +11,11 @@
 
   - The same Python configuration is compatible with the WGAN and GAN pretrained weights provided in this repository for the CT super-resolution task.
 
+
 * For GAN and WGAN training
 
   - Training the WGAN and GAN models requires Horovod. For instructions on Horovod-based multi-GPU training, refer to the `Horovod documentation <https://horovod.readthedocs.io/en/latest/install_include.html>`_.
+
 
 * For CT PAIL testing and training
 
