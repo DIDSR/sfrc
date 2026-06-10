@@ -25,8 +25,8 @@
 # 
 mode=$1     # "CT" or "MRI"
 data_opt=$2 # "tune" sfrc on tuning set or 'test' sfrc on test set
-ker_opt=$3  # "sh" sharp kernel or "sm" smooth kernel for CT || "unet" or "plstv" for MRI
-recon=$4    # "srgan" or "srwgan" for CT
+ker_opt=$3  # "sh" sharp kernel or "sm" smooth kernel for super-resolution problem || "" for MRI and PAIL reconstruction 
+recon=$4    # "srgan" or "srwgan" for CT || "unet" or "plstv" for MRI
 nranks=$5   #  no. of processors for mpi
 echo "modality is:" $mode
 echo "data for sfrc is:" $data_opt
@@ -49,14 +49,14 @@ then
 elif [[ "$mode" == "MRI" ]]
 then
   INPUT_FOLDER="./mr_subsampling/recon_data/"
-  INPUT_GEN="masked_${data_opt}_${ker_opt}_recons_ood"
+  INPUT_GEN="masked_${data_opt}_${recon}_recons_ood"
   TARGET_GEN="masked_${data_opt}_gt_ood"
-  OUTPUT_FNAME="./results/MRI/ood_${data_opt}_${ker_opt}/"
-  if [[ "$ker_opt" == "unet" ]]
+  OUTPUT_FNAME="./results/MRI/ood_${data_opt}_${recon}/"
+  if [[ "$recon" == "unet" ]]
   then
     HT=0.16
     echo "method is unet and ht is:" $HT
-  elif [[ "$ker_opt" == "plstv" ]]
+  elif [[ "$recon" == "plstv" ]]
   then
     HT=0.17
     echo "method is plstv and ht is:" $HT

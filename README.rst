@@ -147,7 +147,7 @@ Create a new conda enviroment and install the required packages as follows:
     $ pip install -r ./requirements/sfrc_requirements.txt
 
 For the additional packages required for the MR sub-sampling and CT super-resolution tasks, 
-see `requirements/im_recon_requirements.txt.`
+see `requirements/README.rst.`
 
 DEMO execution of sFRC
 ----------------------------------------------------------
@@ -174,7 +174,10 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
    and the tuning dataset used to determine the sFRC parameters described in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. 
    Similarly, ``srgan`` indicates the use of the SRGAN pretrained weights provided in this repository. ``1``
    specifies that a single processing unit (``-np 1``) is used in our MPI-based sFRC implementation. 
-   
+
+   Set the third option to ``sm`` to process smooth-kernel CT data and the fourth option to ``srwgan`` to 
+   specify SR-WGAN–based upsampled images as the input.
+
    Note that the CT demonstration included in this repository contains only five CT images. 
    Consequently, for the SRGAN model and the specified sFRC parameters, the numbers of detected hallucinations 
    for the sharp and smooth datasets are 21 and 16, respectively. Refer to the next subsection for instructions on 
