@@ -1,8 +1,0 @@
-We used torch==1.6.0, torchvision==0.7.0, and pytorch-lightning==0.7.3 to 
-apply the U-Net pretrained weights provided in 
-https://github.com/comp-imaging-sci/hallucinations-tomo-recon for the deep learning–based 
-MR post-processing task. The same software configuration is compatible for applyging the WGAN and 
-GAN pretrained weights provided in this repository for the CT super-resolution task. 
-However, training the WGAN and GAN models requires Horovod. 
-For instructions on Horovod-based multi-GPU training, please refer to the Horovod 
-documentation: https://horovod.readthedocs.io/en/latest/install_include.html.

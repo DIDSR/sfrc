@@ -154,7 +154,7 @@ DEMO execution of sFRC
 The example codes below show how to run sfrc by using data from DL/IRT methods and their reference counterparts used in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. 
 Run the codes below. Then accordingly change input paths and sfrc parameters for your application. 
 
-1. sFRC on SRGAN-based CT upsampled (x4) images
+1. sFRC on SRGAN- and SR-WGAN-based CT upsampled (x4) images
 
    .. code-block::
       
@@ -168,15 +168,17 @@ Run the codes below. Then accordingly change input paths and sfrc parameters for
    
    .. code-block:: 
       
-      bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 1
+      bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 'srgan' 1
 
-   'CT' indicates sFRC applied on CT-based data. 'sh' and 'tune' are options to indicate paths for sharp kernel-based data and 
-   tuning set for sFRC parameters used in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. Likewise 'sm' indicates smooth kernel-based test set. 
-   1 indicates one processing unit (-np) to be used in our mpi-based sFRC implementation. 
-   Note that, in this git repo, the demo example for the CT application includes only 5 CT images. 
-   As such, the no. of hallucinations, for the specified parameters, for sharp and smooth data will be 21 
-   and 16 respectively. Refer to the next subsection to fetch the complete test set and results as 
-   provided in the sFRC paper for the CT application. 
+   ``CT`` indicates that sFRC is applied to CT-based data. ``sh`` and ``tune`` specify the paths for the sharp-kernel dataset 
+   and the tuning dataset used to determine the sFRC parameters described in the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. 
+   Similarly, ``srgan`` indicates the use of the SRGAN pretrained weights provided in this repository. ``1``
+   specifies that a single processing unit (``-np 1``) is used in our MPI-based sFRC implementation. 
+   
+   Note that the CT demonstration included in this repository contains only five CT images. 
+   Consequently, for the SRGAN model and the specified sFRC parameters, the numbers of detected hallucinations 
+   for the sharp and smooth datasets are 21 and 16, respectively. Refer to the next subsection for instructions on 
+   obtaining the complete test set and reproducing the results reported in the sFRC paper for the CT application.
 
    Change the ht parameter as 0.25, 0.35, 0.34, and 0.33 to reproduce different sFRC-detected bounding boxes as hallucinations as shown in the supplemental part of the `sFRC paper <https://arxiv.org/abs/2603.04673>`_.
 
