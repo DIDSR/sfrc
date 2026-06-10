@@ -13,6 +13,8 @@
 # 
 # bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 'srgan' 1 
 # bash +x demo_sfrc_run.sh 'CT' 'tune' 'sm'  'srgan' 1
+# bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 'srwgan' 5 
+# bash +x demo_sfrc_run.sh 'CT' 'tune' 'sm'  'srwgan' 5
 # bash +x demo_sfrc_run.sh 'MRI' 'test' 'unet' 4
 #
 # ***********************************************************************
@@ -38,7 +40,7 @@ then
   INPUT_FOLDER="./ct_superresolution/results/${ker_opt}_L067/ua_ll_sm${recon^^}_${data_opt}_in_x4/checkpoint-generator-20/"
   INPUT_GEN="test_${ker_opt}_L067_cnn"
   TARGET_GEN="test_${ker_opt}_L067_gt"
-  mpirun --mca btl ^openib -np $nranks \
+  mpirun --mca btl ^openib -np $nranks --oversubscribe \
   python main.py --input-folder ${INPUT_FOLDER} --output-folder ${OUTPUT_FNAME} --patch-size 'p64'   \
   --input-gen-folder ${INPUT_GEN} --target-gen-folder ${TARGET_GEN} \
   --img-format 'raw' --frc-threshold '0.5' --in-dtype 'uint16' \
