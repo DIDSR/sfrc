@@ -8,20 +8,27 @@
 #   on sharp tuning set: 22
 #   on smooth tuning set: 17
 # ----------------------------------------------------------
-# 
+# CT demo runs 
+#   Also see readme file to sequester GAN applied
+#   set for testing sfrc for the super problem
+# ------------------------------------------------------------
 # bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 'srgan' 1 
 # bash +x demo_sfrc_run.sh 'CT' 'tune' 'sm'  'srgan' 1
 # bash +x demo_sfrc_run.sh 'CT' 'tune' 'sh' 'srwgan' 5 
 # bash +x demo_sfrc_run.sh 'CT' 'tune' 'sm'  'srwgan' 5
 # bash +x demo_sfrc_run.sh 'CT' '' ''  'pail' 1
-# bash +x demo_sfrc_run.sh 'MRI' 'test' 'unet' 4
-# bash +x demo_sfrc_run.sh 'MRI' 'test' 'plstv' 4
+# 
+# MRI demo runs
+#-----------------------------------------------------------------
+# bash +x demo_sfrc_run.sh 'MRI' 'test' '' 'unet' 4
+# bash +x demo_sfrc_run.sh 'MRI' 'test' '' 'plstv' 4
 #
-# ***********************************************************************
-# Notes: ensure mpl.use('Agg') in src/plot_func.py is NOT COMMENTED in 
-#        case you see any segmentation fault error when sfrc is processing 
-#        large number of images over multiple threads
-# ***********************************************************************
+#
+# ***************************************************************************
+# Notes: In case you see any segmentation fault error when sfrc is processing 
+#        large number of images over multiple threads:
+#               -> ensure mpl.use('Agg') in src/plot_func.py is NOT COMMENTED 
+# ****************************************************************************
 # 
 mode=$1     # "CT" or "MRI"
 data_opt=$2 # "tune" sfrc on tuning set or 'test' sfrc on test set
