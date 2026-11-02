@@ -17,7 +17,7 @@ Following are the steps to add irt to your matlab path:
     >> setup
     >> cd ..
 
-Simulate the Noise Artifact shown in the supplemental information in our `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_
+Simulate the Noise Artifact shown in the supplemental information in our `sFRC paper <https://arxiv.org/abs/2603.04673>`_
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 .. code-block:: matlab
 
@@ -27,7 +27,7 @@ Simulate the Noise Artifact shown in the supplemental information in our `sFRC p
 .. image:: ../paper_plots/git_illustration_noisy.png
    :width: 500
 
-Simulate the Missing Wedge Artifact shown in the supplemental information in our `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_
+Simulate the Missing Wedge Artifact shown in the supplemental information in our `sFRC paper <https://arxiv.org/abs/2603.04673>`_
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: matlab
@@ -40,7 +40,7 @@ Simulate the Missing Wedge Artifact shown in the supplemental information in our
 
 change the missing wedge angle inside the matlab file
 
-Simulate the Distortion Artifact shown in the supplemental information in our `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_
+Simulate the Distortion Artifact shown in the supplemental information in our `sFRC paper <https://arxiv.org/abs/2603.04673>`_
 ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: matlab
@@ -51,14 +51,14 @@ Simulate the Distortion Artifact shown in the supplemental information in our `s
 .. image:: ../paper_plots/git_illustration_distortion.png
    :width: 500
 
-Simulate the Blurring Artifact shown in the supplemental information in our `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_
+Simulate the Blurring Artifact shown in the supplemental information in our `sFRC paper <https://arxiv.org/abs/2603.04673>`_
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: python
 
     python blurring_artifact.py
 
-Get the banded plots as shown in main and supplemental paper in our `sFRC paper <https://doi.org/10.36227/techrxiv.171259560.02243347/v2>`_
+Get the banded plots as shown in main and supplemental paper in our `sFRC paper <https://arxiv.org/abs/2603.04673>`_
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
 .. code-block:: python

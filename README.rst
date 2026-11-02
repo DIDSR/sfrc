@@ -285,7 +285,7 @@ Then edit the path to BART's python wrapper in line 20 in file ``./mr_subsamplin
       cd plstv
       bash +x run_bart_pls_tv.sh
 
-Conventional artifacts (non-hallucinatory) 
+Conventional artifacts (non-hallucinatory)
 --------------------------------------------
 
 10. Refer to the readme file inside the folder conventional_artifact to simulate the four different artifacts (missing wedge, distortion, blur, noise) discussed in the supplemental part of the `sFRC paper <https://arxiv.org/abs/2603.04673>`_. Update folder conventional_artifact/data in accordance to the options you set when simulating artifacts or per your own experimental data. 
